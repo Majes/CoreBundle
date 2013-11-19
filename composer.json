@@ -1,0 +1,8 @@
+{
+    "name": "majes/corebundle",
+    "type": "symfony-bundle",
+    "description": "Majes framework core bundle",
+    "require": {
+        "php": ">=5.3.0",
+    }
+}
