@@ -43,7 +43,7 @@ class CoreExtension extends \Twig_Extension
     }
 
     public function getMimeType($path){
-        $file = __DIR__.'/../../../../web/'.$path;
+        $file = __DIR__.'/../../../../../../web/'.$path;
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         return $finfo->file($file);
