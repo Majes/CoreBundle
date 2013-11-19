@@ -3,5 +3,6 @@
     "description": "Majes framework core bundle",
     "require": {
         "php": ">=5.3.0"
-    }
+    },
+    "target-dir": "Majes/CoreBundle"
 }
