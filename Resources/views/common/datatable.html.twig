@@ -1,0 +1,68 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Dashboard{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+
+<div class="container-fluid main-content">
+
+  {{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+  
+    <div class="page-title">
+      <h1>{{ pageTitle }}</h1>
+	  </div>
+
+    {% block datatable %}
+    {% set config = dataTable(object, datas) %}
+    <!-- DataTables Example -->
+    <div class="row">
+    	<div class="col-lg-12">
+        	<div class="widget-container fluid-height clearfix">
+            	<div class="heading">
+              		<i class="icon-table"></i>{{ pageSubTitle }}
+              		{% if config.object.hasAdd %}<a href="{{ path(urls.add) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>Add new</a>{% endif %}
+            	</div>
+            	<div class="widget-content padded clearfix">
+              		<table class="table table-bordered table-striped{% if config.object.isDatatablejs %} dataTable{% endif %}">
+                		<thead>
+                  			<th class="check-header hidden-xs"></th>
+                  			{% for config_item in config.column %}
+                        <th class="{{config_item.isMobile ? 'hidden-xs' : ''}}{{config_item.isSortable ? '' : ' sorting_disabled'}}">{{config_item.label}}</th>
+                        {% endfor %}
+                  			<th></th>
+                		</thead>
+                		<tbody>
+                			{% for data in datas %}
+                  			<tr>
+                    			<td class="check hidden-xs">
+                      				<input name="optionsRadios1" type="checkbox" value="option1">
+                    			</td>
+                          {% for config_item in config.column %}
+                          {% set column = config_item.column %}
+                    			<td {{config_item.isMobile ? 'class="hidden-xs"' : ''}}>
+                            {{ get(data, config_item.column, config_item.format)}}
+                          </td>
+                          {% endfor %}
+                    			<td class="actions">
+                    			  	<div class="action-buttons">
+                    			  	  {% if config.object.hasPreview %}<a class="table-actions" href=""><i class="icon-eye-open"></i></a>{% endif %}
+                    			  	 	<a href="{{ path(urls.edit, {'id' : data.id}) }}" class="table-actions"><i class="icon-pencil"></i></a>
+                    			  	 	<a href="{{ path(urls.delete, {'id' : data.id}) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this language?{% endtrans %}')"><i class="icon-trash"></i></a>
+                    			  	</div>
+                    			</td>
+                  			</tr>
+                  			{% endfor %}
+                		</tbody>
+              		</table>
+            	</div>
+          	</div>
+    	</div>
+    </div>
+    <!-- end DataTables Example -->
+    {% endblock datatable %}
+</div>
+{% endblock %}

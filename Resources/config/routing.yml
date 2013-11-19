@@ -1,0 +1,64 @@
+_admin_index:
+    pattern:  /
+    defaults: { _controller: MajesCoreBundle:Index:dashboard }
+
+_admin_login:
+    pattern:  /authentification
+    defaults: { _controller: MajesCoreBundle:Auth:login }
+
+_admin_login_check:
+    pattern:   /authentification_check
+    defaults: { _controller: MajesCoreBundle:Auth:login_check }
+
+_admin_logout:
+    pattern:   /deconnexion
+    defaults: { _controller: MajesCoreBundle:Auth:logout }
+
+_admin_myaccount:
+    pattern:  /myaccount
+    defaults: { _controller: MajesCoreBundle:Index:myaccount }
+
+_admin_languages:
+    pattern:  /languages
+    defaults: { _controller: MajesCoreBundle:Index:languages }
+
+_admin_language_edit:
+    pattern:  /language/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:languageEdit, id: null }
+
+_admin_language_delete:
+    pattern:  /language/delete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:languageDelete }
+
+_admin_users:
+    pattern:  /users
+    defaults: { _controller: MajesCoreBundle:Index:users }
+
+_admin_user_edit:
+    pattern:  /user/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:userEdit, id: null }
+
+_admin_user_activity:
+    pattern:  /user/activity/{id}
+    defaults: { _controller: MajesCoreBundle:Index:userActivity, id: null }
+
+_admin_user_role:
+    pattern:  /user/role/{id}
+    defaults: { _controller: MajesCoreBundle:Index:userRole }
+
+_admin_user_delete:
+    pattern:  /user/delete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:userDelete }
+
+
+_admin_roles:
+    pattern:  /roles
+    defaults: { _controller: MajesCoreBundle:Index:roles }
+
+_admin_role_edit:
+    pattern:  /role/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:roleEdit, id: null }
+
+_admin_role_delete:
+    pattern:  /role/delete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:roleDelete }

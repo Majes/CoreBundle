@@ -1,0 +1,107 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Dashboard{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+<div class="container-fluid main-content">
+
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+	<div class="row">
+		<div class="col-lg-12">
+	    	<div class="widget-container fluid-height clearfix">
+	
+				<div class="heading tabs">
+        	    	<i class="icon-user"></i> {% trans %}%pageSubTitle%{% endtrans %}  
+        	      	<ul class="nav nav-tabs pull-right" data-tabs="tabs" id="tabs">
+        	        	<li class="active">
+							<a data-toggle="tab" href="#tab1">
+								<i class="icon-user"></i>
+								<span>{% trans %}Details{% endtrans %}  </span>
+							</a>
+        	        	</li>
+        	        	{% if user is not null %}<li>
+        	          		<a data-toggle="tab" href="#tab2">
+        	          			<i class="icon-cog"></i>
+        	          			<span>{% trans %}Roles{% endtrans %}  </span>
+        	          		</a>
+        	        	</li>
+        	        	<li>
+        	          		<a data-toggle="tab" href="#tab3">
+        	          			<i class="icon-stackexchange"></i>
+        	          			<span>{% trans %}Activity{% endtrans %}  </span>
+        	          		</a>
+        	        	</li>{% endif %}
+        	      	</ul>
+        	    </div>
+	
+				
+				
+				<div class="tab-content padded" id="my-tab-content">
+					<div class="tab-pane active" id="tab1">
+						{% form_theme form 'MajesCoreBundle:Form:fields.html.twig' %}
+	    	    		{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+	    	    		<div class="col-md-3">
+							
+	    	  			</div>
+	    				<div class="col-md-6">
+	    	    			
+	    	    			<div class="widget-content padded">
+	    	    		  		
+								{{ form_errors(form) }}
+	    	    				{{ form_widget(form) }}
+			
+	    	    		  		<div class="form-actions col-lg-offset-3 col-lg-9">
+	    	    		    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
+	    	    		    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	    	    		  		</div>
+								
+	    	    			</div>
+	    	  			</div>
+	    	  			{{ form_end(form) }}
+	    	  		</div>
+	    	  		{% if user is not null %}<div class="tab-pane" id="tab2">
+
+						{% form_theme form_role 'MajesCoreBundle:Form:fields.html.twig' %}
+	    	    		{{ form_start(form_role, { 'attr': {'class': 'form-horizontal'} }) }}
+	    	    		<div class="col-md-3">
+							
+	    	  			</div>
+	    				<div class="col-md-6">
+	    	    			
+	    	    			<div class="widget-content padded">
+	    	    		  		
+								{{ form_errors(form_role) }}
+	    	    				{{ form_widget(form_role) }}
+			
+	    	    		  		<div class="form-actions col-lg-offset-3 col-lg-9">
+	    	    		    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
+	    	    		    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	    	    		  		</div>
+								
+	    	    			</div>
+	    	  			</div>
+	    	  			{{ form_end(form_role) }}
+	    	  		</div>
+	    	  		<div class="tab-pane" id="tab3">
+						
+						{{ render(controller('MajesCoreBundle:Index:userActivity', { 'id': user.id })) }}
+
+        	  		</div>{% endif %}
+	    	  	</div>
+	    	  	
+	    	</div>
+		</div>
+	</div>
+
+</div>
+
+
+{% endblock %}

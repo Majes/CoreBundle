@@ -1,0 +1,39 @@
+services:
+    kernel.listener.system_listener:
+        class: Majes\CoreBundle\EventListener\SystemListener
+        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    kernel.listener.exception_listener:
+        class: Majes\CoreBundle\EventListener\ExceptionListener
+        arguments: [@templating, @kernel]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    #translator:
+    #    class: Majes\CoreBundle\Services\Translation\Translator
+    #    arguments: [%locale%]
+#
+    translation.loader.db:
+        class: Majes\CoreBundle\Services\DBLoader
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - { name: translation.loader, alias: db }
+
+    majescore.select2_extension:
+        class: Majes\CoreBundle\Form\Extension\Select2TypeExtension
+        tags:
+            - { name: form.type_extension, alias: choice }
+
+    majescore.twig.core_extension:
+        class: Majes\CoreBundle\Twig\CoreExtension
+        tags:
+            - { name: twig.extension }
+
+    authentication_handler:
+        class: Majes\CoreBundle\Handler\AuthenticationHandler
+        arguments:  [@router, @security.context]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+

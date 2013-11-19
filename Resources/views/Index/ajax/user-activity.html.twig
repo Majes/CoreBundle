@@ -1,0 +1,16 @@
+{% for activity in activities %}
+<tr>
+    <td class="filter-category red">
+        <div class="arrow-left"></div>
+        <i class="icon-cogs"></i>
+    </td>
+    <td>{{ activity.name }}</td>
+    <td>{{ activity.route }}</td>
+    <td class="hidden-sm hidden-xs">{{ activity.createDate|date("m/d/Y") }}</td>
+    <td class="hidden-xs">
+      <div class="sparkslim">{{ activity.createDate|date("H:i:s") }}</div>
+    </td>
+</tr>
+{% endfor %}
+
+{% if loadmore == false %}<script>if($("#loadMoreButton")) $("#loadMoreButton").remove()</script>{% endif %}

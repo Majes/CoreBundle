@@ -1,0 +1,61 @@
+<div class="container-fluid main-nav clearfix">
+		<div class="nav-collapse">
+				<ul class="nav">
+						<li class="dashboard">
+								<a {% if app.request.get('_route') == '_admin_index' %}class="current"{% endif %} href="{{ path('_admin_index') }}">
+									<span aria-hidden="true" class="se7en-home"></span> 
+									{% trans %}Dashboard{% endtrans %}
+								</a>
+						</li>
+						<li class="cms dropdown">
+							<a {% if ('_cms_' in app.request.get('_route')) %}class="current"{% endif %} data-toggle="dropdown" href="#">
+								<span aria-hidden="true" class="icon-folder-open-alt"></span>
+								{% trans %}Content management{% endtrans %}<b class="caret"></b>
+							</a>
+
+							<ul class="dropdown-menu">
+								<li>
+										<a href="{{ path('_cms_content') }}">{% trans %}Content{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="{{ path('_cms_templates_list') }}">{% trans %}Templates setup{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="{{ path('_cms_blocks_list') }}">{% trans %}Blocks setup{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="{{ path('_cms_roles') }}">{% trans %}Roles{% endtrans %}</a>
+								</li>
+							</ul>
+
+						</li>
+						<li class="gallery">
+							<a {% if ('_media_' in app.request.get('_route')) %}class="current"{% endif %} href="{{ path('_media_list') }}">
+									<span aria-hidden="true" class="icon-picture"></span>
+									{% trans %}Medialibrary{% endtrans %}
+							</a>
+						</li>
+						<li class="dropdown ui">
+							<a {% if (app.request.get('_route') != '_admin_index') and ('_admin_' in app.request.get('_route')) %}class="current"{% endif %} data-toggle="dropdown" href="#">
+								<span aria-hidden="true" class="icon-cogs"></span>
+								{% trans %}Admin{% endtrans %}<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+										<a href="{{ path('_admin_users') }}">{% trans %}Users{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="{{ path('_admin_languages') }}">{% trans %}Languages{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="{{ path('_admin_roles') }}">{% trans %}Roles{% endtrans %}</a>
+								</li>
+								<li>
+										<a href="components.html">{% trans %}Analytics{% endtrans %}</a>
+								</li>
+							</ul>
+						</li>
+						
+				</ul>
+		</div>
+</div>

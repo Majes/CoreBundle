@@ -1,0 +1,14 @@
+{% extends 'MajesCoreBundle::error.html.twig' %}
+
+{% block title %}MajesCore - Error 500{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+
+	
+	<h2>{% trans %}Server has return an error{% endtrans %} "{{ code }}".</h2>
+	<blockquote>{{message}}</blockquote>
+					
+
+{% endblock %}

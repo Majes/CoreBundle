@@ -1,0 +1,69 @@
+.form_errors .alert{
+	padding: 5px 15px;
+	margin-bottom: 0px;
+}
+
+.padded.form_errors{
+	padding: 2px 0 5px;
+}
+
+.gallery-item .caption{
+	clear: both; 
+	position: absolute;
+	width: 100%;
+	display: block;
+	top: 50px;
+	color: #fff;
+}
+
+.isotope .isotope-item{overflow: hidden;}
+
+.isotope .isotope-item i{width: 60px; height: 60px; font-size: 60px; margin: 30px auto; display: block; }
+
+#cmsEditing .widget-container{border: 1px dashed #e8e8e8; margin: 0 0 20px; position: relative; padding: 0 0 20px;}
+#cmsEditing .widget-container:hover{border: 1px solid #bbbbbb;}
+
+#cmsEditing .widget-container.draft{border: 2px dashed #f0ad4e; }
+#cmsEditing .widget-container.draft:hover{border: 2px solid #f0ad4e;}
+
+#cmsActions .widget-container .heading{padding: 9px 15px 15px;}
+
+#cmsActions .widget-container .heading .btn-group{margin: 0 10px 10px 0;}
+
+#cmsEditing .widget-container .updated{position: absolute; bottom: 0; right: 10px;}
+
+#cmsEditingDD .panel-group .panel{overflow: visible}
+
+#cmsTemplateBlocks .icon-desktop,
+#cmsTemplateBlocks .icon-mobile-phone,
+#cmsTemplateBlocks .icon-tablet,
+#cmsTemplateBlocks .icon-repeat{font-size: 22px; width: 22px; height: 22px; color: #c09853;}
+
+#cmsTemplateBlocks .icon-desktop.on,
+#cmsTemplateBlocks .icon-mobile-phone.on,
+#cmsTemplateBlocks .icon-tablet.on,
+#cmsTemplateBlocks .icon-repeat.on,
+#cmsTemplateBlocks .icon-desktop:hover,
+#cmsTemplateBlocks .icon-mobile-phone:hover,
+#cmsTemplateBlocks .icon-tablet:hover,
+#cmsTemplateBlocks .icon-repeat:hover{color: #000;}
+
+#flashMessage{position: fixed; width: 100%; top: -60px; z-index: 9999;  -webkit-transition: all 0.5s;  -moz-transition: all 0.5s;  -ms-transition: all 0.5s;  -o-transition: all 0.5s;  transition: all 0.5s;}
+#flashMessage.show{top: 0px; -webkit-transition: all 0.5s;  -moz-transition: all 0.5s;  -ms-transition: all 0.5s;  -o-transition: all 0.5s;  transition: all 0.5s;}
+#loader{z-index: 9999; display: block; position: fixed; width: 24px; height: 24px; top: 50%; left: 50%; margin: -12px 0 0 -12px; background-image: url('../images/loader.small.gif')}
+
+#cmsTree{z-index: 100;}
+#cmsTree #menu{float: left; border: 0px; width: 80%;}
+#cmsTree .panel-group .panel{overflow: visible!important; font-size: 12px;}
+#cmsTree .ui-menu-icons .ui-menu-item a{padding-left: 10px;}
+#cmsTree .ui-menu .ui-menu{width: auto;}
+#cmsTree .ui-menu .ui-menu-item a{white-space: nowrap;}
+
+
+/*BOOTSTRAP*/
+.modal-dialog{
+	width: 800px!important;
+}
+
+
+blockquote{border-color: #ddd;}

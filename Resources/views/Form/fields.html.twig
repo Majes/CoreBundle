@@ -1,0 +1,148 @@
+{% use 'form_div_layout.html.twig' with form_label as base_form_label %}
+
+{% block form_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        <div class="col-lg-9">
+        	{{ form_widget(form) }}
+			{{ form_errors(form) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+        <div class="widget-content padded form_errors">
+        <div class="alert alert-danger">
+          	<!--<button class="close" data-dismiss="alert" type="button">×</button>-->
+          	{% for error in errors %}
+        	    {{
+        	        error.messagePluralization is null
+        	            ? error.messageTemplate|trans(error.messageParameters, 'validators')
+        	            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+        	    }}
+        	{% endfor %}
+        </div>
+        </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+
+{% block form_label %}
+{% spaceless %}
+    {% if not compound %}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {% endif %}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('control-label col-lg-3'))|trim}) %}
+    {% if required %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {% endif %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }} </label>
+{% endspaceless %}
+{% endblock form_label %}
+
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% if type == 'file' %}{{ value }}{% endif %}
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block file_widget %}
+    {% spaceless %}
+
+    {{ block('form_widget') }}
+    {% if (image_url is not null) %}
+        {% set mime_type = getMimeType(image_url) %}
+        {% if 'image' in mime_type %}<img src="{{ asset(image_url) }}" style="max-width: 80%; margin: 10px 0 0"/>
+        {% else %}<a href="{{ asset(image_url) }}" target="_blank" class="icon-cloud-download"> {{ 'Download file'|trans({}, translation_domain) }}</a>
+        {% endif %}
+    {% endif %}
+
+    {% endspaceless %}
+{% endblock %}
+
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+    {% if required and empty_value is none and not empty_value_in_choices %}
+        {% set required = false %}
+    {% endif %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="{% if select2 is not null %}select2able{% else %}form-control{% endif %}">
+        {% if empty_value is not none %}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('choice_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        {{ form_widget(child) }}
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+
+
+{% block collection_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
+{% endspaceless %}
+{% endblock collection_widget %}
+
+{% block text_widget %}
+	{% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+{% endblock text_widget %}
+
+
+{% block textarea_widget %}
+{% spaceless %}
+    <textarea {{ block('widget_attributes') }} class="form-control">{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+
+{% block checkbox_widget %}
+	<label class="checkbox">
+    	<input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
+        {{ label|trans }}
+	</label>
+{% endblock checkbox_widget %}
+
+{% block password_widget %}
+    <input type="password" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control" autocomplete="off"/>
+{% endblock password_widget %}
+
+{% block email_widget %}
+    <input type="email" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control email"/>
+{% endblock email_widget %}

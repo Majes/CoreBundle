@@ -1,0 +1,102 @@
+<form action="{{ path('_admin_user_activity', {'id': id}) }}" method="get" id="formFilter">
+    <input type="hidden" name="page" value="{{ page }}"/>
+    <input type="hidden" name="new" value="0"/>
+<div class="col-sm-3">
+	<div class="widget-container fluid-height">
+		<div class="widget-content">
+			<div class="panel-group" id="accordion">
+				<div class="panel">
+				  	<div class="panel-heading">
+				    	<div class="panel-title">
+				      		<a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseOne"><div class="caret pull-right"></div>Date Range</a>
+				    	</div>
+				  	</div>
+				  	<div class="panel-collapse collapse in" id="collapseOne">
+				    	<div class="panel-body">
+				      		<label class="radio"><input name="type" type="radio" value="hour">Past Hour</label>
+                            <label class="radio"><input name="type" type="radio" value="day">Past Day</label>
+				      		<label class="radio"><input checked="" name="type" type="radio" value="week">Past Week</label>
+				      		<label class="radio"><input name="type" type="radio" value="month">Past Month</label>
+				      		<label class="radio"><input name="type" type="radio" value="year">Past Year</label>
+				    	</div>
+				  	</div>
+                    <div class="panel">
+                            <div class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <button class="btn btn-default pull-right" id="filterButton"><i class="icon-search"></i>Filter</button>
+                                </div>
+                            </div>
+                        </div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+<div class="col-sm-9">
+
+  <div class="widget-container fluid-height">
+        <div class="heading">
+            <i class="icon-stackexchange"></i> User activity
+        </div>
+        <div class="widget-content padded">
+        <!-- Table -->
+        <table class="table table-filters">
+            <thead>
+                <th width="60"></th>
+                <th>Module</th>
+                <th>Action</th>
+                <th class="hidden-sm hidden-xs">Date</th>
+                <th class="hidden-xs">Time</th>
+            </thead>
+            <tbody id="activityResultsAjax">
+                {{ include(
+                            'MajesCoreBundle:Index:ajax/user-activity.html.twig'
+                        ) }}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% if loadmore == true %}<a href="{{ path('_admin_user_activity', {'id': id, 'page': page+1}) }}" class="btn btn-lg btn-default btn-block" id="loadMoreButton" style="margin-top: 20px;">
+{% trans %}Load more{% endtrans %}
+</a>{% endif %}
+
+<script>
+    $(document).ready(function(){
+        var page = {{page}};
+        if($("#loadMoreButton")){
+            $("#loadMoreButton").click(function(e){
+                e.preventDefault();
+                var self = $(this);
+                page++;
+                $('input[name=page]').val(page);
+                $('input[name=new]').val('0');
+                $("form#formFilter").ajaxSubmit({
+                    success: function(response){
+                        var $newItems = $(response);
+                        //$("#mediaResultsAjax").prepend(response);
+                        $('#activityResultsAjax').append( $newItems );
+                    }
+                });
+            });
+        }
+
+        $("#filterButton").click(function(e){
+            e.preventDefault();
+            var self = $(this);
+            page=1;
+            $('input[name=page]').val('1');
+            $('input[name=new]').val('1');
+            $("form#formFilter").ajaxSubmit({
+                success: function(response){
+                    var $newItems = $(response);
+                    //$("#mediaResultsAjax").prepend(response);
+                    $('#activityResultsAjax').html( $newItems );
+                }
+            });
+        });
+
+    });
+</script>
