@@ -25,13 +25,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             // if there is no record matching the criteria.
             $user = $q->getSingleResult();
 
-            $datetime = new \DateTime();
-            $user->setLastconnectedDate($datetime);
-
-            $em = $this->getEntityManager();
-            $em->persist($user);
-            $em->flush();
-
         } catch (NoResultException $e) {
             $message = sprintf(
                 'Unable to find an active admin MajesCoreBundle:User\User object identified by "%s".',
