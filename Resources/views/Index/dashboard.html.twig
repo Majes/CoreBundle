@@ -5,8 +5,8 @@
 {% block content_header '' %}
 
 {% block content %}
-   		
     <div class="container-fluid main-content">
+      {% if google._analytics is not null %}
       <!-- Statistics -->
       <div class="row">
         <div class="col-lg-12">
@@ -14,7 +14,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-long-arrow-up"></div>
-                {{analytics.percent_new_visits}}<small>%</small>
+                {{google._analytics.percent_new_visits}}<small>%</small>
               </div>
               <div class="text">
                 Percentage new visits
@@ -23,7 +23,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-stackexchange"></div>
-                {{analytics.new_visits}}
+                {{google._analytics.new_visits}}
               </div>
               <div class="text">
                 New visitors this current month
@@ -32,7 +32,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-time"></div>
-                {{analytics.average_time}}<small>sec</small>
+                {{google._analytics.average_time}}<small>sec</small>
               </div>
               <div class="text">
                 Average time on site
@@ -41,7 +41,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-file-text-alt"></div>
-                {{analytics.pageviews_visit}}
+                {{google._analytics.pageviews_visit}}
               </div>
               <div class="text">
                 Page views per visit
@@ -51,6 +51,20 @@
         </div>
       </div>
       <!-- End Statistics -->
+      {% elseif google._noparams == false %}
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="widget-container stats-container">
+            <div class="item social-widget pinterest" style="">
+              <i class="icon-bar-chart"></i>
+              <div class="social-data">
+                <a href="{{google._authUrl}}">Connect me to my analytics</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
       <div class="row">
         <!-- Weather -->
         <div class="col-md-8">
@@ -409,5 +423,5 @@
         <!-- End Pie Graph 1 -->
       </div>
     </div>
-	
+  
 {% endblock %}

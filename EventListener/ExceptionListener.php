@@ -33,7 +33,11 @@ class ExceptionListener
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
         } else {
-            $response->setStatusCode($exception->getCode() != 0 ? $exception->getCode() : 500);
+            $statusCode = $response->getStatusCode();
+            if($statusCode == 200) header("Location: /install");
+            
+            if(empty($statusCode))
+                $response->setStatusCode($exception->getCode() != 0 ? $exception->getCode() : 500);
         }
 
         if($this->templating->exists('MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig'))

@@ -1,0 +1,40 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Authentification{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+
+	<!-- Login Screen -->
+    <div class="login-container">
+      	<img src="{{ asset('bundles/majescore/images/logo-login@2x.png') }}" />
+      	<form action="{{ path('_admin_login_check') }}" method="post" name="login_form">
+      	  	
+			<ol style="text-align: left; margin: 0 0 40px">
+                <li>
+                  {% if permissions.dir_cache >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/cache'
+                </li>
+                <li>
+                  {% if permissions.dir_var >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/var'
+                </li>
+                <li>
+                  {% if permissions.dir_bundles >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'web/bundles'
+                </li>
+                <li>
+                  {% if permissions.dir_media >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'web/media'
+                </li>
+               
+                <li>
+                  <i class="icon-remove" style="color: red"></i> DataBase / Tables exists
+                  {% if db_exists == false %}<br/><small>Please run 'php app/console doctrine:database:create' before install</small>{% endif %}
+                </li>
+              </ol>
+
+      	  	{% if db_exists and permission_status %}<a class="btn btn-default-outline btn-block" href="{{ path('_majes_install_db') }}">Install tables now</a>{% endif %}
+      	</form>
+    </div>
+    <!-- End Login Screen -->
+
+{% endblock %}
+	
