@@ -37,7 +37,7 @@ class IndexController extends Controller implements SystemController
         $google = new GoogleAnalytics($google_params);
         
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
-            'analytics' => $google->_analytics));
+            'google' => $google));
     }
 
     /**

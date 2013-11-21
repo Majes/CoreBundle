@@ -5,7 +5,9 @@ namespace Majes\CoreBundle\Utils;
 class GoogleAnalytics{
 
 	public $_analytics;
+	public $_authUrl;
 	public $_params;
+	public $_noparams = false;
 	
 	public function __construct($params){
 
@@ -35,9 +37,11 @@ class GoogleAnalytics{
 		  $client->setAccessToken($_SESSION['token']);
 		}
 		
-		if (!$client->getAccessToken()) {
-		  $authUrl = $client->createAuthUrl();
-		  print "<a class='login' href='$authUrl'>Connect Me!</a>";
+		if(empty($params['oauth2_client_id'])){
+			$this->_noparams = true;
+		}
+		elseif (!$client->getAccessToken()) {
+		  $this->_authUrl = $client->createAuthUrl();
 		
 		} else {
 		  $analytics = new \Google_AnalyticsService($client);
