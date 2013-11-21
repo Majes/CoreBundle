@@ -93,8 +93,8 @@
             <span class="icon-bar"></span>
         </button>
         <a class="logo" href="http://www.majes.fr" target="_blank">majes</a>
-        <form class="navbar-form form-inline col-lg-2 hidden-xs">
-              <input class="form-control" placeholder="Search" type="text">
+        <form class="navbar-form form-inline col-lg-2 hidden-xs" action="{{ path('_search_search') }}" method="post">
+              <input class="form-control" placeholder="Search" type="text" name="query">
         </form>
     </div>
 
