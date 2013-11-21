@@ -27,6 +27,9 @@ class CoreController extends Controller
         $dbExists = mysql_select_db($this->container->getParameter('database_name'), 
             $conn); 
         
+        if(!is_dir(__DIR__ . '/../../../../../../web/media'))
+            mkdir(__DIR__ . '/../../../../../../web/media', 0775);
+
         $permissions['dir_cache'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../app/cache')), -4);
         $permissions['dir_var'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../app/var')), -4);
         $permissions['dir_bundles'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../web/bundles')), -4);

@@ -34,6 +34,8 @@ class ExceptionListener
             $response->headers->replace($exception->getHeaders());
         } else {
             $statusCode = $response->getStatusCode();
+            if($statusCode == 200) header("Location: /install");
+            
             if(empty($statusCode))
                 $response->setStatusCode($exception->getCode() != 0 ? $exception->getCode() : 500);
         }
