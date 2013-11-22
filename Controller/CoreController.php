@@ -63,7 +63,7 @@ class CoreController extends Controller
 
         $query="";
  
-        $sql=file(__DIR__ . '/../../../../../../app/var/sql/db-mysql.sql'); // on charge le fichier SQL
+        $sql=file(__DIR__ . '/../../../../../../app/var/db/db-mysql.sql'); // on charge le fichier SQL
         foreach($sql as $l){ // on le lit
             if (substr(trim($l),0,2)!="--"){ // suppression des commentaires
                 $query .= $l;

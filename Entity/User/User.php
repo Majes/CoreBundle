@@ -84,6 +84,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $wysiwyg;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $tags;
+
+    /**
      * @ORM\Column(name="lastconnected_date", type="datetime")
      */
     private $lastconnectedDate;
@@ -116,6 +121,8 @@ class User implements AdvancedUserInterface, \Serializable
 
         $datetime = new \DateTime();
         $this->lastconnectedDate = $datetime;
+
+        $this->tags = 'User';
 
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->logs = new \Doctrine\Common\Collections\ArrayCollection();
@@ -217,6 +224,15 @@ class User implements AdvancedUserInterface, \Serializable
     public function setWysiwyg($wysiwyg)
     {
         $this->wysiwyg = $wysiwyg;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
         return $this;
     }
 
@@ -384,6 +400,14 @@ class User implements AdvancedUserInterface, \Serializable
     public function getWysiwyg()
     {
         return $this->wysiwyg;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
 

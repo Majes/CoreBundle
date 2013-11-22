@@ -41,6 +41,11 @@ class Role implements RoleInterface
     private $internal;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $tags;
+
+    /**
      * @ORM\ManyToMany(targetEntity="User")
      * @ORM\JoinTable(name="user_role",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
@@ -55,6 +60,8 @@ class Role implements RoleInterface
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+
+        $this->tags = 'Role';
     }
 
     /**
@@ -100,6 +107,14 @@ class Role implements RoleInterface
     public function getInternal()
     {
         return $this->internal;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
@@ -152,6 +167,15 @@ class Role implements RoleInterface
     public function setInternal($internal)
     {
         $this->internal = $internal;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
         return $this;
     }
 
