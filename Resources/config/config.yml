@@ -7,23 +7,23 @@ fos_elastica:
             types:
                 user:
                     mappings:
-                	    username: { analyzer: snowball }
-                	    email: { analyzer: snowball }
-                	    firstname: { analyzer: snowball }
-                	    lastname: { analyzer: snowball }
-                	    tags: { analyzer: keyword }
+                        username: { analyzer: snowball }
+                        email: { analyzer: snowball }
+                        firstname: { analyzer: snowball }
+                        lastname: { analyzer: snowball }
+                        tags: { analyzer: keyword }
                     persistence:
-                	    driver: orm
-                	    model: Majes\CoreBundle\Entity\User\User
-                	    provider: ~
-                	    finder: ~
+                        driver: orm
+                        model: Majes\CoreBundle\Entity\User\User
+                        provider: ~
+                        finder: ~
                 role:
                     mappings:
-                	    name: { analyzer: snowball }
-                	    role: { analyzer: snowball }
-                	    tags: { analyzer: keyword }
+                        name: { analyzer: snowball }
+                        role: { analyzer: snowball }
+                        tags: { analyzer: keyword }
                     persistence:
-                	    driver: orm
-                	    model: Majes\CoreBundle\Entity\User\Role
-                	    provider: ~
-                	    finder: ~
+                        driver: orm
+                        model: Majes\CoreBundle\Entity\User\Role
+                        provider: ~
+                        finder: ~
