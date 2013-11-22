@@ -7,24 +7,16 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span aria-hidden="true" class="se7en-flag"></span>
                     <div class="sr-only">Notifications</div>
-                    <p class="counter">4</p>
+                    <p class="counter">2</p>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="#">
-                        <div class="notifications label label-info">New</div>
-                        New user added: Jane Smith
+                        <div class="notifications label label-danger">Error</div>
+                        Elasticsearch is down
                     </a></li>
                     <li><a href="#">
-                        <div class="notifications label label-info">New</div>
-                        Sales targets available
-                    </a></li>
-                    <li><a href="#">
-                        <div class="notifications label label-info">New</div>
-                        New performance metric added
-                    </a></li>
-                    <li><a href="#">
-                        <div class="notifications label label-info">New</div>
-                        New growth data available
+                        <div class="notifications label label-warning">Update</div>
+                        CmsBundle has been updated
                     </a></li>
                 </ul>
             </li>
@@ -32,18 +24,14 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span aria-hidden="true" class="se7en-envelope"></span>
                     <div class="sr-only">Messages</div>
-                    <p class="counter">3</p>
+                    <p class="counter">1</p>
                 </a>
                 <ul class="dropdown-menu messages">
                     <li><a href="#">
-                        <img width="34" height="34" src="{{ asset('bundles/majescore/images/avatar-male2.png') }}" />Could we meet today? I wanted... 
+                        {% if app.user.getMedia() is not null %}<img src="{{ path('_media_load', {'id':app.user.getMedia().getId(), 'width': '34', 'height': '34', 'crop': '1'}) }}" />{% endif %}
+                    {{ app.user.username }} published a page 
                     </a></li>
-                    <li><a href="#">
-                        <img width="34" height="34" src="{{ asset('bundles/majescore/images/avatar-female.png') }}" />Important data needs your analysis...</a>
-                    </li>
-                    <li><a href="#">
-                        <img width="34" height="34" src="{{ asset('bundles/majescore/images/avatar-male2.png') }}" />Buy Se7en today, it's a great theme...</a>
-                    </li>
+                    
                 </ul>
             </li>
             <li class="dropdown settings hidden-xs">
