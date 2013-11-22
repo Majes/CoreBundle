@@ -6,23 +6,23 @@ fos_elastica:
         majesteel_back:
             types:
                 user:
-                	mappings:
+                    mappings:
                 	    username: { analyzer: snowball }
                 	    email: { analyzer: snowball }
                 	    firstname: { analyzer: snowball }
                 	    lastname: { analyzer: snowball }
                 	    tags: { analyzer: keyword }
-                	persistence:
+                    persistence:
                 	    driver: orm
                 	    model: Majes\CoreBundle\Entity\User\User
                 	    provider: ~
                 	    finder: ~
-            	role:
-                	mappings:
+                role:
+                    mappings:
                 	    name: { analyzer: snowball }
                 	    role: { analyzer: snowball }
                 	    tags: { analyzer: keyword }
-                	persistence:
+                    persistence:
                 	    driver: orm
                 	    model: Majes\CoreBundle\Entity\User\Role
                 	    provider: ~
