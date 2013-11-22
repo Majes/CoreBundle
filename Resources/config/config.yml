@@ -4,6 +4,8 @@ imports:
 fos_elastica:
     indexes:
         majesteel_back:
+            client: default
+            finder: ~
             types:
                 user:
                     mappings:

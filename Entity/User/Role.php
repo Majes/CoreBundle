@@ -179,5 +179,9 @@ class Role implements RoleInterface
         return $this;
     }
 
+    public function entityRender(){
 
+        return array('title' => $this->role, 'description' => $this->name, 'url' => null);
+
+    }
 }

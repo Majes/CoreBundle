@@ -514,4 +514,10 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->logs->removeElement($logs);
     }
+
+    public function entityRender(){
+
+        return array('title' => $this->firstname.' '.$this->lastname, 'description' => 'toto', 'url' => null);
+
+    }
 }
