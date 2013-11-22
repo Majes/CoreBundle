@@ -1,2 +1,19 @@
 imports:
     - { resource: @MajesCoreBundle/Resources/config/services.yml }
+
+fos_elastica:
+    indexes:
+        majesteel_back:
+            types:
+                users:
+                    mappings:
+                        username: { analyzer: snowball }
+                        email: { analyzer: snowball }
+                        firstname: { analyzer: snowball }
+                        lastname: { analyzer: snowball }
+                    persistence:
+                        driver: orm
+                        model: Majes\CoreBdundle\Entity\User\User
+                        provider:
+                        listener:
+                        finder:
