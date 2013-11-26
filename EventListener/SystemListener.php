@@ -93,13 +93,13 @@ class SystemListener
             $matches    = array();
             $controller = $request->attributes->get('_controller');
             preg_match("/([a-zA-Z]*)\\\([a-zA-Z]*)Bundle\\\Controller\\\([a-zA-Z]*)Controller::([a-zA-Z]*)Action/", $controller, $matches);
+
             if(count($matches) > 0){
                 $request->attributes->set('namespace',  $matches[1]);
                 $request->attributes->set('bundle',     $matches[2]);
                 $request->attributes->set('controller', $matches[3]);
                 $request->attributes->set('action',     $matches[4]);
             }
-
             
             $env = $this->container->get( 'kernel' )->getEnvironment();
             if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') 
@@ -121,6 +121,27 @@ class SystemListener
             $session->set('_locale', $locale);
             $session->set('wysiwyg', $wysiwyg);
             
+            /*NOTIFICATION*/
+            // Google analytics
+            // Google api
+            $ga = $this->container->get('majes.ga');
+            $ga_status = $ga->isUp();
+
+            $notification = $this->container->get('majes.notification');
+
+            $notification->set(array('_source' => 'core'));
+            $notification->reinit();
+            
+            $google = $this->container->getParameter('google');
+            if($ga_status == -1)
+                $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
+            elseif($ga_status == -2)
+                $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
+            
+            if(!isset($google['analytics']) || empty($google['analytics'])) 
+                $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
+
+       
         }
        
 

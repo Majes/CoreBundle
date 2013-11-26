@@ -28,16 +28,10 @@ class IndexController extends Controller implements SystemController
      */
     public function dashboardAction()
     {
-        /*
-         * The action's view can be rendered using render() method
-         * or @Template annotation as demonstrated in DemoController.
-         *
-         */
-        $google_params = $this->container->getParameter('google');
-        $google = new GoogleAnalytics($google_params);
+        $ga = $this->container->get('majes.ga');
         
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
-            'google' => $google));
+            'google' => $ga));
     }
 
     /**

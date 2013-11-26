@@ -36,7 +36,12 @@ services:
         class: Majes\CoreBundle\Services\Notification
         arguments:
             session: "@session"
-            source: "cms"
+            source: "core"
+
+    majes.ga:
+        class: Majes\CoreBundle\Services\GoogleAnalytics
+        arguments:
+            session: "@service_container"
 
     authentication_handler:
         class: Majes\CoreBundle\Handler\AuthenticationHandler
