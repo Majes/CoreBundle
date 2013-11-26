@@ -3,11 +3,14 @@ namespace Majes\CoreBundle\Twig;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Majes\CoreBundle\Conversion\DataTableConverter;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CoreExtension extends \Twig_Extension
 {
-   
+    private $_container;
+    public function __construct(ContainerInterface $container = null){
+        $this->_container = $container;
+    }
 
     public function getFunctions()
     {
@@ -15,13 +18,14 @@ class CoreExtension extends \Twig_Extension
             new \Twig_SimpleFunction('dataTable', array($this, 'dataTable')),
             new \Twig_SimpleFunction('get', array($this, 'get')),
             new \Twig_SimpleFunction('getMimeType', array($this, 'getMimeType')),
+            new \Twig_SimpleFunction('majesCountNotification', array($this, 'majesCountNotification')),
         );
     }
 
     public function dataTable($object, $objects){
-    	
+        
 
-    	$reader = new AnnotationReader();
+        $reader = new AnnotationReader();
         $converter = new DataTableConverter($reader);
         
         $dataTableConfig = $converter->convert($object);
@@ -31,8 +35,8 @@ class CoreExtension extends \Twig_Extension
     }
 
     public function get($object, $property, $format){
-    	
-    	$function = 'get'.ucfirst($property);
+        
+        $function = 'get'.ucfirst($property);
         $value = $object->$function();
 
         if($format == 'datetime'){
@@ -50,6 +54,12 @@ class CoreExtension extends \Twig_Extension
 
         
 
+    }
+
+    public function majesCountNotification($type){
+
+        $notification = $this->_container->get('majes.notification');
+        return $notification->count($type);
     }
 
     public function getName()

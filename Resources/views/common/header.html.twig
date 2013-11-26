@@ -4,33 +4,44 @@
         <div class="pull-right">
             <ul class="nav navbar-nav pull-right">
             <li class="dropdown notifications hidden-xs">
+                {% set flashNotices = app.session.get('notices') %}
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span aria-hidden="true" class="se7en-flag"></span>
                     <div class="sr-only">Notifications</div>
-                    <p class="counter">2</p>
+                    <p class="counter">{{ majesCountNotification('notices') }}</p>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">
-                        <div class="notifications label label-danger">Error</div>
-                        Elasticsearch is down
-                    </a></li>
-                    <li><a href="#">
-                        <div class="notifications label label-warning">Update</div>
-                        CmsBundle has been updated
-                    </a></li>
+
+                    {% for source, notices in flashNotices %}
+                        {% for notice in notices %}
+                        <li><a href="#">
+                        <div class="notifications label label-{{ notice.status }}">Error</div>
+                        {{ notice.title }}
+                        </a></li>
+                        {% endfor %}
+ 
+                    {% endfor %}
+                    
                 </ul>
             </li>
             <li class="dropdown messages hidden-xs">
+                {% set flashMessages = app.session.get('messages') %}
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span aria-hidden="true" class="se7en-envelope"></span>
                     <div class="sr-only">Messages</div>
-                    <p class="counter">1</p>
+                    <p class="counter">{{ majesCountNotification('messages') }}</p>
                 </a>
                 <ul class="dropdown-menu messages">
-                    <li><a href="#">
-                        {% if app.user.getMedia() is not null %}<img src="{{ path('_media_load', {'id':app.user.getMedia().getId(), 'width': '34', 'height': '34', 'crop': '1'}) }}" />{% endif %}
-                    {{ app.user.username }} published a page 
-                    </a></li>
+
+                    {% for source, messages in flashMessages %}
+                        {% for message in messages %}
+                        <li><a href="#">
+                        <img src="{{ path('_media_load', {'id':message.media_id, 'width': '34', 'height': '34', 'crop': '1'}) }}" />
+                        {{ message.title }}
+                        </a></li>
+                        {% endfor %}
+ 
+                    {% endfor %}
                     
                 </ul>
             </li>

@@ -14,7 +14,7 @@ services:
     #translator:
     #    class: Majes\CoreBundle\Services\Translation\Translator
     #    arguments: [%locale%]
-    
+#
     translation.loader.db:
         class: Majes\CoreBundle\Services\DBLoader
         arguments: [@doctrine.orm.entity_manager]
@@ -28,11 +28,15 @@ services:
 
     majescore.twig.core_extension:
         class: Majes\CoreBundle\Twig\CoreExtension
+        arguments:  ["@service_container"]
         tags:
             - { name: twig.extension }
 
     majes.notification:
-        class: Majes\CoreBundle\DependencyInjection\Notification
+        class: Majes\CoreBundle\Services\Notification
+        arguments:
+            session: "@session"
+            source: "cms"
 
     authentication_handler:
         class: Majes\CoreBundle\Handler\AuthenticationHandler
