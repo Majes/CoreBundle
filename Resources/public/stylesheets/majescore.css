@@ -60,6 +60,34 @@
 #cmsTree .ui-menu .ui-menu-item a{white-space: nowrap;}
 
 
+.gallery-item .actions a {
+      display: inline-block;
+      margin: 0 4px;
+      font-size: 18px;
+      color: white;
+      width: 36px;
+      height: 36px;
+      text-align: center;
+      line-height: 35px;
+      border: 1px solid white;
+      border-radius: 50%;
+      vertical-align: top;
+      -webkit-transition: all 0.25s;
+      -moz-transition: all 0.25s;
+      transition: all 0.25s; }
+      .gallery-item .actions a:hover {
+        background: white;
+        color: #333333; }
+      .gallery-item .actions a.icon-zoom-in {
+        font-size: 24px;
+        width: 50px;
+        height: 50px;
+        line-height: 48px;
+        margin-top: -7px; }
+
+body.ajax {
+  padding: 20px 0 0 0;
+}
 /*BOOTSTRAP*/
 .modal-dialog{
 	width: 800px!important;

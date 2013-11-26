@@ -842,6 +842,48 @@
       skycons.add(canvasId, Skycons[weatherSetting]);
       return skycons.play();
     });
+
+    /*
+    # =============================================================================
+    #   Drag and drop files
+    # =============================================================================
+    */
+
+    $(".single-file-drop").each(function() {
+      var $dropbox;
+      $dropbox = $(this);
+      if (typeof window.FileReader === "undefined") {
+        $("small", this).html("File API & FileReader API not supported").addClass("text-danger");
+        return;
+      }
+      this.ondragover = function() {
+        $dropbox.addClass("hover");
+        return false;
+      };
+      this.ondragend = function() {
+        $dropbox.removeClass("hover");
+        return false;
+      };
+      return this.ondrop = function(e) {
+        var file, reader;
+        e.preventDefault();
+        $dropbox.removeClass("hover").html("");
+        file = e.dataTransfer.files[0];
+        reader = new FileReader();
+        reader.onload = function(event) {
+          return $dropbox.append($("<img>").attr("src", event.target.result));
+        };
+        reader.readAsDataURL(file);
+        return false;
+      };
+    });
+    /*
+    # =============================================================================
+    #   File upload buttons
+    # =============================================================================
+    */
+
+    $('.fileupload').fileupload();
   });
 
 }).call(this);
