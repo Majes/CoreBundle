@@ -14,7 +14,7 @@
 
                     {% for source, notices in flashNotices %}
                         {% for notice in notices %}
-                        <li><a href="{{ notice.url }}">
+                        <li><a href="{{ notice.url }}"{% if notice.target is defined %}target="{{ notice.target }}"{% endif %}>
                         <div class="notifications label label-{{ notice.status }}">{% if notice.status == 'danger' %}Error{% elseif notice.status == 'warning' %}Warning{% elseif notice.status == 'info' %}Info{% else %}Success{% endif %}</div>
                         {{ notice.title }}
                         </a></li>
