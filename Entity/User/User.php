@@ -517,7 +517,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function entityRender(){
 
-        return array('title' => $this->firstname.' '.$this->lastname, 'description' => 'toto', 'url' => null);
+        return array('title' => $this->firstname.' '.$this->lastname, 'description' => 'toto', 'url' => array('route' => '_admin_user_edit', 'params' => array('id' => $this->getId())));
 
     }
 }
