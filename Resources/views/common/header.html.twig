@@ -14,8 +14,8 @@
 
                     {% for source, notices in flashNotices %}
                         {% for notice in notices %}
-                        <li><a href="#">
-                        <div class="notifications label label-{{ notice.status }}">Error</div>
+                        <li><a href="{{ notice.url }}">
+                        <div class="notifications label label-{{ notice.status }}">{% if notice.status == 'danger' %}Error{% elseif notice.status == 'warning' %}Warning{% elseif notice.status == 'info' %}Info{% else %}Success{% endif %}</div>
                         {{ notice.title }}
                         </a></li>
                         {% endfor %}
@@ -35,8 +35,10 @@
 
                     {% for source, messages in flashMessages %}
                         {% for message in messages %}
-                        <li><a href="#">
+                        <li><a href="{{ message.url }}">
+                        {% if message.media_id is defined and message.media_id is not null %}
                         <img src="{{ path('_media_load', {'id':message.media_id, 'width': '34', 'height': '34', 'crop': '1'}) }}" />
+                        {% endif %}
                         {{ message.title }}
                         </a></li>
                         {% endfor %}
