@@ -53,7 +53,20 @@
 {% block form_widget_simple %}
 {% spaceless %}
     {% set type = type|default('text') %}
+    {% if type == 'file' %}
+    <div class="fileupload fileupload-new" data-provides="fileupload"><input type="hidden">
+                <div class="input-group">
+                  <div class="form-control">
+                    <i class="icon-file fileupload-exists"></i><span class="fileupload-preview"></span>
+                  </div>
+                  <div class="input-group-btn">
+                    <a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">Remove</a><span class="btn btn-default btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/></span>
+                  </div>
+                </div>
+              </div>
+    {% else %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endif %}
     {% if type == 'file' %}{{ value }}{% endif %}
 {% endspaceless %}
 {% endblock form_widget_simple %}
