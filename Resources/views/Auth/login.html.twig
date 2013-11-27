@@ -7,7 +7,7 @@
 {% block content %}
 
       <!-- Login Screen -->
-    <div class="login-wrapper">
+    <div class="login-wrapper opacity">
             <img  src="{{ asset('bundles/majescore/images/logo-login@2x.png') }}" />
             <form action="{{ path('_admin_login_check') }}" method="post" name="login_form">
                   <div class="form-group">
@@ -23,8 +23,11 @@
                         </div>
                   </div>
                   <a class="pull-right" href="#">Forgot password?</a>
-                  <div class="form-group">
-                        <label class="checkbox"><input type="checkbox" name="_remember_me"/>Keep me logged in</label>
+                  <div class="text-left">
+                        <label class="checkbox">
+                          <input type="checkbox" name="_remember_me"/>
+                          <span>Keep me logged in</span>
+                        </label>
                   </div>
                   <input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Log in"/>
                   
