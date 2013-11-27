@@ -96,6 +96,8 @@ body.ajax {
         .navbar .container-fluid.top-bar .logo {
           background-image: url("../images/logo.png"); } }
 
+.navbar .container-fluid.top-bar .logo{width: 80px;}
+
 /*BOOTSTRAP*/
 .modal-dialog{
 	width: 800px!important;
