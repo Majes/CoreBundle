@@ -44,9 +44,12 @@ fos_elastica:
                     persistence:
                         driver: orm
                         model: Majes\CmsBundle\Entity\PageLang
-                        provider: ~
+                        provider:
+                            query_builder_method: createIsActiveQueryBuilder
                         finder: ~
                         listener:
                             insert: true
                             update: true
                             delete: true
+                            is_indexable_callback: "isIndexable"
+                            

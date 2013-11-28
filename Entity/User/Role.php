@@ -184,4 +184,6 @@ class Role implements RoleInterface
         return array('title' => $this->role, 'description' => $this->name, 'url' => array('route' => '_admin_role_edit', 'params' => array('id' => $this->getId())));
 
     }
+
+    public function entityRenderFront(){ return $this->entityRender();}
 }

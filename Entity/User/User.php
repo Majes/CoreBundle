@@ -520,4 +520,6 @@ class User implements AdvancedUserInterface, \Serializable
         return array('title' => $this->firstname.' '.$this->lastname, 'description' => 'toto', 'url' => array('route' => '_admin_user_edit', 'params' => array('id' => $this->getId())));
 
     }
+
+    public function entityRenderFront(){ return $this->entityRender();}
 }
