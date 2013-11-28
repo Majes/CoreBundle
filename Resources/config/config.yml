@@ -10,7 +10,7 @@ fos_elastica:
                         email: { analyzer: snowball }
                         firstname: { analyzer: snowball }
                         lastname: { analyzer: snowball }
-                        tags: { analyzer: keyword }
+                        tags: { analyzer: letter }
                     persistence:
                         driver: orm
                         model: Majes\CoreBundle\Entity\User\User
@@ -24,7 +24,7 @@ fos_elastica:
                     mappings:
                         name: { analyzer: snowball }
                         role: { analyzer: snowball }
-                        tags: { analyzer: keyword }
+                        tags: { analyzer: letter }
                     persistence:
                         driver: orm
                         model: Majes\CoreBundle\Entity\User\Role
@@ -40,7 +40,7 @@ fos_elastica:
                         metaDescription: { analyzer: snowball }
                         title: { analyzer: snowball }
                         url: { analyzer: snowball }
-                        tags: { analyzer: keyword }
+                        tags: { analyzer: letter }
                     persistence:
                         driver: orm
                         model: Majes\CmsBundle\Entity\PageLang
@@ -62,7 +62,8 @@ fos_elastica:
                         metaDescription: { analyzer: snowball }
                         title: { analyzer: snowball }
                         url: { analyzer: snowball }
-                        tags: { analyzer: keyword }
+                        locale: { analyzer: keyword }
+                        tags: { analyzer: letter }
                     persistence:
                         driver: orm
                         model: Majes\CmsBundle\Entity\PageLang
