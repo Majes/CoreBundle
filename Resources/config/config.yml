@@ -52,4 +52,25 @@ fos_elastica:
                             update: true
                             delete: true
                             is_indexable_callback: "isIndexable"
-                            
+        majesteel_front:
+            client: default
+            finder: ~
+            types:
+                page:
+                    mappings:
+                        content: { analyzer: snowball }
+                        metaDescription: { analyzer: snowball }
+                        title: { analyzer: snowball }
+                        url: { analyzer: snowball }
+                        tags: { analyzer: keyword }
+                    persistence:
+                        driver: orm
+                        model: Majes\CmsBundle\Entity\PageLang
+                        provider:
+                            query_builder_method: createIsActiveQueryBuilder
+                        finder: ~
+                        listener:
+                            insert: true
+                            update: true
+                            delete: true
+                            is_indexable_callback: "isIndexable"
