@@ -16,6 +16,10 @@ fos_elastica:
                         model: Majes\CoreBundle\Entity\User\User
                         provider: ~
                         finder: ~
+                        listener:
+                            insert: true
+                            update: true
+                            delete: true
                 role:
                     mappings:
                         name: { analyzer: snowball }
@@ -26,3 +30,23 @@ fos_elastica:
                         model: Majes\CoreBundle\Entity\User\Role
                         provider: ~
                         finder: ~
+                        listener:
+                            insert: true
+                            update: true
+                            delete: true
+                page:
+                    mappings:
+                        content: { analyzer: snowball }
+                        metaDescription: { analyzer: snowball }
+                        title: { analyzer: snowball }
+                        url: { analyzer: snowball }
+                        tags: { analyzer: keyword }
+                    persistence:
+                        driver: orm
+                        model: Majes\CmsBundle\Entity\PageLang
+                        provider: ~
+                        finder: ~
+                        listener:
+                            insert: true
+                            update: true
+                            delete: true
