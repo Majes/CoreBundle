@@ -16,7 +16,7 @@
                         {% for notice in notices %}
                         <li><a href="{{ notice.url }}"{% if notice.target is defined %}target="{{ notice.target }}"{% endif %}>
                         <div class="notifications label label-{{ notice.status }}">{% if notice.status == 'danger' %}Error{% elseif notice.status == 'warning' %}Warning{% elseif notice.status == 'info' %}Info{% else %}Success{% endif %}</div>
-                        {{ notice.title }}
+                        {{ notice.title|raw }}
                         </a></li>
                         {% endfor %}
  
@@ -39,7 +39,7 @@
                         {% if message.media_id is defined and message.media_id is not null %}
                         <img src="{{ path('_media_load', {'id':message.media_id, 'width': '34', 'height': '34', 'crop': '1'}) }}" />
                         {% endif %}
-                        {{ message.title }}
+                        {{ message.title|raw }}
                         </a></li>
                         {% endfor %}
  
