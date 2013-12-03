@@ -26,6 +26,11 @@ class LanguageToken {
     private $translations;
 
     /**
+     * Current translation
+     */
+    private $translation = null;
+
+    /**
      * @inheritDoc
      */
     public function __construct(){
@@ -52,8 +57,35 @@ class LanguageToken {
     /**
      * @inheritDoc
      */
+    public function setTranslation($id)
+    {
+        if(is_null($this->translations)){
+            $this->translation = null;
+            return $this;
+        }
+
+        foreach ($this->translations as $translation) {
+            if($translation->getId() == $id){
+                $this->translation = $translation;
+                break;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getTranslations()
     {
         return $this->translations->toArray();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTranslation()
+    {
+        return $this->translation;
     }
 }

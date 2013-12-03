@@ -34,7 +34,7 @@ class CoreExtension extends \Twig_Extension
 
     }
 
-    public function get($object, $property, $format){
+    public function get($object, $property, $format = null){
         
         $function = 'get'.ucfirst($property);
         $value = $object->$function();

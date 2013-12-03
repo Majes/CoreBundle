@@ -35,7 +35,7 @@ _admin_language_messages:
     defaults: { _controller: MajesCoreBundle:Index:languageMessages }
 
 _admin_language_message_edit:
-    pattern:  /language/message/edit/{id}
+    pattern:  /language/message/edit/{lang}/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageMessageEdit, id: null }
 
 _admin_language_message_delete:

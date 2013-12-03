@@ -19,6 +19,8 @@ use Majes\CoreBundle\Form\User\UserType;
 use Majes\CoreBundle\Form\Language\LanguageType;
 use Majes\CoreBundle\Form\User\UserRoleType;
 use Majes\CoreBundle\Form\User\RoleType;
+use Majes\CoreBundle\Form\Language\LanguageTokenType;
+use Majes\CoreBundle\Form\Language\LanguageTranslationType;
 use Majes\CoreBundle\Utils\GoogleAnalytics;
 
 class IndexController extends Controller implements SystemController
@@ -226,11 +228,95 @@ class IndexController extends Controller implements SystemController
             'urls' => array(
                 'add' => '_admin_language_message_edit',
                 'edit' => '_admin_language_message_edit',
-                'delete' => '_admin_language_message_delete'
+                'delete' => '_admin_language_message_delete',
+                'params' => array('lang' => array('key'=>'locale', 'default' => $this->_lang))
                 )
             ));
     }
 
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageMessageEditAction($id, $lang)
+    {   
+
+        $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+
+        //If lang is null, get default language
+        if(is_null($lang)) $lang = $this->_lang;
+        
+        $languagetranslation = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+            ->findOneById($id);
+
+        //Get token
+        $token = $languagetranslation->getToken();
+        $token->setTranslation($id);
+
+
+        //Perform post submit
+        $form = $this->createForm(new LanguageTokenType(), $token);
+        if($request->getMethod() == 'POST'){
+
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $page = $form->getData();
+                if(is_null($page->getId())){
+                    $page->setUser($this->_user);
+                }
+
+                if(!is_null($page_parent)) $page->setParent($page_parent);
+                if(!is_null($menu)) $page->setMenu($menu);
+
+                $em->persist($page);
+                $em->flush();
+
+                $pageLang = $form['lang']->getData();
+                if(is_null($pageLang->getPage())){
+
+                    $pageLang->setLocale($lang);
+                    $pageLang->setPage($page);
+                    $pageLang->setUser($this->_user);
+                    $pageLang->setUrlRoot('');
+
+                    $page->addLang($pageLang);
+                }
+         
+                $em->persist($page);
+                $em->flush();
+
+
+
+                //Set routes to table
+                $em->getRepository('MajesCmsBundle:Page')->generateRoutes($menu->getRef());
+
+                return $this->redirect($this->get('router')->generate('_cms_content', array('id' => $page->getId(), 'menu_id' => $menu_id, 'lang' => $lang, 'page_parent_id' => is_null($page_parent_id) ? "0" : $page_parent_id)));
+
+            }else{
+                foreach ($form->getErrors() as $error) {
+                    echo $message[] = $error->getMessage();
+                }
+            }
+
+            
+        }
+
+        $edit = !is_null($id) ? 1 : 0;
+
+        $pageSubTitle = is_null($token) ? 'Add a new translation' : 'Edit translation ' . (!is_null($token->getToken()) ? $token->getToken() : '--');
+
+        return $this->render('MajesCoreBundle:Index:language-message-edit.html.twig', array(
+            'pageTitle' => 'Language translation',
+            'pageSubTitle' => $pageSubTitle,
+            'form' => $form->createView(),
+            'translation' => $languagetranslation,
+            'edit' => $edit,
+            'lang' => $lang
+            ));
+    }
+
+   
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
      *
