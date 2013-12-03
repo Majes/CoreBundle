@@ -5,8 +5,8 @@
     <div class="form-group">
         {{ form_label(form) }}
         <div class="col-lg-9">
-        	{{ form_widget(form) }}
-			{{ form_errors(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
         </div>
     </div>
 {% endspaceless %}
@@ -17,14 +17,14 @@
         {% if errors|length > 0 %}
         <div class="widget-content padded form_errors">
         <div class="alert alert-danger">
-          	<!--<button class="close" data-dismiss="alert" type="button">×</button>-->
-          	{% for error in errors %}
-        	    {{
-        	        error.messagePluralization is null
-        	            ? error.messageTemplate|trans(error.messageParameters, 'validators')
-        	            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
-        	    }}
-        	{% endfor %}
+            <!--<button class="close" data-dismiss="alert" type="button">×</button>-->
+            {% for error in errors %}
+                {{
+                    error.messagePluralization is null
+                        ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+                }}
+            {% endfor %}
         </div>
         </div>
         {% endif %}
@@ -133,7 +133,7 @@
 {% endblock collection_widget %}
 
 {% block text_widget %}
-	{% set type = type|default('text') %}
+    {% set type = type|default('text') %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
 {% endblock text_widget %}
 
@@ -146,10 +146,10 @@
 
 
 {% block checkbox_widget %}
-	<label class="checkbox">
-    	<input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
-        {{ label|trans }}
-	</label>
+    <label class="checkbox">
+        <input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
+        <span>{{ label|trans }}</span>
+    </label>
 {% endblock checkbox_widget %}
 
 {% block password_widget %}
