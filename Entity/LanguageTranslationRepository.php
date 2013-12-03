@@ -29,4 +29,44 @@ class LanguageTranslationRepository extends EntityRepository {
         return $query->getResult();
     }
    
+
+    public function findForAdmin($catalogues = null, $langs = null, $page = 1, $limit = 20)
+    {
+
+      $offset = ($page - 1) * $limit;
+      $limit++;
+      
+      $q = $this
+            ->createQueryBuilder('t')
+            ->setFirstResult( $offset )
+            ->setMaxResults( $limit );
+
+        if(!is_null($catalogues)){
+
+            $q = $q->where('t.catalogue IN (:catalogues)')
+              ->setParameter('catalogues', $catalogues);
+        }
+
+      $q = $q->getQuery();
+
+      return $translations = $q->getResult();
+
+
+    }
+
+    public function listCatalogues()
+    {
+
+
+      $q = $this
+            ->createQueryBuilder('t')
+            ->groupby('t.catalogue');
+
+        $q = $q->getQuery();
+
+      return $catalogues = $q->getResult();
+
+
+    }
+
 }

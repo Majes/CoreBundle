@@ -1,0 +1,104 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Dashboard{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+<div class="container-fluid main-content">
+
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+	<div class="row">
+
+		<form action="{{ path('_admin_language_messages') }}" method="get" id="formFilter">
+			<input type="hidden" name="page" value="{{ page }}"/>
+            <div class="col-lg-3">
+				<div class="widget-container fluid-height">
+					<div class="widget-content">
+						<div class="panel-group" id="accordion">
+							<div class="panel">
+				  				<div class="panel-heading">
+				    				<div class="panel-title">
+				      					<a class="accordion-toggle{% if langs is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseLang"><div class="caret pull-right"></div>Languages</a>
+				    				</div>
+				  				</div>
+				  				<div class="panel-collapse collapse{% if langs is not null %} in{% endif %}" id="collapseLang">
+				    				<div class="panel-body">
+				      					<label class="checkbox"><input {% if '' in langs %}checked="checked"{% endif %} name="langs[]" type="checkbox" value=""><span>All</span></label>
+				      					{% for lang in all_langs %}
+										<label class="checkbox"><input {% if lang.locale in langs %}checked="checked"{% endif %} name="langs[]" type="checkbox" value="{{lang.locale}}"><span>{{lang.locale}}</span></label>
+				      					{% endfor %}
+         
+				    				</div>
+				  				</div>
+							</div>
+							<div class="panel">
+				  				<div class="panel-heading">
+				    				<div class="panel-title">
+				      					<a class="accordion-toggle{% if catalogues is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>Catalogue</a>
+				    				</div>
+				  				</div>
+				  				<div class="panel-collapse collapse{% if catalogues is not null %} in{% endif %}" id="collapseType">
+				    				<div class="panel-body">
+				      					<label class="checkbox"><input {% if '' in catalogues %}checked="checked"{% endif %} name="catalogues[]" type="checkbox" value=""><span>All</span></label>
+				      					{% for catalogue in all_catalogues %}
+										<label class="checkbox"><input {% if catalogue.catalogue in catalogues %}checked="checked"{% endif %} name="catalogues[]" type="checkbox" value="{{catalogue.catalogue}}"><span>{{catalogue.catalogue}}</span></label>
+				      					{% endfor %}
+         
+				    				</div>
+				  				</div>
+							</div>
+							<div class="panel">
+                			    <div class="panel-collapse collapse in">
+                			        <div class="panel-body">
+                			            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>Filter</button>
+                			        </div>
+                			    </div>
+                			</div>
+				
+						</div>
+					</div>
+				</div>
+			</div>
+        </form>
+		
+		<div class="col-lg-9">
+
+
+            {{ include(
+                'MajesCoreBundle:Index:ajax/list-catalogue.html.twig'
+            ) }}
+
+	    </div>
+	</div>
+
+</div>
+<script>
+    $(document).ready(function(){
+        var page = {{page}};
+        if($("#loadMoreMediaButton")){
+            $("#loadMoreMediaButton").click(function(e){
+                e.preventDefault();
+                var self = $(this);
+                page++;
+                $('input[name=page]').val(page);
+                $("form#formFilter").ajaxSubmit({
+                    success: function(response){
+                        var $newItems = $(response);
+                        //$("#mediaResultsAjax").prepend(response);
+                        $('#catalogueResultsAjax').isotope( 'insert', $newItems );
+                    }
+                });
+            });
+        }
+
+    });
+</script>
+
+{% endblock %}

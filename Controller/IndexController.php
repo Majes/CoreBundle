@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 use Majes\CoreBundle\Conversion\DataTableConverter;
 use Majes\CoreBundle\Entity\Language;
+use Majes\CoreBundle\Entity\LanguageTranslation;
 use Majes\CoreBundle\Entity\User\User;
 use Majes\CoreBundle\Entity\User\Role;
 use Majes\MediaBundle\Entity\Media;
@@ -178,6 +179,56 @@ class IndexController extends Controller implements SystemController
 
 
         return $this->redirect($this->get('router')->generate('_admin_languages', array()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageMessagesAction(){
+        $_results_per_page = 20; 
+        $request = $this->getRequest();
+
+        $catalogues = $request->get('catalogues');
+        $langs = $request->get('langs');
+        $page = $request->get('page');
+        $loadmore = false;
+
+        $em = $this->getDoctrine()->getManager();
+
+        if(!is_null($catalogues) && in_array('', $catalogues)) $catalogues = null;
+        if(!is_null($langs) && in_array('', $langs)) $langs = null;
+        if(is_null($page)) $page = 1;
+
+        $translations = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+                ->findForAdmin($catalogues, $langs, $page, $_results_per_page);
+        
+
+        $loadmore = count($translations) > $_results_per_page ? true : false;
+        count($translations) > $_results_per_page ? array_pop($translations) : $translations;
+
+
+        $all_catalogues = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+            ->listCatalogues();
+
+
+        return $this->render('MajesCoreBundle:Index:language-messages.html.twig', array(
+            'pageTitle' => 'Languages',
+            'object' => new LanguageTranslation(),
+            'pageSubTitle' => 'List of translations',
+            'loadmore' => $loadmore,
+            'page' => $page,
+            'catalogues' => $catalogues,
+            'langs' => $langs,
+            'all_langs' => $this->_langs,
+            'datas' => $translations,
+            'all_catalogues' => $all_catalogues,
+            'urls' => array(
+                'add' => '_admin_language_message_edit',
+                'edit' => '_admin_language_message_edit',
+                'delete' => '_admin_language_message_delete'
+                )
+            ));
     }
 
     /**

@@ -5,7 +5,7 @@ namespace Majes\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\LanguageTokenRepository")
  * @ORM\Table(name="core_language_token")
  */
 class LanguageToken {
@@ -18,6 +18,19 @@ class LanguageToken {
  
     /** @ORM\column(type="string", length=200, unique=true) */
     private $token;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Majes\CoreBundle\Entity\LanguageTranslation", mappedBy="token", cascade={"persist"})
+     * @ORM\JoinColumn(name="id", referencedColumnName="languade_token_id")
+     */
+    private $translations;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct(){
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
  
  
     public function getId() {
@@ -34,5 +47,13 @@ class LanguageToken {
  
     public function setToken($token) {
         $this->token = $token;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTranslations()
+    {
+        return $this->translations->toArray();
     }
 }
