@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Majes\CoreBundle\Conversion\DataTableConverter;
 use Majes\CoreBundle\Entity\Language;
 use Majes\CoreBundle\Entity\LanguageTranslation;
+use Majes\CoreBundle\Entity\LanguageToken;
 use Majes\CoreBundle\Entity\User\User;
 use Majes\CoreBundle\Entity\User\Role;
 use Majes\MediaBundle\Entity\Media;
@@ -109,8 +110,8 @@ class IndexController extends Controller implements SystemController
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $this->_langs,
             'object' => new Language(),
-            'pageTitle' => 'Languages',
-            'pageSubTitle' => 'List off all languages currently available',
+            'pageTitle' => $this->_translator->trans('Languages'),
+            'pageSubTitle' => $this->_translator->trans('List off all languages currently available'),
             'urls' => array(
                 'add' => '_admin_language_edit',
                 'edit' => '_admin_language_edit',
@@ -154,7 +155,7 @@ class IndexController extends Controller implements SystemController
             }
         }
 
-        $pageSubTitle = empty($language) ? 'Add a new language' : 'Edit language ' . $language->getName();
+        $pageSubTitle = empty($language) ? $this->_translator->trans('Add a new language') : $this->_translator->trans('Edit language') . ' ' . $language->getName();
 
         return $this->render('MajesCoreBundle:Index:language-edit.html.twig', array(
             'pageTitle' => 'Languages',
@@ -215,9 +216,9 @@ class IndexController extends Controller implements SystemController
 
 
         return $this->render('MajesCoreBundle:Index:language-messages.html.twig', array(
-            'pageTitle' => 'Languages',
+            'pageTitle' => $this->_translator->trans('Languages'),
             'object' => new LanguageTranslation(),
-            'pageSubTitle' => 'List of translations',
+            'pageSubTitle' => $this->_translator->trans('List of translations'),
             'loadmore' => $loadmore,
             'page' => $page,
             'catalogues' => $catalogues,
@@ -251,47 +252,41 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         //Get token
-        $token = $languagetranslation->getToken();
-        $token->setTranslation($id);
-
+        if(!is_null($languagetranslation)){
+            $token = $languagetranslation->getToken();
+            $token->setTranslation($id);
+        }else{
+            $token = new LanguageToken();
+        }
 
         //Perform post submit
-        $form = $this->createForm(new LanguageTokenType(), $token);
+        $form = $this->createForm(new LanguageTokenType($lang), $token);
         if($request->getMethod() == 'POST'){
 
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $page = $form->getData();
-                if(is_null($page->getId())){
-                    $page->setUser($this->_user);
+                $languageToken = $form->getData();
+                if(is_null($languageToken->getId())){
+                    //Create token
+                    $em->persist($languageToken);
+                    $em->flush();
+
                 }
 
-                if(!is_null($page_parent)) $page->setParent($page_parent);
-                if(!is_null($menu)) $page->setMenu($menu);
+                $languageTranslation = $form['translation']->getData();
+                if(is_null($languageTranslation->getToken())){
 
-                $em->persist($page);
-                $em->flush();
+                    $languageTranslation->setToken($languageToken);
 
-                $pageLang = $form['lang']->getData();
-                if(is_null($pageLang->getPage())){
-
-                    $pageLang->setLocale($lang);
-                    $pageLang->setPage($page);
-                    $pageLang->setUser($this->_user);
-                    $pageLang->setUrlRoot('');
-
-                    $page->addLang($pageLang);
                 }
          
-                $em->persist($page);
+                $em->persist($languageTranslation);
                 $em->flush();
 
 
 
                 //Set routes to table
-                $em->getRepository('MajesCmsBundle:Page')->generateRoutes($menu->getRef());
-
-                return $this->redirect($this->get('router')->generate('_cms_content', array('id' => $page->getId(), 'menu_id' => $menu_id, 'lang' => $lang, 'page_parent_id' => is_null($page_parent_id) ? "0" : $page_parent_id)));
+                return $this->redirect($this->get('router')->generate('_admin_language_messages'));
 
             }else{
                 foreach ($form->getErrors() as $error) {
@@ -304,10 +299,10 @@ class IndexController extends Controller implements SystemController
 
         $edit = !is_null($id) ? 1 : 0;
 
-        $pageSubTitle = is_null($token) ? 'Add a new translation' : 'Edit translation ' . (!is_null($token->getToken()) ? $token->getToken() : '--');
 
+        $pageSubTitle = is_null($token) ? $this->_translator->trans('Add a new translation') : $this->_translator->trans('Edit translation') .' '. (!is_null($token->getToken()) ? $token->getToken() : '--');
         return $this->render('MajesCoreBundle:Index:language-message-edit.html.twig', array(
-            'pageTitle' => 'Language translation',
+            'pageTitle' => $this->_translator->trans('Language translation'),
             'pageSubTitle' => $pageSubTitle,
             'form' => $form->createView(),
             'translation' => $languagetranslation,
@@ -331,7 +326,7 @@ class IndexController extends Controller implements SystemController
             'datas' => $users,
             'object' => new User(),
             'pageTitle' => 'Users',
-            'pageSubTitle' => 'List off all users currently "created"',
+            'pageSubTitle' => $this->_translator->trans('List off all users currently "created"'),
             'urls' => array(
                 'add' => '_admin_user_edit',
                 'edit' => '_admin_user_edit',
@@ -418,7 +413,7 @@ class IndexController extends Controller implements SystemController
             }
         }
 
-        $pageSubTitle = empty($user) ? 'Add a new user' : 'Edit user ' . $user->getUsername();
+        $pageSubTitle = empty($user) ? $this->_translator->trans('Add a new user') : $this->_translator->trans('Edit user') . ' ' . $user->getUsername();
 
         $form_role = null;
         if(!is_null($id))
@@ -429,7 +424,7 @@ class IndexController extends Controller implements SystemController
             )->createView();
 
         return $this->render('MajesCoreBundle:Index:user-edit.html.twig', array(
-            'pageTitle' => 'Users',
+            'pageTitle' => $this->_translator->trans('Users'),
             'pageSubTitle' => $pageSubTitle,
             'user' => $user,
             'form' => $form->createView(),
@@ -564,8 +559,8 @@ class IndexController extends Controller implements SystemController
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $roles,
             'object' => new Role(),
-            'pageTitle' => 'Roles',
-            'pageSubTitle' => 'List off all roles currently available',
+            'pageTitle' => $this->_translator->trans('Roles'),
+            'pageSubTitle' => $this->_translator->trans('List off all roles currently available'),
             'urls' => array(
                 'add' => '_admin_role_edit',
                 'edit' => '_admin_role_edit',
@@ -609,10 +604,10 @@ class IndexController extends Controller implements SystemController
             }
         }
 
-        $pageSubTitle = empty($role) ? 'Add a new role' : 'Edit role ' . $role->getRole();
+        $pageSubTitle = empty($role) ? $this->_translator->trans('Add a new role') : $this->_translator->trans('Edit role') . ' ' . $role->getRole();
 
         return $this->render('MajesCoreBundle:Index:role-edit.html.twig', array(
-            'pageTitle' => 'Roles',
+            'pageTitle' => $this->_translator->trans('Roles'),
             'pageSubTitle' => $pageSubTitle,
             'form' => $form->createView()));
     }

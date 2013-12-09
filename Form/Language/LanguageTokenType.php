@@ -13,18 +13,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class LanguageTokenType extends AbstractType
 {
 
-
-	public function __construct(){
-
+    private $_lang;
+    public function __construct($lang){
+        $this->_lang = $lang;
     }
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
-	{
-    	$resolver->setDefaults(array(
-    	    'data_class' => 'Majes\CoreBundle\Entity\LanguageToken',
-    	    'csrf_protection' => false,
-    	));
-	}
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Majes\CoreBundle\Entity\LanguageToken',
+            'csrf_protection' => false,
+        ));
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -37,7 +37,7 @@ class LanguageTokenType extends AbstractType
                 new NotBlank()
             )));
 
-        $builder->add('translation', new LanguageTranslationType());
+        $builder->add('translation', new LanguageTranslationType($this->_lang));
 
     }
 

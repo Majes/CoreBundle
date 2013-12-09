@@ -12,7 +12,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class LanguageTranslationType extends AbstractType
 {
-    public function __construct(){}
+    private $_lang;
+    public function __construct($lang){
+        $this->_lang = $lang;
+    }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -36,6 +39,8 @@ class LanguageTranslationType extends AbstractType
       
         $builder->add('translation', 'textarea', array(
             'required' => false));
+
+        $builder->add('locale', 'hidden', array('empty_data' => $this->_lang));
 
      
     }

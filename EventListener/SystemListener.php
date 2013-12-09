@@ -23,11 +23,13 @@ class SystemListener
     public $_lang;
     public $_langs;
     public $_default_lang;
-    
+    public $_translator;
+
     private $entityManager = null;
     private $securityContext = null;
     private $container = null;
     private $router = null;
+
 
     public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Container $container, $router)
     {
@@ -115,6 +117,7 @@ class SystemListener
             $controllerObject->_lang = $locale;
             $controllerObject->_langs = $language_rowset;
             $controllerObject->_default_lang = $default_lang;
+            $controllerObject->_translator = $controllerObject->get('translator');
 
             $session = $request->getSession();
             $session->set('langs', $controllerObject->_langs);

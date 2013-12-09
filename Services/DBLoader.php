@@ -33,7 +33,7 @@ class DBLoader implements LoaderInterface{
         /**@var $translation Frtrains\CommonbBundle\Entity\LanguageTranslation */
         foreach($translations as $translation){
              
-            $catalogue->set($translation->getLanguageTokenId()->getToken(), $translation->getTranslation(), $domain);
+            $catalogue->set($translation->getToken()->getToken(), $translation->getTranslation(), $domain);
         }
 
         return $catalogue;
