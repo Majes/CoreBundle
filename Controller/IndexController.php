@@ -283,7 +283,11 @@ class IndexController extends Controller implements SystemController
                 $em->persist($languageTranslation);
                 $em->flush();
 
-
+                //Clear translation cache
+                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php')) 
+                    unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php');
+                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta')) 
+                    unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta');
 
                 //Set routes to table
                 return $this->redirect($this->get('router')->generate('_admin_language_messages'));
