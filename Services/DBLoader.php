@@ -25,11 +25,14 @@ class DBLoader implements LoaderInterface{
         //Load on the db for the specified local
         //$language = $this->languageRepository->getLanguage($locale);
     
-
-        $translations = $this->transaltionRepository->findBy(array('locale' => $locale, 'catalogue' => $domain));
- 
         $catalogue = new MessageCatalogue($locale);
 
+        try{
+            $translations = $this->transaltionRepository->findBy(array('locale' => $locale, 'catalogue' => $domain));
+        }catch(Exception $e){
+            return $catalogue;
+        }
+        
         /**@var $translation Frtrains\CommonbBundle\Entity\LanguageTranslation */
         foreach($translations as $translation){
              
