@@ -17,7 +17,7 @@
                 {{google._analytics.percent_new_visits}}<small>%</small>
               </div>
               <div class="text">
-                Percentage new visits
+                {% trans %}Percentage new visits{% endtrans %}
               </div>
             </div>
             <div class="col-md-3">
@@ -26,7 +26,7 @@
                 {{google._analytics.new_visits}}
               </div>
               <div class="text">
-                New visitors this current month
+                {% trans %}New visitors this current month{% endtrans %}
               </div>
             </div>
             <div class="col-md-3">
@@ -35,7 +35,7 @@
                 {{google._analytics.average_time}}<small>sec</small>
               </div>
               <div class="text">
-                Average time on site
+                {% trans %}Average time on site{% endtrans %}
               </div>
             </div>
             <div class="col-md-3">
@@ -44,7 +44,7 @@
                 {{google._analytics.pageviews_visit}}
               </div>
               <div class="text">
-                Page views per visit
+                {% trans %}Page views per visit{% endtrans %}
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@
         <div class="col-md-6">
           <div class="widget-container fluid-height">
             <div class="heading">
-              <i class="icon-bar-chart"></i>Area Chart
+              <i class="icon-bar-chart"></i>{% trans %}Area Chart{% endtrans %}
             </div>
             <div class="widget-content padded text-center">
               <div class="graph-container">
@@ -189,225 +189,69 @@
         </div>
         <!-- Area Charts:Morris --><!-- Chat -->
         <div class="col-md-6">
-          <div class="widget-container scrollable chat" style="height: 427px;">
-            <div class="heading">
-              <i class="icon-comments"></i>Chat Widget<i class="icon-smile pull-right"></i>
-            </div>
-            <div class="widget-content padded">
-              <ul>
-                <li>
-                  <img width="50" height="50" src="{{ asset('bundles/majescore/images/avatar-male.jpg') }}" />
-                  <div class="bubble">
-                    <a class="user-name" href="">John Smith</a>
-                    <p class="message">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
-                    </p>
-                    <em class="time"><i class="icon-time"></i>10 min ago</em>
-                  </div>
-                </li>
-                <li class="current-user">
-                  <img width="50" height="50" src="{{ asset('bundles/majescore/images/avatar-female.jpg') }}" />
-                  <div class="bubble">
-                    <a class="user-name" href="">Jane Smith</a>
-                    <p class="message">
-                      Donec odio. Quisque volutpat mattis eros.
-                    </p>
-                    <em class="time"><i class="icon-time"></i>10 min ago</em>
-                  </div>
-                </li>
-                <li>
-                  <img width="50" height="50" src="{{ asset('bundles/majescore/images/avatar-male.jpg') }}" />
-                  <div class="bubble">
-                    <a class="user-name" href="">John Smith</a>
-                    <p class="message">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                    </p>
-                    <em class="time"><i class="icon-time"></i>10 min ago</em>
-                  </div>
-                </li>
-                <li>
-                  <img width="50" height="50" src="{{ asset('bundles/majescore/images/avatar-male.jpg') }}" />
-                  <div class="bubble">
-                    <a class="user-name" href="">John Smith</a>
-                    <p class="message">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                    </p>
-                    <em class="time"><i class="icon-time"></i>10 min ago</em>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="post-message">
-              <input class="form-control" placeholder="Write your message here…" type="text"><input class="btn btn-primary" type="submit" value="Post">
+            <div class="widget-container scrollable chat" style="height: 427px;">
+              <div class="heading">
+                <i class="icon-comments"></i>Chat Widget<i class="icon-smile pull-right"></i>
+              </div>
+              <div class="widget-content padded">
+                <ul>
+                  <li>
+                    <img width="30" height="30" src="images/avatar-male.jpg">
+                    <div class="bubble">
+                      <a class="user-name" href="">John Smith</a>
+                      <p class="message">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+                      </p>
+                      <p class="time">
+                        <strong>Today </strong>3:53 pm
+                      </p>
+                    </div>
+                  </li>
+                  <li class="current-user">
+                    <img width="30" height="30" src="images/avatar-female.jpg">
+                    <div class="bubble">
+                      <a class="user-name" href="">Jane Smith</a>
+                      <p class="message">
+                        Donec odio. Quisque volutpat mattis eros.
+                      </p>
+                      <p class="time">
+                        <strong>Today </strong>3:53 pm
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <img width="30" height="30" src="images/avatar-male.jpg">
+                    <div class="bubble">
+                      <a class="user-name" href="">John Smith</a>
+                      <p class="message">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                      </p>
+                      <p class="time">
+                        <strong>Today </strong>3:53 pm
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <img width="30" height="30" src="images/avatar-male.jpg">
+                    <div class="bubble">
+                      <a class="user-name" href="">John Smith</a>
+                      <p class="message">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                      </p>
+                      <p class="time">
+                        <strong>Today </strong>3:53 pm
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="post-message">
+                <input class="form-control" placeholder="Write your message here..." type="text"><input type="submit" value="Send">
+              </div>
             </div>
           </div>
-        </div>
         <!-- End Chat -->
       </div>
-      <div class="row">
-        <!-- Pie Graph 1 -->
-        <div class="col-lg-5">
-          <div class="widget-container fluid-height">
-            <div class="heading">
-              <i class="icon-bar-chart"></i>Donut Charts
-            </div>
-            <div class="widget-content clearfix">
-              <div class="col-sm-6">
-                <div class="pie-chart1 pie-chart pie-number" data-percent="87">
-                  87%
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="pie-chart2 pie-chart pie-number" data-percent="26">
-                  26%
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-7">
-          <div class="widget-container fluid-height">
-            <!-- Table -->
-            <table class="table table-filters">
-              <tbody>
-                <tr>
-                  <td class="filter-category blue">
-                    <div class="arrow-left"></div>
-                    <i class="icon-stethoscope"></i>
-                  </td>
-                  <td>
-                    National Distribution Co.
-                  </td>
-                  <td>
-                    $ 9204
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      50,55,60,40,30,35,30,20,25,30,40,20,15
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="danger">
-                      - 4%
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="filter-category green">
-                    <div class="arrow-left"></div>
-                    <i class="icon-coffee"></i>
-                  </td>
-                  <td>
-                    Star Organization Co.
-                  </td>
-                  <td>
-                    $ 23,890
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      5,10,15,50,80,50,40,30,50,60,70,75,75
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="success">
-                      + 12%
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="filter-category orange">
-                    <div class="arrow-left"></div>
-                    <i class="icon-gamepad"></i>
-                  </td>
-                  <td>
-                    Companysoft, LLC
-                  </td>
-                  <td>
-                    $ 10,995
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      100,100,80,70,40,20,20,40,50,60,70
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="success">
-                      + 5%
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="filter-category red">
-                    <div class="arrow-left"></div>
-                    <i class="icon-gift"></i>
-                  </td>
-                  <td>
-                    Craft Co.
-                  </td>
-                  <td>
-                    $ 6,790
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      5,10,15,20,30,40,80,100,120,120,140
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="success">
-                      + 26%
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="filter-category blue">
-                    <div class="arrow-left"></div>
-                    <i class="icon-stethoscope"></i>
-                  </td>
-                  <td>
-                    National Distribution Co.
-                  </td>
-                  <td>
-                    $ 9204
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      50,55,60,40,30,35,30,20,25,30,40,20,15
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="danger">
-                      - 4%
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="filter-category magenta">
-                    <div class="arrow-left"></div>
-                    <i class="icon-trophy"></i>
-                  </td>
-                  <td>
-                    Fastnation Co.
-                  </td>
-                  <td>
-                    $ 22,156
-                  </td>
-                  <td class="hidden-xs">
-                    <div class="sparkslim">
-                      20,40,50,60,70,80,90,95,100,80,70,60
-                    </div>
-                  </td>
-                  <td>
-                    <h3 class="danger">
-                      - 4%
-                    </h3>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <!-- End Pie Graph 1 -->
-      </div>
-    </div>
+      
   
 {% endblock %}
