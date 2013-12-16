@@ -9,7 +9,27 @@
       {% if google._analytics is not null %}
       <!-- Statistics -->
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-4">
+          <div class="widget-container weather">
+            <div class="widget-content padded">
+              <div class="row text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12 today">
+                  <p>
+                    TODAY
+                  </p>
+                  <img id="picTemp" src="" width="100" height="100">
+                  <div class="number">
+                    <span id="txtTemperature"></span><small>&deg;</small>
+                  </div>
+                  <p class="location">
+                    <span id="txtCity"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
           <div class="widget-container stats-container">
             <div class="col-md-3">
               <div class="number">
@@ -51,127 +71,7 @@
         </div>
       </div>
       {% endif %}
-      <div class="row">
-        <!-- Weather -->
-        <div class="col-md-8">
-          <div class="widget-container weather">
-            <div class="widget-content padded">
-              <div class="row text-center">
-                <div class="col-sm-6 col-md-6 col-lg-4 today">
-                  <p>
-                    TODAY
-                  </p>
-                  <canvas class="skycons-element" data-skycons="RAIN" height="100" id="rain" width="100"></canvas>
-                  <div class="number">
-                    72<small>&deg;</small>
-                  </div>
-                  <p class="location">
-                    Washington, D.C.
-                  </p>
-                </div>
-                <div class="col-sm-2 hidden-xs">
-                  <p>
-                    MON
-                  </p>
-                  <canvas class="skycons-element" data-skycons="CLEAR_DAY" height="60" id="clear-day" width="60"></canvas>
-                  <div class="number">
-                    86<small>&deg;</small>
-                  </div>
-                </div>
-                <div class="col-sm-2 hidden-xs">
-                  <p>
-                    TUE
-                  </p>
-                  <canvas class="skycons-element" data-skycons="RAIN" height="60" id="cloudy" width="60"></canvas>
-                  <div class="number">
-                    75<small>&deg;</small>
-                  </div>
-                </div>
-                <div class="col-sm-2 hidden-xs">
-                  <p>
-                    WED
-                  </p>
-                  <canvas class="skycons-element" data-skycons="PARTLY_CLOUDY_DAY" height="60" id="partly-cloudy-day" width="60"></canvas>
-                  <div class="number">
-                    82<small>&deg;</small>
-                  </div>
-                </div>
-                <div class="col-sm-2 hidden-md hidden-sm hidden-xs">
-                  <p>
-                    THU
-                  </p>
-                  <canvas class="skycons-element" data-skycons="SLEET" height="60" id="sleet" width="60"></canvas>
-                  <div class="number">
-                    64<small>&deg;</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- end Weather --><!-- Bar Graph -->
-        <div class="col-md-4">
-          <div class="widget-container small">
-            <div class="heading">
-              <i class="icon-signal"></i>New sign ups<i class="icon-list pull-right"></i><i class="icon-refresh pull-right"></i>
-            </div>
-            <div class="widget-content padded">
-              <div class="bar-chart-widget">
-                <div class="chart-graph">
-                  <div id="barcharts">
-                    Loading...
-                  </div>
-                  <ul class="chart-text-axis">
-                    <li>
-                      1
-                    </li>
-                    <li>
-                      2
-                    </li>
-                    <li>
-                      3
-                    </li>
-                    <li>
-                      4
-                    </li>
-                    <li>
-                      5
-                    </li>
-                    <li>
-                      6
-                    </li>
-                    <li>
-                      7
-                    </li>
-                    <li>
-                      8
-                    </li>
-                    <li>
-                      9
-                    </li>
-                    <li>
-                      10
-                    </li>
-                    <li>
-                      11
-                    </li>
-                    <li>
-                      12
-                    </li>
-                    <li>
-                      13
-                    </li>
-                    <li>
-                      14
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Bar Graph -->
-      </div>
+      
       <div class="row">
         <!-- Area Charts:Morris -->
         <div class="col-md-6">
@@ -230,6 +130,16 @@
           </div>
         <!-- End Chat -->
       </div>
-      
+      <script>
+      $.MyWeather({
+        showpopup: false,
+        plainfolder: '{{ asset('bundles/majescore/images') }}'
+      },function(City,Country, IP, Latitude, Longitude, Temperature, Picture){
+    
+        $("#txtCity").html(City);
+        $("#txtTemperature").html(parseInt(Temperature));
+        $("#picTemp").attr("src",Picture)
+      });
+      </script>
   
 {% endblock %}

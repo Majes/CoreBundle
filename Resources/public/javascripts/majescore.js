@@ -7,6 +7,7 @@ CoreAdmin = {
 		$(document).ajaxStop(function( event, jqxhr, settings ) {
 		  	CoreAdmin.Loader.stop();
 		});
+
 	}
 };
 

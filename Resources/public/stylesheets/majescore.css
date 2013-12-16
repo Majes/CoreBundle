@@ -99,6 +99,11 @@ body.ajax {
 .navbar .container-fluid.top-bar .logo{width: 80px;}
 
 #catalogueResultsAjax hr{margin-bottom: 0}
+
+.stats-container{height: 200px;}
+.stats-container [class^="col-"] .number, .stats-container [class*="col-"] .number{padding-top: 45px;}
+
+
 /*BOOTSTRAP*/
 .modal-dialog{
 	width: 800px!important;
