@@ -195,58 +195,36 @@
               </div>
               <div class="widget-content padded">
                 <ul>
-                  <li>
-                    <img width="30" height="30" src="images/avatar-male.jpg">
+                  {% for chat_line in chat %}
+                  <li{% if app.user.id == chat_line.user.id %} class="current-user"{% endif %}>
+                    {% if chat_line.user.media.id is defined and chat_line.user.media.id is not null %}
+                        <img src="{{ path('_media_load', {'id':chat_line.user.media.id, 'width': '30', 'height': '30', 'crop': '1'}) }}" />
+                        {% endif %}
                     <div class="bubble">
-                      <a class="user-name" href="">John Smith</a>
+                      <a class="user-name" href="">{{ chat_line.user.firstname }} {{ chat_line.user.lastname }}</a>
                       <p class="message">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+                        {{ chat_line.content }}
                       </p>
                       <p class="time">
-                        <strong>Today </strong>3:53 pm
+                        {{ chat_line.createDate|date("d/m/Y H:i:s") }}
                       </p>
                     </div>
                   </li>
-                  <li class="current-user">
-                    <img width="30" height="30" src="images/avatar-female.jpg">
+                  {% endfor %}
+                  {% if chat|length == 0 %}<li>
                     <div class="bubble">
-                      <a class="user-name" href="">Jane Smith</a>
                       <p class="message">
-                        Donec odio. Quisque volutpat mattis eros.
-                      </p>
-                      <p class="time">
-                        <strong>Today </strong>3:53 pm
-                      </p>
+                        {% trans %}Be the first to post a word.{% endtrans %}
+                      </p>  
+                      <p class="time"></p>
                     </div>
-                  </li>
-                  <li>
-                    <img width="30" height="30" src="images/avatar-male.jpg">
-                    <div class="bubble">
-                      <a class="user-name" href="">John Smith</a>
-                      <p class="message">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                      </p>
-                      <p class="time">
-                        <strong>Today </strong>3:53 pm
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <img width="30" height="30" src="images/avatar-male.jpg">
-                    <div class="bubble">
-                      <a class="user-name" href="">John Smith</a>
-                      <p class="message">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                      </p>
-                      <p class="time">
-                        <strong>Today </strong>3:53 pm
-                      </p>
-                    </div>
-                  </li>
+                  </li>{% endif %}
                 </ul>
               </div>
               <div class="post-message">
-                <input class="form-control" placeholder="Write your message here..." type="text"><input type="submit" value="Send">
+                <form method="POST">
+                <input class="form-control" placeholder="Write your message here..." name="content" type="text"><input type="submit" value="Send">
+                </form>
               </div>
             </div>
           </div>

@@ -14,6 +14,7 @@ use Majes\CoreBundle\Entity\LanguageToken;
 use Majes\CoreBundle\Entity\User\User;
 use Majes\CoreBundle\Entity\User\Role;
 use Majes\MediaBundle\Entity\Media;
+use Majes\CoreBundle\Entity\Chat;
 
 use Majes\CoreBundle\Form\User\Myaccount;
 use Majes\CoreBundle\Form\User\UserType;
@@ -33,9 +34,30 @@ class IndexController extends Controller implements SystemController
     public function dashboardAction()
     {
         $ga = $this->container->get('majes.ga');
+
+        $request = $this->getRequest();
+        if($request->getMethod() == 'POST'){
+
+            $chatObj = new Chat();
+            
+            $chatObj->setUser($this->_user);
+            $chatObj->setContent($request->get('content'));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($chatObj);
+            $em->flush();
+
+        }
+
+        //Get chat info
+        $em = $this->getDoctrine()->getManager();
+        $chat = $em->getRepository('MajesCoreBundle:Chat')
+            ->findForDashboard();
+        
         
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
-            'google' => $ga));
+            'google' => $ga,
+            'chat' => $chat));
     }
 
     /**
