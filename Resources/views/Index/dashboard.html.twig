@@ -29,13 +29,14 @@
             </div>
           </div>
         </div>
-        {% if google._analytics is not null %}
+
+        {% if stats.all is defined %}
         <div class="col-lg-8">
           <div class="widget-container stats-container">
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-long-arrow-up"></div>
-                {{google._analytics.percent_new_visits}}<small>%</small>
+                {{stats.all.percentNewVisits}}<small>%</small>
               </div>
               <div class="text">
                 {% trans %}Percentage new visits{% endtrans %}
@@ -44,7 +45,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-stackexchange"></div>
-                {{google._analytics.new_visits}}
+                {{stats.all.newVisits}}
               </div>
               <div class="text">
                 {% trans %}New visitors this current month{% endtrans %}
@@ -53,7 +54,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-time"></div>
-                {{google._analytics.average_time}}<small>sec</small>
+                {{stats.all.avgTimeToSite}}<small>sec</small>
               </div>
               <div class="text">
                 {% trans %}Average time on site{% endtrans %}
@@ -62,7 +63,7 @@
             <div class="col-md-3">
               <div class="number">
                 <div class="icon-file-text-alt"></div>
-                {{google._analytics.pageviews_visit}}
+                {{stats.all.pageviewsPerVisits}}
               </div>
               <div class="text">
                 {% trans %}Page views per visit{% endtrans %}
@@ -79,7 +80,7 @@
         <div class="col-md-6">
           <div class="widget-container fluid-height">
             <div class="heading">
-              <i class="icon-bar-chart"></i>{% trans %}Area Chart{% endtrans %}
+              <i class="icon-bar-chart"></i>{% trans %}New visits stats{% endtrans %}
             </div>
             <div class="widget-content padded text-center">
               <div class="graph-container">
@@ -93,7 +94,7 @@
         <div class="col-md-6">
             <div class="widget-container scrollable chat" style="height: 427px;">
               <div class="heading">
-                <i class="icon-comments"></i>Chat Widget<i class="icon-smile pull-right"></i>
+                <i class="icon-comments"></i>{% trans %}Chat Widget{% endtrans %}<i class="icon-smile pull-right"></i>
               </div>
               <div class="widget-content padded">
                 <ul>
@@ -133,6 +134,27 @@
         <!-- End Chat -->
       </div>
       <script>
+      
+      $(document).ready(function(){
+        if ($('#hero-area').length) {
+        var data = Array();
+
+        {% for period, stat in google %}var obj = {period: "{{ period }}", all: {{ stat.all.newVisits }}, mobile: {{ stat.mobile.newVisits }}, tablet: {{ stat.tablet.newVisits }} }; data.push(obj);{% endfor %}
+
+        Morris.Area({
+          element: "hero-area",
+          data: data,
+          xkey: "period",
+          ykeys: ["all", "mobile", "tablet"],
+          labels: ["All", "Mobile", "Tablet"],
+          hideHover: "auto",
+          lineWidth: 2,
+          pointSize: 4,
+          lineColors: ["#a0dcee", "#f1c88e", "#a0e2a0"],
+          fillOpacity: 0.5,
+          smooth: true
+        });
+      }
       $.MyWeather({
         showpopup: false,
         plainfolder: '{{ asset('bundles/majescore/images') }}'
@@ -141,6 +163,7 @@
         $("#txtCity").html(City);
         $("#txtTemperature").html(parseInt(Temperature));
         $("#picTemp").attr("src",Picture)
+      });
       });
       </script>
   

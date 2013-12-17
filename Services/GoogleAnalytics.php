@@ -2,6 +2,7 @@
 namespace Majes\CoreBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Majes\CoreBundle\Entity\Stat;
 
 class GoogleAnalytics{
 
@@ -11,11 +12,28 @@ class GoogleAnalytics{
 	public $_noparams = false;
 
 	private $_container = false;
+	private $_begin = false;
+	private $_end = false;
+	private $_em = false;
 	
-	public function __construct(ContainerInterface $container){
+	public function __construct(ContainerInterface $container, $em = null){
 
 		$this->_container = $container;
+		$this->_em = $em;
 		$this->_params = $this->_container->getParameter('google');
+
+		$this->_begin = date('Y-m').'-01';
+		$this->_end = date('Y-m-d');
+
+		$stats = $this->_em->getRepository('MajesCoreBundle:Stat')
+		            ->findBy(array(
+            			'beginDate' => new \DateTime($this->_begin),
+            			'endDate' => new \DateTime($this->_end)));
+
+		if(!empty($stats)){
+			return;
+		}
+
 
 		$client = new \Google_Client();
 		$client->setApplicationName('Analytics');
@@ -69,7 +87,7 @@ class GoogleAnalytics{
   		    $results = $this->getResults($analytics, $this->_params['view_id']);
 
   		    // Step 4. Output the results.
-  		    return $this->printResults($results);
+  		    return $this->saveResults($results);
   		 
   		} catch (apiServiceException $e) {
   		  // Error from the API.
@@ -83,30 +101,75 @@ class GoogleAnalytics{
 	public function getResults(&$analytics, $profileId) {
 	   return $analytics->data_ga->get(
 	       'ga:' . $profileId,
-	       date('Y-m').'-01',
-	       date('Y-m-d'),
-	       'ga:newVisits,ga:percentNewVisits,ga:avgTimeOnSite,ga:pageviewsPerVisit');
+	       $this->_begin,
+	       $this->_end,
+	       'ga:newVisits,ga:percentNewVisits,ga:avgTimeOnSite,ga:pageviewsPerVisit',
+	       array('dimensions' => 'ga:isMobile,ga:isTablet'));
 	   		//http://ga-dev-tools.appspot.com/explorer/
 	   		//, array('segment'=>'gaid::-11') => mobile
 	   		//, array('segment'=>'gaid::-13') => tablet
-	   		//, array('dimension' => 'ga:browser,ga:isMobile,ga:isTablet')
+	   		//, 
 	}
 
 
-	public function printResults(&$results) {
+	public function saveResults(&$results) {
 	  if (count($results->getRows()) > 0) {
 	    $profileName = $results->getProfileInfo()->getProfileName();
 	    $rows = $results->getRows();
 		
-	    $this->_analytics = array(
-	    	'new_visits' => $rows[0][0],
-	    	'percent_new_visits' => number_format($rows[0][1], 2),
-	    	'average_time' => number_format($rows[0][2], 0),
-	    	'pageviews_visit' => number_format($rows[0][3], 2));
+	    foreach($rows as $row){
 
-	  } else {
-	    $this->_analytics = null;
-	  }
+	    	$stat = new Stat();
+	    	$stat->setIsMobile($row[0] == 'Yes' ? 1 : 0);
+	    	$stat->setIsTablet($row[1] == 'Yes' ? 1 : 0);
+	    	$stat->setBeginDate(new \DateTime($this->_begin));
+	    	$stat->setEndDate(new \DateTime($this->_end));
+	    	$stat->setNewVisits($row[2]);
+	    	$stat->setPercentNewVisits($row[3]);
+	    	$stat->setAvgTimeToSite($row[4]);
+	    	$stat->SetPageviewsPerVisits($row[5]);
+
+	    	$this->_em->persist($stat);
+			$this->_em->flush();
+
+	    }
+
+
+	  } 
+
+	  return true;
+	}
+
+	public function pastMonth(){
+
+		$stats = $this->_em->getRepository('MajesCoreBundle:Stat')
+		            ->pastMonth();
+
+		$statsArray = array();
+
+		foreach ($stats as $stat) {
+
+			$beginDate = $stat->getBeginDate();
+			$beginDate = $beginDate->format('Y-m');
+			if(!isset($statsArray[$beginDate]))
+				$statsArray[$beginDate] = array();
+
+			$isMobile = $stat->getIsMobile();
+			$isTablet = $stat->getIsTablet();
+			if($isTablet) $key = 'tablet';
+			else if($isMobile) $key = 'mobile';
+			else $key = 'all';
+
+			$statsArray[$beginDate][$key] = array(
+					'newVisits' => $stat->getNewVisits(),
+					'percentNewVisits' => number_format($stat->getPercentNewVisits(), 2),
+					'avgTimeToSite' => number_format($stat->getAvgTimeToSite(), 0),
+					'pageviewsPerVisits' => number_format($stat->getPageviewsPerVisits(), 2)
+					);
+		}
+
+		return $statsArray;
+
 	}
 
 

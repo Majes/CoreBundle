@@ -54,9 +54,16 @@ class IndexController extends Controller implements SystemController
         $chat = $em->getRepository('MajesCoreBundle:Chat')
             ->findForDashboard();
         
+        $stats_lastmonth = $ga->pastMonth();
+        $global_stats = array();
+        foreach ($stats_lastmonth as $date => $row) {
+            $global_stats = $row;
+            break;
+        }
         
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
-            'google' => $ga,
+            'google' => $stats_lastmonth,
+            'stats' => $global_stats,
             'chat' => $chat));
     }
 

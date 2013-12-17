@@ -73,7 +73,8 @@ class GoogleAnalytics{
 	       'ga:' . $profileId,
 	       date('Y-m').'-01',
 	       date('Y-m-d'),
-	       'ga:newVisits,ga:percentNewVisits,ga:avgTimeOnSite,ga:pageviewsPerVisit');
+	       'ga:newVisits,ga:percentNewVisits,ga:avgTimeOnSite,ga:pageviewsPerVisit',
+	       array('dimension' => 'ga:browser,ga:isMobile,ga:isTablet'));
 	   		//http://ga-dev-tools.appspot.com/explorer/
 	   		//, array('segment'=>'gaid::-11') => mobile
 	   		//, array('segment'=>'gaid::-13') => tablet
