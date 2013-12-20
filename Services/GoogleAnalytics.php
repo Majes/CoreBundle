@@ -3,6 +3,7 @@ namespace Majes\CoreBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Majes\CoreBundle\Entity\Stat;
+use Google\Service\Analytics;
 
 class GoogleAnalytics{
 
@@ -35,14 +36,12 @@ class GoogleAnalytics{
 		$client = new \Google_Client();
 		$client->setApplicationName('Analytics');
 
-		$client->setClientId($this->_params['oauth2_client_id']);
-		$client->setClientSecret($this->_params['oauth2_client_secret']);
-		$client->setRedirectUri($this->_params['oauth2_redirect_uri']);
+
 		$client->setDeveloperKey($this->_params['api_server_key']);
 
 		$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
 
-		$client->setUseObjects(true);
+		//$client->setUseObjects(true);
 
 		if (isset($_GET['code'])) {
 		  $client->authenticate();
@@ -67,7 +66,7 @@ class GoogleAnalytics{
 				return;
 			}
 
-		  	$analytics = new \Google_AnalyticsService($client);
+		  	$analytics = new \Google_Service_Analytics($client);
 		  	$this->getAnalytics($analytics);
 		}
 	}
@@ -101,6 +100,7 @@ class GoogleAnalytics{
 	}
 
 	public function getResults(&$analytics, $profileId) {
+
 	   return $analytics->data_ga->get(
 	       'ga:' . $profileId,
 	       $this->_begin->format('Y-m-d'),
