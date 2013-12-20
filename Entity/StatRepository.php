@@ -12,8 +12,8 @@ class StatRepository extends EntityRepository {
 
    		$query = $this->createQueryBuilder('s')
             ->where('s.beginDate >= :begin')
+            ->andWhere('s.current = 1')
             ->setParameter('begin', $begin3M)
-            ->orderBy('s.beginDate', 'DESC')
             ->getQuery();
 
         return $results = $query->getResult();

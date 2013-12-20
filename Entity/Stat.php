@@ -43,6 +43,9 @@ class Stat {
     /** @ORM\column(type="decimal", name="pageviews_per_visits") */
     private $pageviewsPerVisits;
 
+    /** @ORM\column(type="boolean", name="current") */
+    private $current;
+
     /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="create_date", type="datetime")
@@ -55,6 +58,7 @@ class Stat {
      */
     public function __construct(){
         $this->createDate = new \DateTime();
+        $this->current = 1;
     }
 
     /**
@@ -162,6 +166,15 @@ class Stat {
     {
         $this->pageviewsPerVisits = $pageviewsPerVisits;
         return $this;
+    }
+
+
+    public function getCurrent() {
+        return $this->current;
+    }
+ 
+    public function setCurrent($current) {
+        $this->current = $current;
     }
 
     /**

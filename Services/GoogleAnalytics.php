@@ -22,18 +22,15 @@ class GoogleAnalytics{
 		$this->_em = $em;
 		$this->_params = $this->_container->getParameter('google');
 
-		$this->_begin = date('Y-m').'-01';
-		$this->_end = date('Y-m-d');
+		$this->_begin = new \DateTime(date('Y-m').'-01');
+		$this->_end = new \DateTime(date('Y-m-d'));
+
+   		$this->_end = $this->_end->sub(new \DateInterval('P1D'));
 
 		$stats = $this->_em->getRepository('MajesCoreBundle:Stat')
 		            ->findBy(array(
-            			'beginDate' => new \DateTime($this->_begin),
-            			'endDate' => new \DateTime($this->_end)));
-
-		if(!empty($stats)){
-			return;
-		}
-
+            			'beginDate' => $this->_begin,
+            			'endDate' => $this->_end));
 
 		$client = new \Google_Client();
 		$client->setApplicationName('Analytics');
@@ -44,7 +41,6 @@ class GoogleAnalytics{
 		$client->setDeveloperKey($this->_params['api_server_key']);
 
 		$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
-
 
 		$client->setUseObjects(true);
 
@@ -65,8 +61,14 @@ class GoogleAnalytics{
 		elseif (!$client->getAccessToken()) {
 		  $this->_authUrl = $client->createAuthUrl();		
 		} else {
-		  $analytics = new \Google_AnalyticsService($client);
-		  $this->getAnalytics($analytics);
+
+
+			if(!empty($stats)){
+				return;
+			}
+
+		  	$analytics = new \Google_AnalyticsService($client);
+		  	$this->getAnalytics($analytics);
 		}
 	}
 
@@ -101,8 +103,8 @@ class GoogleAnalytics{
 	public function getResults(&$analytics, $profileId) {
 	   return $analytics->data_ga->get(
 	       'ga:' . $profileId,
-	       $this->_begin,
-	       $this->_end,
+	       $this->_begin->format('Y-m-d'),
+	       $this->_end->format('Y-m-d'),
 	       'ga:newVisits,ga:percentNewVisits,ga:avgTimeOnSite,ga:pageviewsPerVisit',
 	       array('dimensions' => 'ga:isMobile,ga:isTablet'));
 	   		//http://ga-dev-tools.appspot.com/explorer/
@@ -119,15 +121,28 @@ class GoogleAnalytics{
 		
 	    foreach($rows as $row){
 
+	    	//Remove current one
+	    	$statCurrent = $this->_em->getRepository('MajesCoreBundle:Stat')
+		            ->findOneBy(array(
+            			'beginDate' => $this->_begin,
+            			'isMobile' => $row[0] == 'Yes' ? 1 : 0,
+            			'isTablet' => $row[1] == 'Yes' ? 1 : 0,
+            			'current' => 1));
+		    if(!empty($statCurrent)){
+		    	$statCurrent->setCurrent(0);
+		    	$this->_em->persist($statCurrent);
+				$this->_em->flush();   
+			}
+
 	    	$stat = new Stat();
 	    	$stat->setIsMobile($row[0] == 'Yes' ? 1 : 0);
 	    	$stat->setIsTablet($row[1] == 'Yes' ? 1 : 0);
-	    	$stat->setBeginDate(new \DateTime($this->_begin));
-	    	$stat->setEndDate(new \DateTime($this->_end));
+	    	$stat->setBeginDate($this->_begin);
+	    	$stat->setEndDate($this->_end);
 	    	$stat->setNewVisits($row[2]);
 	    	$stat->setPercentNewVisits($row[3]);
 	    	$stat->setAvgTimeToSite($row[4]);
-	    	$stat->SetPageviewsPerVisits($row[5]);
+	    	$stat->setPageviewsPerVisits($row[5]);
 
 	    	$this->_em->persist($stat);
 			$this->_em->flush();
