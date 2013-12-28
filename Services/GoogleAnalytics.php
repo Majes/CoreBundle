@@ -68,8 +68,8 @@ class GoogleAnalytics{
 		if(empty($this->_params['oauth2_client_id'])){
 			$this->_noparams = true;
 		}
-		else if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-		  	$client->setAccessToken($_SESSION['access_token']);
+		else if (isset($_SESSION['access_token']) && $_SESSION['access_token'] && !$client->isAccessTokenExpired()) {
+			$client->setAccessToken($_SESSION['access_token']);
 		} else {
 		  	$this->_authUrl = $client->createAuthUrl();
 		}
