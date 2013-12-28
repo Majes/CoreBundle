@@ -68,6 +68,7 @@ class SystemListener
 
             $parameters = $this->container->getParameter('admin');
             $wysiwyg = $parameters['wysiwyg'];
+            $menu = $this->container->getParameter('menu');
             try{
                 $token = $this->securityContext->getToken();
                 $_user = !is_null($token) ? $token->getUser() : false;
@@ -123,6 +124,7 @@ class SystemListener
             $session->set('langs', $controllerObject->_langs);
             $session->set('_locale', $locale);
             $session->set('wysiwyg', $wysiwyg);
+            $session->set('menu', $menu);
             
             /*NOTIFICATION*/
             // Google analytics
