@@ -4,7 +4,7 @@
 						{% set adminmenu = app.session.get('menu') %}
 						{% for key, menu in adminmenu %}
 							<li class="{{ key }}{% if menu.submenu is defined %} dropdown{% endif %}">
-								<a {% if (key in app.request.get('_route')) %}class="current"{% endif %} {% if menu.route is defined %}href="{{ path(menu.route) }}"{% else %}href="#" data-toggle="dropdown"{% endif %}>
+								<a {% if (key in app.request.get('_route')) and key != 'admin' %}class="current"{% endif %} {% if menu.route is defined %}href="{{ path(menu.route) }}"{% else %}href="#" data-toggle="dropdown"{% endif %}>
 									<span aria-hidden="true" class="{{ menu.icon }}"></span> 
 									{{ menu.label }}{% if menu.submenu is defined %}<b class="caret"></b>{% endif %}
 								</a>
