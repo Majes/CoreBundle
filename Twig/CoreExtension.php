@@ -40,6 +40,7 @@ class CoreExtension extends \Twig_Extension
         $value = $object->$function();
 
         if($format == 'datetime'){
+            if(is_null($value)) return '';
             return $value->format('d/m/Y');
         }else
             return $value;

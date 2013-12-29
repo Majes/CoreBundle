@@ -31,8 +31,8 @@
         			  	  {% if config.object.hasPreview %}<a class="table-actions" href=""><i class="icon-eye-open"></i></a>{% endif %}
                     {% set params = {'id' : data.id} %}
                     {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key):get(data, param.key)}) %}{% endfor %}{% endif %}
-        			  	 	<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>
-        			  	 	<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this language?{% endtrans %}')"><i class="icon-trash"></i></a>
+        			  	 	{% if urls.edit is defined %}<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>{% endif %}
+        			  	 	{% if urls.delete is defined %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this language?{% endtrans %}')"><i class="icon-trash"></i></a>{% endif %}
         			  	</div>
         			</td>
       			</tr>
