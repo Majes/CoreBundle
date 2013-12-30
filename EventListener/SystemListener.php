@@ -67,6 +67,7 @@ class SystemListener
         if ($controllerObject instanceof SystemController) {
 
             $parameters = $this->container->getParameter('admin');
+            $google = $this->container->getParameter('google');
             $wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
             try{
@@ -125,6 +126,7 @@ class SystemListener
             $session->set('_locale', $locale);
             $session->set('wysiwyg', $wysiwyg);
             $session->set('menu', $menu);
+            $session->set('google', $google);
             
             /*NOTIFICATION*/
             // Google analytics

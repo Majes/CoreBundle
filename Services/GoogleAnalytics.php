@@ -71,6 +71,7 @@ class GoogleAnalytics{
 		else if (isset($_SESSION['access_token']) && $_SESSION['access_token'] && !$client->isAccessTokenExpired()) {
 			$client->setAccessToken($_SESSION['access_token']);
 		} else {
+			$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
 		  	$this->_authUrl = $client->createAuthUrl();
 		}
 		

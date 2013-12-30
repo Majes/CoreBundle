@@ -15,7 +15,7 @@
               <div class="row text-center">
                 <div class="col-sm-12 col-md-12 col-lg-12 today">
                   <p>
-                    TODAY
+                     {% trans %}TODAY{% endtrans %}
                   </p>
                   <img id="picTemp" src="" width="100" height="100">
                   <div class="number">
@@ -71,7 +71,16 @@
             </div>
           </div>
         </div>
+        {% else %}
+        <div class="col-lg-8" style="">
+          <div class="widget-container fluid-height">
+            <div class="alert alert-danger">
+              {% trans %}You need to activate Google Analytics API{% endtrans %}
+            </div>
+          </div>
+        </div>
         {% endif %}
+
       </div>
       
       
