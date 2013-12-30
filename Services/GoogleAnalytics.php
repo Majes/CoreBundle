@@ -4,6 +4,7 @@ namespace Majes\CoreBundle\Services;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Majes\CoreBundle\Entity\Stat;
 use Google\Service\Analytics;
+use Google\Auth\AssertionCredentials;
 
 class GoogleAnalytics{
 
@@ -34,77 +35,26 @@ class GoogleAnalytics{
             			'endDate' => $this->_end));
 
 		$client = new \Google_Client();
-		$client->setClientId($this->_params['oauth2_client_id']);
-		$client->setClientSecret($this->_params['oauth2_client_secret']);
-		$client->setRedirectUri($this->_params['oauth2_redirect_uri']);
-
+		$client->setApplicationName("Majesteel");
 		$analytics = new \Google_Service_Analytics($client);
 
-		/************************************************
-		  If we're logging out we just need to clear our
-		  local access token in this case
-		 ************************************************/
-		if (isset($_REQUEST['logout'])) {
-		  	unset($_SESSION['access_token']);
-		}
-		
-		/************************************************
-		  If we have a code back from the OAuth 2.0 flow,
-		  we need to exchange that with the authenticate()
-		  function. We store the resultant access token
-		  bundle in the session, and redirect to ourself.
-		 ************************************************/
-		if (isset($_GET['code'])) {
-		  	$client->authenticate($_GET['code']);
-		  	$_SESSION['access_token'] = $client->getAccessToken();
-		  	$redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-		  	header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
-		}
-		
-		/************************************************
-		  If we have an access token, we can make
-		  requests, else we generate an authentication URL.
-		 ************************************************/
-		if(empty($this->_params['oauth2_client_id'])){
-			$this->_noparams = true;
-		}
-		else if (isset($_SESSION['access_token']) && $_SESSION['access_token'] && !$client->isAccessTokenExpired()) {
-			$client->setAccessToken($_SESSION['access_token']);
-		} else {
-			$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
-		  	$this->_authUrl = $client->createAuthUrl();
-		}
-		
-		/************************************************
-		  If we're signed in and have a request to shorten
-		  a URL, then we create a new URL object, set the
-		  unshortened URL, and call the 'insert' method on
-		  the 'url' resource. Note that we re-store the
-		  access_token bundle, just in case anything
-		  changed during the request - the main thing that
-		  might happen here is the access token itself is
-		  refreshed if the application has offline access.
-		 ************************************************/
-		if ($client->getAccessToken() && isset($_GET['url'])) {
-		  	$url = new Google_Service_Urlshortener_Url();
-		  	$url->longUrl = $_GET['url'];
-		  	$short = $service->url->insert($url);
-		  	$_SESSION['access_token'] = $client->getAccessToken();
-		}
-		
-		
-		if ($this->_noparams || !empty($this->_authUrl)) {
-		  	
-		}else{
-			if(!empty($stats)){
-				return;
-			}
+		$key = file_get_contents(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12');
 
-		  	$this->getAnalytics($analytics);
+		$cred = new \Google_Auth_AssertionCredentials(
+		  	// Replace this with the email address from the client.
+		  	$this->_params['service_email_address'],
+		  	// Replace this with the scopes you are requesting.
+		  	array('https://www.googleapis.com/auth/analytics.readonly'),
+		  	$key
+		);
+
+		$client->setAssertionCredentials($cred);
+
+		if(!empty($stats)){
+			return;
 		}
-
 		
-
+		$this->getAnalytics($analytics);
 
 	}
 
