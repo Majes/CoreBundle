@@ -64,7 +64,7 @@ class GoogleAnalytics{
 	}
 
 	public function isUp(){
-		if(empty($this->_params['oauth2_client_id']))
+		if(empty($this->_params['service_key_fingerprints']))
 			return -2;
 		else if(!is_null($this->_authUrl))
 			return -1;
