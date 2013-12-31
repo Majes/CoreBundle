@@ -38,6 +38,11 @@ class GoogleAnalytics{
 		$client->setApplicationName("Majesteel");
 		$analytics = new \Google_Service_Analytics($client);
 
+		if(!file_exists(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12'))
+		{
+			$this->_noparams = true;
+			return false;
+		}
 		$key = file_get_contents(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12');
 
 		$cred = new \Google_Auth_AssertionCredentials(
