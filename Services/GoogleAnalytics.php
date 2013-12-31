@@ -159,7 +159,10 @@ class GoogleAnalytics{
 			$beginDate = $stat->getBeginDate();
 			$beginDate = $beginDate->format('Y-m');
 			if(!isset($statsArray[$beginDate]))
-				$statsArray[$beginDate] = array();
+				$statsArray[$beginDate] = array(
+					'all' => array('newVisits' => 0, 'percentNewVisits' => 0, 'avgTimeToSite' => 0, 'pageviewsPerVisits' => 0),
+					'mobile' => array('newVisits' => 0, 'percentNewVisits' => 0, 'avgTimeToSite' => 0, 'pageviewsPerVisits' => 0),
+					'tablet' => array('newVisits' => 0, 'percentNewVisits' => 0, 'avgTimeToSite' => 0, 'pageviewsPerVisits' => 0));
 
 			$isMobile = $stat->getIsMobile();
 			$isTablet = $stat->getIsTablet();
