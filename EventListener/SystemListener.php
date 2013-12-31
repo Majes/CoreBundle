@@ -24,6 +24,7 @@ class SystemListener
     public $_langs;
     public $_default_lang;
     public $_translator;
+    public $_is_multilingual;
 
     private $entityManager = null;
     private $securityContext = null;
@@ -70,6 +71,8 @@ class SystemListener
             $google = $this->container->getParameter('google');
             $wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
+            $is_multilingual = $this->container->getParameter('is_multilingual');
+
             try{
                 $token = $this->securityContext->getToken();
                 $_user = !is_null($token) ? $token->getUser() : false;
@@ -120,6 +123,7 @@ class SystemListener
             $controllerObject->_langs = $language_rowset;
             $controllerObject->_default_lang = $default_lang;
             $controllerObject->_translator = $controllerObject->get('translator');
+            $controllerObject->_is_multilingual = $is_multilingual;
 
             $session = $request->getSession();
             $session->set('langs', $controllerObject->_langs);
