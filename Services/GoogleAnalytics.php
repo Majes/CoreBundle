@@ -27,7 +27,8 @@ class GoogleAnalytics{
 		$this->_begin = new \DateTime(date('Y-m').'-01');
 		$this->_end = new \DateTime(date('Y-m-d'));
 
-   		$this->_end = $this->_end->sub(new \DateInterval('P1D'));
+		if(date('Y-m-d') !== date('Y-m').'-01')
+   			$this->_end = $this->_end->sub(new \DateInterval('P1D'));
 
 		$stats = $this->_em->getRepository('MajesCoreBundle:Stat')
 		            ->findBy(array(
