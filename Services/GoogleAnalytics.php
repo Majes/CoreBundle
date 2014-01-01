@@ -179,7 +179,7 @@ class GoogleAnalytics{
 			$statsArray[$beginDate][$key] = array(
 					'newVisits' => $stat->getNewVisits(),
 					'percentNewVisits' => number_format($stat->getPercentNewVisits(), 2),
-					'avgTimeToSite' => number_format($stat->getAvgTimeToSite(), 2),
+					'avgTimeToSite' => number_format($stat->getAvgTimeToSite(), 0),
 					'pageviewsPerVisits' => number_format($stat->getPageviewsPerVisits(), 2)
 					);
 		}
