@@ -6,6 +6,7 @@ use Majes\CoreBundle\Controller\SystemController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\HttpFoundation\Response;
 
 use Majes\CoreBundle\Conversion\DataTableConverter;
 use Majes\CoreBundle\Entity\Language;
@@ -23,7 +24,7 @@ use Majes\CoreBundle\Form\User\UserRoleType;
 use Majes\CoreBundle\Form\User\RoleType;
 use Majes\CoreBundle\Form\Language\LanguageTokenType;
 use Majes\CoreBundle\Form\Language\LanguageTranslationType;
-use Majes\CoreBundle\Utils\GoogleAnalytics;
+use Majes\CoreBundle\Utils\TeelFunction;
 
 class IndexController extends Controller implements SystemController
 {
@@ -128,6 +129,22 @@ class IndexController extends Controller implements SystemController
         return $this->render('MajesCoreBundle:Index:myaccount.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function emptycacheAction()
+    {
+        /*Clear cache*/
+        if(is_dir($this->get('kernel')->getCacheDir())) {
+            TeelFunction::delTree($this->get('kernel')->getCacheDir(), false, array('annotations'));
+
+            echo json_encode(array('error' => false, 'message' => 'Cache has been cleared successfully!'));
+        }
+
+        return new Response();
     }
 
     /**

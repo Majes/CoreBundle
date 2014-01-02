@@ -101,7 +101,8 @@ body.ajax {
 #catalogueResultsAjax hr{margin-bottom: 0}
 
 .stats-container{height: 200px;}
-.stats-container [class^="col-"] .number, .stats-container [class*="col-"] .number{padding-top: 45px;}
+.stats-container [class^="col-"] .number, .stats-container [class*="col-"] .number{padding-top: 45px; font-size: 3em;}
+
 
 
 /*BOOTSTRAP*/

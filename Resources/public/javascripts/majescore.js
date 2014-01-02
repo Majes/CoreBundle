@@ -8,6 +8,22 @@ CoreAdmin = {
 		  	CoreAdmin.Loader.stop();
 		});
 
+		$("a#emptycache").click(function(e){
+			e.preventDefault();
+			var self = $(this);
+			var href = self.attr('href');
+
+			$.ajax({
+
+				url: href,
+				dataType: 'json',
+				success: function(response){
+					CoreAdmin.Alert.show(response.message);
+				}
+
+			});
+		});
+
 	}
 };
 
