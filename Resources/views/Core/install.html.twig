@@ -6,17 +6,21 @@
 
 {% block content %}
 
-	<!-- Login Screen -->
-    <div class="login-container">
-      	<img src="{{ asset('bundles/majescore/images/logo-login@2x.png') }}" />
-      	<form action="{{ path('_admin_login_check') }}" method="post" name="login_form">
-      	  	
-			<ol style="text-align: left; margin: 0 0 40px">
+  <!-- Login Screen -->
+    <div class="login-wrapper">
+        <img src="{{ asset('bundles/majescore/images/logo-login@2x.png') }}" />
+        <br/>
+        <img src="{{ asset('bundles/majescore/images/logo-icon.png') }}" style="margin: -30px 0 40px"/>
+        <form action="{{ path('_majes_install_db') }}" method="post">
+            
+      <ol style="text-align: left; margin: 0 0 40px">
                 <li>
                   {% if permissions.dir_cache >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/cache'
                 </li>
                 <li>
                   {% if permissions.dir_var >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/var'
+                </li><li>
+                  {% if permissions.dir_log >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/logs'
                 </li>
                 <li>
                   {% if permissions.dir_bundles >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'web/bundles'
@@ -29,12 +33,37 @@
                   <i class="icon-remove" style="color: red"></i> DataBase / Tables exists
                   {% if db_exists == false %}<br/><small>Please run 'php app/console doctrine:database:create' before install</small>{% endif %}
                 </li>
-              </ol>
 
-      	  	{% if db_exists and permission_status %}<a class="btn btn-default-outline btn-block" href="{{ path('_majes_install_db') }}">Install tables now</a>{% endif %}
-      	</form>
+                <li>
+                  <i class="icon-remove" style="color: red"></i> Domain url (without http) / admin email / admin password<br><br>
+                  <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-link"></i></span>
+                        <input class="form-control" type="text" name="url" placeholder="domain.dev" value=""  required/>
+                      </div>
+                    </div>
+      
+                    <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input class="form-control" type="text" name="email" placeholder="admin@admin.com" value="admin@admin.com" required/>
+                      </div>
+                    </div>
+      
+                    <div class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                        <input class="form-control" type="text" name="password" placeholder="admin" value="admin" />
+                      </div>
+                    </div>
+                </li>
+              </ol>
+              
+
+            {% if db_exists and permission_status %}<input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Complete install"/>{% endif %}
+        </form>
     </div>
     <!-- End Login Screen -->
 
 {% endblock %}
-	
+  
