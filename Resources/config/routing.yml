@@ -14,6 +14,10 @@ _admin_logout:
     pattern:   /deconnexion
     defaults: { _controller: MajesCoreBundle:Auth:logout }
 
+_admin_emptycache:
+    pattern:  /cache
+    defaults: { _controller: MajesCoreBundle:Index:emptycache }
+
 _admin_myaccount:
     pattern:  /myaccount
     defaults: { _controller: MajesCoreBundle:Index:myaccount }
