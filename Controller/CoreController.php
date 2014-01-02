@@ -7,6 +7,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 use Majes\CmsBundle\Entity\Host;
+use Majes\CmsBundle\Entity\Route;
 
 class CoreController extends Controller
 {
@@ -77,14 +78,25 @@ class CoreController extends Controller
             }
         }        
 
-
-        $host = new Host();
-        $host->setUrl($this->container->getParameter('domain_url'));
-        $host->setTitle('Majesteel');
-
         $em = $this->getDoctrine()->getManager();
+        $host = $em->getRepository('MajesCmsBundle:Host')
+            ->findOneById(1);
+
+        $host->setUrl($this->container->getParameter('domain_url'));
+        $host->setTitle('majesteel example');
+
         $em->persist($host);
         $em->flush();
+
+        $routes = $em->getRepository('MajesCmsBundle:Route')
+            ->findAll();
+        
+        foreach($routes as $route){
+            $route->setHost($this->container->getParameter('domain_url'));
+            
+            $em->persist($route);
+            $em->flush();
+        }
 
         return $this->redirect($this->get('router')->generate('_admin_index'));
 

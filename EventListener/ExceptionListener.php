@@ -19,7 +19,7 @@ class ExceptionListener
     
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-   
+
         // exception object
         $exception = $event->getException();
         // new Response object
