@@ -38,7 +38,7 @@ class LanguageTranslationType extends AbstractType
         
       
         $builder->add('translation', 'textarea', array(
-            'required' => false));
+            'required' => true));
 
         $builder->add('locale', 'hidden', array('empty_data' => $this->_lang));
 
