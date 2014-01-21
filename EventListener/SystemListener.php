@@ -9,12 +9,16 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 use Majes\CoreBundle\Entity\Language;
 use Majes\CoreBundle\Entity\Log;
 use Majes\CoreBundle\Entity\User\User;
+use Majes\CoreBundle\Entity\User\Role;
+
+require_once __DIR__.'/../../../../../facebook/php-sdk/src/facebook.php';
 
 class SystemListener
 {
@@ -24,6 +28,7 @@ class SystemListener
     public $_langs;
     public $_default_lang;
     public $_translator;
+    public $_env;
     public $_is_multilingual;
 
     private $entityManager = null;
@@ -66,10 +71,61 @@ class SystemListener
         }
 
         if ($controllerObject instanceof SystemController) {
-
+			
             $parameters = $this->container->getParameter('admin');
             $google = $this->container->getParameter('google');
-            $wysiwyg = $parameters['wysiwyg'];
+            $facebook = $this->container->getParameter('facebook');
+
+
+			/*FACEBOOK CONNECT*/
+			$facebook_params = $facebook;
+			if(!empty($facebook_params['app_id']) 
+				&& !empty($facebook_params['app_secret'])){
+				$facebookClass = new \Facebook(array(
+			  		'appId'  => $facebook_params['app_id'],
+			  		'secret' => $facebook_params['app_secret'],
+				));
+
+				$facebook_id = $facebookClass->getUser();
+				if($facebook_id){
+					
+					$user = $this->entityManager->getRepository('MajesCoreBundle:User\User')
+			            ->findOneBy(array('facebookId' => $facebook_id));
+			
+					$user_profile = $facebookClass->api('/me','GET');
+
+					if(is_null($user)){
+						//subscribe them
+						$user = new User();
+						$user->setFirstname($user_profile['first_name']);
+						$user->setLastname($user_profile['last_name']);
+						$user->setEmail($user_profile['email']);
+						$user->setUsername($user_profile['email']);
+						$user->setFacebookId($user_profile['id']);
+						$user->setLocale(substr($user_profile['locale'], 0, 2));
+						
+						$password = 'gbeauvoir';//uniqid();
+						$factory = $this->container->get('security.encoder_factory');
+		                $encoder = $factory->getEncoder($user);
+		                $pwd = $encoder->encodePassword($password, $user->getSalt());
+
+		                $user->setPassword($pwd);
+		
+						//Add user role
+						$role = $this->entityManager->getRepository('MajesCoreBundle:User\Role')
+				            ->findOneBy(array('role' => 'ROLE_USER'));
+				
+						$user->addRole($role);
+						
+						$this->entityManager->persist($user);
+		                $this->entityManager->flush();
+							
+					}
+					
+				}
+			}
+
+			$wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
             $is_multilingual = $this->container->getParameter('is_multilingual');
 
@@ -77,9 +133,16 @@ class SystemListener
                 $token = $this->securityContext->getToken();
                 $_user = !is_null($token) ? $token->getUser() : false;
 
+				if((empty($_user) || is_string($_user)) && !empty($user)){
+					//TODO :: Auto login user
+					$token = new UsernamePasswordToken($user, $user->getPassword(), "myaccount", $user->getRoles());
+					$this->securityContext->setToken($token);
+					$_user = $user;
+				}
+
                 if(!empty($_user) && !is_string($_user)){
                     $params = array_merge($request->query->all(),  $request->request->all(), $request->get('_route_params'));
-
+					
                     if(!is_null($request->get('_route'))){
                         $log = new Log();
                         $log->setUser($_user);
@@ -118,19 +181,21 @@ class SystemListener
             $globals = $twig->getGlobals();
             $default_lang = $globals['default_lang'];
 
-            $controllerObject->_user = $_user;
+            $controllerObject->_env = $env;
+			$controllerObject->_user = $_user;
             $controllerObject->_lang = $locale;
             $controllerObject->_langs = $language_rowset;
             $controllerObject->_default_lang = $default_lang;
             $controllerObject->_translator = $controllerObject->get('translator');
             $controllerObject->_is_multilingual = $is_multilingual;
-
-            $session = $request->getSession();
+			
+			$session = $request->getSession();
             $session->set('langs', $controllerObject->_langs);
             $session->set('_locale', $locale);
             $session->set('wysiwyg', $wysiwyg);
             $session->set('menu', $menu);
             $session->set('google', $google);
+            $session->set('facebook', $facebook);
             
             /*NOTIFICATION*/
             // Google analytics
