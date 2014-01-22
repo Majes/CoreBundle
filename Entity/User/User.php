@@ -24,6 +24,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
+     * @ORM\Column(name="facebook_id", type="integer")
+     */
+    private $facebookId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Majes\MediaBundle\Entity\Media")
      * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
      */
@@ -121,6 +126,8 @@ class User implements AdvancedUserInterface, \Serializable
 
         $datetime = new \DateTime();
         $this->lastconnectedDate = $datetime;
+        $this->createDate = $datetime;
+        $this->wysiwyg = false;
 
         $this->tags = 'User';
 
@@ -134,6 +141,15 @@ class User implements AdvancedUserInterface, \Serializable
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
         return $this;
     }
 
@@ -270,6 +286,15 @@ class User implements AdvancedUserInterface, \Serializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     * @DataTable(label="Fbk Id", column="facebookId", isSortable=0)
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
     }
 
     /**
