@@ -107,6 +107,9 @@ class CoreController extends Controller
                 ->findOneById(1);
     
             $host->setUrl($url);
+            if(!$this->container->getParameter('is_multilingual'))
+                $host->setIsMultilingual(false);
+            
             $host->setTitle('majesteel example');
     
             $em->persist($host);
