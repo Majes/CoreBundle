@@ -9,7 +9,7 @@ use Majes\CoreBundle\Annotation\DataTable;
 /**
  * Majes\CoreBundle\Entity\Host
  *
- * @ORM\Table(name="cms_host")
+ * @ORM\Table(name="core_host")
  * @ORM\Entity
  */
 class Host{
