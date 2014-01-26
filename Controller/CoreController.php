@@ -7,7 +7,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Response;
 
-use Majes\CmsBundle\Entity\Host;
+use Majes\CoreBundle\Entity\Host;
 use Majes\CmsBundle\Entity\Route;
 
 class CoreController extends Controller
@@ -103,7 +103,7 @@ class CoreController extends Controller
             
             /* SET URL */
             $em = $this->getDoctrine()->getManager();
-            $host = $em->getRepository('MajesCmsBundle:Host')
+            $host = $em->getRepository('MajesCoreBundle:Host')
                 ->findOneById(1);
     
             $host->setUrl($url);
