@@ -96,7 +96,7 @@ class Host{
 
     /**
      * @inheritDoc
-     * @DataTable(label="Id", column="id", isSortable=1)
+     * @DataTable(label="Id", column="id", isSortable=0)
      */
     public function getId()
     {
@@ -114,19 +114,20 @@ class Host{
 
     /**
      * @inheritDoc
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @inheritDoc
-     * @DataTable(label="Title", column="title", isSortable=1)
+     * @DataTable(label="Title", column="title", isSortable=0)
      */
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @inheritDoc
+     * @DataTable(label="Url", column="url", isSortable=0)
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**

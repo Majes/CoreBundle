@@ -16,9 +16,11 @@ use Majes\CoreBundle\Entity\User\User;
 use Majes\CoreBundle\Entity\User\Role;
 use Majes\MediaBundle\Entity\Media;
 use Majes\CoreBundle\Entity\Chat;
+use Majes\CoreBundle\Entity\Host;
 
 use Majes\CoreBundle\Form\User\Myaccount;
 use Majes\CoreBundle\Form\User\UserType;
+use Majes\CoreBundle\Form\HostType;
 use Majes\CoreBundle\Form\Language\LanguageType;
 use Majes\CoreBundle\Form\User\UserRoleType;
 use Majes\CoreBundle\Form\User\RoleType;
@@ -228,6 +230,93 @@ class IndexController extends Controller implements SystemController
 
 
         return $this->redirect($this->get('router')->generate('_admin_languages', array()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function domainsAction(){
+
+        $em = $this->getDoctrine()->getManager();
+        $hosts = $em->getRepository('MajesCoreBundle:Host')
+            ->findAll();
+
+        return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
+            'datas' => $hosts,
+            'object' => new Host(),
+            'pageTitle' => $this->_translator->trans('Domains'),
+            'pageSubTitle' => $this->_translator->trans('List off all domains currently available'),
+            'urls' => array(
+                'add' => '_admin_domain_edit',
+                'edit' => '_admin_domain_edit',
+                'delete' => '_admin_domain_delete'
+                )
+            ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function domainEditAction($id){
+
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $host = $em->getRepository('MajesCoreBundle:Host')
+            ->findOneById($id);
+
+
+        $form = $this->createForm(new HostType($request->getSession()), $host);
+
+        if($request->getMethod() == 'POST'){
+
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+
+                if(is_null($host)) $host = $form->getData();
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($host);
+                $em->flush();
+
+                return $this->redirect($this->get('router')->generate('_admin_domain_edit', array('id' => $host->getId())));
+
+            }else{
+                foreach ($form->getErrors() as $error) {
+                    echo $message[] = $error->getMessage();
+                }
+            }
+        }
+
+        $pageSubTitle = empty($host) ? $this->_translator->trans('Add a new domain') : $this->_translator->trans('Edit domain') . ' ' . $host->getTitle();
+
+        return $this->render('MajesCoreBundle:Index:domain-edit.html.twig', array(
+            'pageTitle' => 'Domains',
+            'pageSubTitle' => $pageSubTitle,
+            'host' => $host,
+            'form' => $form->createView()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function domainDeleteAction($id){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $host = $em->getRepository('MajesCoreBundle:Host')
+            ->findOneById($id);
+
+        if(!is_null($host)){
+            //$em->remove($host);
+            //$em->flush();
+        }
+
+
+        return $this->redirect($this->get('router')->generate('_admin_domains', array()));
     }
 
     /**

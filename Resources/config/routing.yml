@@ -22,6 +22,18 @@ _admin_myaccount:
     pattern:  /myaccount
     defaults: { _controller: MajesCoreBundle:Index:myaccount }
 
+_admin_domains:
+    pattern:  /domains
+    defaults: { _controller: MajesCoreBundle:Index:domains }
+
+_admin_domain_edit:
+    pattern:  /domain/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:domainEdit, id: null }
+
+_admin_domain_delete:
+    pattern:  /domain/delete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:domainDelete }
+
 _admin_languages:
     pattern:  /languages
     defaults: { _controller: MajesCoreBundle:Index:languages }
