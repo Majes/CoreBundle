@@ -38,12 +38,14 @@ class CoreController extends Controller
         $permissions['dir_var'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../app/var')), -4);
         $permissions['dir_bundles'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../web/bundles')), -4);
         $permissions['dir_media'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../web/media')), -4);
+        $permissions['dir_media_private'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../app/private/media')), -4);
         $permissions['dir_log'] = substr(sprintf('%o', fileperms(__DIR__ . '/../../../../../../app/logs')), -4);
 
         $permission_status = ($permissions['dir_cache'] >= '0775' && 
             $permissions['dir_var'] >= '0775' && 
             $permissions['dir_bundles'] >= '0775' && 
             $permissions['dir_media'] >= '0775' && 
+            $permissions['dir_media_private'] >= '0775' && 
             $permissions['dir_log'] >= '0775') ? true : false;
 
         if($permission_status && $val)

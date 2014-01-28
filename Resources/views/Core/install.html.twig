@@ -28,7 +28,9 @@
                 <li>
                   {% if permissions.dir_media >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'web/media'
                 </li>
-               
+               <li>
+                  {% if permissions.dir_media_private >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/private/media'
+                </li>
                 <li>
                   <i class="icon-remove" style="color: red"></i> DataBase / Tables exists
                   {% if db_exists == false %}<br/><small>Please run 'php app/console doctrine:database:create' before install</small>{% endif %}
