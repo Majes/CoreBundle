@@ -5,8 +5,8 @@
     <div class="form-group">
         {{ form_label(form) }}
         <div class="col-lg-9">
-        	{{ form_widget(form) }}
-			{{ form_errors(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
         </div>
     </div>
 {% endspaceless %}
@@ -17,14 +17,14 @@
         {% if errors|length > 0 %}
         <div class="widget-content padded form_errors">
         <div class="alert alert-danger">
-          	<!--<button class="close" data-dismiss="alert" type="button">×</button>-->
-          	{% for error in errors %}
-        	    {{
-        	        error.messagePluralization is null
-        	            ? error.messageTemplate|trans(error.messageParameters, 'validators')
-        	            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
-        	    }}
-        	{% endfor %}
+            <!--<button class="close" data-dismiss="alert" type="button">×</button>-->
+            {% for error in errors %}
+                {{
+                    error.messagePluralization is null
+                        ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+                }}
+            {% endfor %}
         </div>
         </div>
         {% endif %}
@@ -75,11 +75,10 @@
     {% spaceless %}
 
     {{ block('form_widget') }}
-    {% if (image_url is not null) %}
-        {% set mime_type = getMimeType(image_url) %}
-        {% if 'image' in mime_type %}<img src="{{ asset(image_url) }}" style="max-width: 80%; margin: 10px 0 0"/>
-        {% else %}<a href="{{ asset(image_url) }}" target="_blank" class="icon-cloud-download"> {{ 'Download file'|trans({}, translation_domain) }}</a>
-        {% endif %}
+    {% if (media_id is not null) %}
+
+        {{ teelMediaLoad(media_id, 200, 150, true, asset('bundles/majesmedia/img/icon-document.png'))|raw }}
+
     {% endif %}
 
     {% endspaceless %}
@@ -133,7 +132,7 @@
 {% endblock collection_widget %}
 
 {% block text_widget %}
-	{% set type = type|default('text') %}
+    {% set type = type|default('text') %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
 {% endblock text_widget %}
 
@@ -146,10 +145,10 @@
 
 
 {% block checkbox_widget %}
-	<label class="checkbox">
-    	<input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
+    <label class="checkbox">
+        <input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
         <span>{{ label|trans }}</span>
-	</label>
+    </label>
 {% endblock checkbox_widget %}
 
 {% block password_widget %}
