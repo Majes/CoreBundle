@@ -61,7 +61,6 @@ class IndexController extends Controller implements SystemController
         $global_stats = array();
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
-            break;
         }
         
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
