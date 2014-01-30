@@ -24,8 +24,9 @@ CoreAdmin = {
 			});
 		});
 
-	}
-};
+		
+			}
+		};
 
 CoreAdmin.Common = {
 	confirmDelete: function(msg){

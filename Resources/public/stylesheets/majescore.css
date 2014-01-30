@@ -1,22 +1,23 @@
 .form_errors .alert{
-	padding: 5px 15px;
-	margin-bottom: 0px;
+  padding: 5px 15px;
+  margin-bottom: 0px;
 }
 
 .padded.form_errors{
-	padding: 2px 0 5px;
+  padding: 2px 0 5px;
 }
 
 .gallery-item .caption{
-	clear: both; 
-	position: absolute;
-	width: 100%;
-	display: block;
-	top: 50px;
-	color: #fff;
+  clear: both; 
+  position: absolute;
+  width: 100%;
+  display: block;
+  top: 50px;
+  color: #fff;
 }
 
-.isotope .isotope-item{overflow: hidden;}
+.isotope .isotope-item{overflow: hidden; text-align: center}
+  .isotope .isotope-item .icon-facetime-video{font-size: 50px; color: #999; margin: 30px 0 0; display: block;}
 
 .isotope .isotope-item i{width: 60px; height: 60px; font-size: 60px; margin: 30px auto; display: block; }
 
@@ -103,11 +104,13 @@ body.ajax {
 .stats-container{height: 200px;}
 .stats-container [class^="col-"] .number, .stats-container [class*="col-"] .number{padding-top: 45px; font-size: 3em;}
 
-
+.fancybox-wrap {
+  width: auto !important;
+}
 
 /*BOOTSTRAP*/
 .modal-dialog{
-	width: 800px!important;
+  width: 800px!important;
 }
 
 hr{border-bottom: 1px solid #fff;border-top: 1px solid #ddd;}
