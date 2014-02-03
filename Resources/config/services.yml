@@ -40,7 +40,7 @@ services:
 
     majes.mailer:
         class: Majes\CoreBundle\Services\Mailer
-        arguments: [@mailer, @templating,@doctrine.orm.entity_manager, %admin_email%]
+        arguments: [@mailer, @templating,@doctrine.orm.entity_manager, @security.context, %admin_email%]
 
     majes.ga:
         class: Majes\CoreBundle\Services\GoogleAnalytics
