@@ -54,7 +54,12 @@ class Mailer
 
     }
 
-    public function setBody($body, $template = null, $data = array()){
+    public function setBody($body = '', $template = null, $data = array()){
+
+        if(!is_null($template) && $this->_templating->exists($template)){
+            $body = $this->_templating->render($template, $data);
+            $this->_email->setContentType('text/html');
+        }
 
         $this->_email->setBody($body);
         $this->_mailerDb->setHtml($body);
