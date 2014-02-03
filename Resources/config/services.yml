@@ -38,6 +38,10 @@ services:
             session: "@session"
             source: "core"
 
+    majes.mailer:
+        class: Majes\CoreBundle\Services\Mailer
+        arguments: [@mailer, @templating,@doctrine.orm.entity_manager, %admin_email%]
+
     majes.ga:
         class: Majes\CoreBundle\Services\GoogleAnalytics
         arguments: ["@service_container",@doctrine.orm.entity_manager]
