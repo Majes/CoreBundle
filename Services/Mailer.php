@@ -69,6 +69,7 @@ class Mailer
     public function send(){
 
         $from = $this->_email->getFrom();
+        $to = $this->_email->getTo();
 
         if(empty($from))
             $this->setFrom($this->_admin_email);
@@ -79,10 +80,6 @@ class Mailer
         $this->_mailer->send($this->_email);
 
         //Save email in database
-
-        
-        
-
         $this->_em->persist($this->_mailerDb);
         $this->_em->flush();  
 
