@@ -58,5 +58,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             || is_subclass_of($class, $this->getEntityName());
     }
 
+public function getUserBySocial($social, $id) {
+
+        $q = $this->createQueryBuilder('u')
+                ->where('u.social like :query')
+                ->setParameter('query', '%"' . $social . '":"' . $id . '"%')
+                ->getQuery();
+
+        $result = $q->getOneOrNullResult();
+        return $result;
+    }
     
 }
