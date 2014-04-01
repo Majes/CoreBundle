@@ -24,9 +24,9 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(name="facebook_id", type="integer")
+     * @ORM\Column(name="social", type="json_array")
      */
-    private $facebookId;
+    private $social;
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\MediaBundle\Entity\Media")
@@ -147,9 +147,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @inheritDoc
      */
-    public function setFacebookId($facebookId)
+    public function setSocial($social)
     {
-        $this->facebookId = $facebookId;
+        $this->social = $social;
         return $this;
     }
 
@@ -290,11 +290,11 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritDoc
-     * @DataTable(label="Fbk Id", column="facebookId", isSortable=0)
+     * @DataTable(label="Scl", column="social", isSortable=0)
      */
-    public function getFacebookId()
+    public function getSocial()
     {
-        return $this->facebookId;
+        return $this->social;
     }
 
     /**
