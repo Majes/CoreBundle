@@ -75,55 +75,11 @@ class SystemListener
             $parameters = $this->container->getParameter('admin');
             $google = $this->container->getParameter('google');
             $facebook = $this->container->getParameter('facebook');
+            $twitter = $this->container->getParameter('twitter');
 
-
-            /*FACEBOOK CONNECT*/
-            $facebook_params = $facebook;
-            if(!empty($facebook_params['app_id']) 
-                && !empty($facebook_params['app_secret'])){
-                $facebookClass = new \Facebook(array(
-                    'appId'  => $facebook_params['app_id'],
-                    'secret' => $facebook_params['app_secret'],
-                ));
-
-                $facebook_id = $facebookClass->getUser();
-                if($facebook_id){
-                    
-                    $user = $this->entityManager->getRepository('MajesCoreBundle:User\User')
-                        ->findOneBy(array('facebookId' => $facebook_id));
-            
-                    $user_profile = $facebookClass->api('/me','GET');
-
-                    if(is_null($user)){
-                        //subscribe them
-                        $user = new User();
-                        $user->setFirstname($user_profile['first_name']);
-                        $user->setLastname($user_profile['last_name']);
-                        $user->setEmail($user_profile['email']);
-                        $user->setUsername($user_profile['email']);
-                        $user->setFacebookId($user_profile['id']);
-                        $user->setLocale(substr($user_profile['locale'], 0, 2));
-                        
-                        $password = uniqid();
-                        $factory = $this->container->get('security.encoder_factory');
-                        $encoder = $factory->getEncoder($user);
-                        $pwd = $encoder->encodePassword($password, $user->getSalt());
-
-                        $user->setPassword($pwd);
-        
-                        //Add user role
-                        $role = $this->entityManager->getRepository('MajesCoreBundle:User\Role')
-                            ->findOneBy(array('role' => 'ROLE_USER'));
-                
-                        $user->addRole($role);
-                        
-                        $this->entityManager->persist($user);
-                        $this->entityManager->flush();
-                            
-                    }
-                    
-                }
-            }
+            //try autologin via facebook, twitter or google
+            $social = $this->container->get('majes.social');
+            $user = $social->login();
 
             $wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
@@ -196,6 +152,7 @@ class SystemListener
             $session->set('menu', $menu);
             $session->set('google', $google);
             $session->set('facebook', $facebook);
+            $session->set('twitter', $twitter);
             
             /*NOTIFICATION*/
             // Google analytics
