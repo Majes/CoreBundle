@@ -45,6 +45,10 @@ services:
     majes.ga:
         class: Majes\CoreBundle\Services\GoogleAnalytics
         arguments: ["@service_container",@doctrine.orm.entity_manager]
+    
+    majes.social:
+        class: Majes\SocialBundle\Services\Social
+        arguments: ["@service_container"]
 
     authentication_handler:
         class: Majes\CoreBundle\Handler\AuthenticationHandler
