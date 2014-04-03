@@ -55,4 +55,17 @@ services:
         arguments:  [@router, @security.context]
         tags:
             - { name: 'monolog.logger', channel: 'security' }
+            
+    swiftmailer.transport.simplemailinvoker: 
+        class: Swift_Transport_SimpleMailInvoker
+
+    swiftmailer.transport.eventdispatcher: 
+        class: Swift_Events_SimpleEventDispatcher
+        
+    swiftmailer.transport.buffer: 
+        class: Swift_Transport_StreamBuffer
+
+    swiftmailer.transport.real:
+        class: Swift_Transport_MailTransport 
+        arguments: [@swiftmailer.transport.simplemailinvoker, @swiftmailer.transport.eventdispatcher]
 
