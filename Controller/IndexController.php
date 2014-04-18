@@ -337,7 +337,7 @@ class IndexController extends Controller implements SystemController
         if(!is_null($langs) && in_array('', $langs)) $langs = null;
         if(is_null($page)) $page = 1;
 
-        $translations = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+        $translations = $em->getRepository('MajesCoreBundle:LanguageToken')
                 ->findForAdmin($catalogues, $langs, $page, $_results_per_page);
         
 
@@ -351,7 +351,7 @@ class IndexController extends Controller implements SystemController
 
         return $this->render('MajesCoreBundle:Index:language-messages.html.twig', array(
             'pageTitle' => $this->_translator->trans('Languages'),
-            'object' => new LanguageTranslation(),
+            'object' => new LanguageToken(),
             'pageSubTitle' => $this->_translator->trans('List of translations'),
             'loadmore' => $loadmore,
             'page' => $page,
@@ -364,7 +364,7 @@ class IndexController extends Controller implements SystemController
                 'add' => '_admin_language_message_edit',
                 'edit' => '_admin_language_message_edit',
                 'delete' => '_admin_language_message_delete',
-                'params' => array('lang' => array('key'=>'locale', 'default' => $this->_lang))
+                'params' => array()
                 )
             ));
     }
@@ -373,79 +373,100 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageMessageEditAction($id, $lang)
+    public function languageMessageEditAction($id)
     {   
-
+        $token_id = $id;
         $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
 
-        //If lang is null, get default language
-        if(is_null($lang)) $lang = $this->_lang;
-        
+
+
         $languagetranslation = $em->getRepository('MajesCoreBundle:LanguageTranslation')
-            ->findOneById($id);
+            ->findOneBy(array('token' => $token_id));
+
+
+        $translations = array();
+        foreach($this->_langs as $lang){
+
+            $translations[$lang->getLocale()] = array('name' => $lang->getName(), 'value' => '');
+
+        }
 
         //Get token
         if(!is_null($languagetranslation)){
+            
             $token = $languagetranslation->getToken();
-            $token->setTranslation($id);
+            foreach($token->getTranslations() as $token_translation){
+                $translations[$token_translation->getLocale()]['value'] = $token_translation->getTranslation();
+            }
+
         }else{
-            $token = new LanguageToken();
+            $token = null;
         }
 
         //Perform post submit
-        $form = $this->createForm(new LanguageTokenType($lang), $token);
+        //$form = $this->createForm(new LanguageTokenType($lang), $token);
         if($request->getMethod() == 'POST'){
 
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $languageToken = $form->getData();
-                if(is_null($languageToken->getId())){
-                    //Create token
-                    $em->persist($languageToken);
-                    $em->flush();
+            if(is_null($token)){
+                $token = new LanguageToken();
+            }
 
+            $token->setToken($request->get('token'));
+            
+            $em->persist($token);
+            $em->flush();
+
+            $token_id = $token->getId();
+
+            $form_translations = $request->get('translations');
+            foreach ($form_translations as $form_translation_lang => $form_translation) {
+                
+                //Get translation if exists in db
+                $form_translation_temp = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+                    ->findOneBy(array('token' => $token_id, 'locale' => $form_translation_lang));
+                if(is_null($form_translation_temp)){
+                    $form_translation_temp = new LanguageTranslation();
+                    $form_translation_temp->setToken($token);
+                    $form_translation_temp->setLocale($form_translation_lang);
+                    $form_translation_temp->setCatalogue('messages'); //to change
                 }
 
-                $languageTranslation = $form['translation']->getData();
-                if(is_null($languageTranslation->getToken())){
-
-                    $languageTranslation->setToken($languageToken);
-
-                }
-         
-                $em->persist($languageTranslation);
+                $form_translation_temp->setTranslation($form_translation);
+                $em->persist($form_translation_temp);
                 $em->flush();
+            }
 
-                //Clear translation cache
+            //Clear translation cache
+            foreach ($this->_langs as $_lang) {
+                $lang = $_lang->getLocale();
                 if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php')) 
                     unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php');
                 if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta')) 
                     unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta');
-
-                //Set routes to table
-                return $this->redirect($this->get('router')->generate('_admin_language_messages'));
-
-            }else{
-                foreach ($form->getErrors() as $error) {
-                    echo $message[] = $error->getMessage();
-                }
             }
+           
+
+            //Set routes to table
+            return $this->redirect($this->get('router')->generate('_admin_language_message_edit', array('id' => $token_id)));
+
+         
 
             
         }
 
-        $edit = !is_null($id) ? 1 : 0;
+        $edit = !is_null($token_id) ? 1 : 0;
 
 
         $pageSubTitle = is_null($token) ? $this->_translator->trans('Add a new translation') : $this->_translator->trans('Edit translation') .' '. (!is_null($token->getToken()) ? $token->getToken() : '--');
         return $this->render('MajesCoreBundle:Index:language-message-edit.html.twig', array(
             'pageTitle' => $this->_translator->trans('Language translation'),
             'pageSubTitle' => $pageSubTitle,
-            'form' => $form->createView(),
             'translation' => $languagetranslation,
+            'token' => $token,
+            'translations' => $translations,
             'edit' => $edit,
-            'lang' => $lang
+            'lang' => $this->_lang
             ));
     }
 
