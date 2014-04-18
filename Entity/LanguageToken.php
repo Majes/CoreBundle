@@ -2,7 +2,10 @@
 
 namespace Majes\CoreBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Majes\CoreBundle\Annotation\DataTable;
 
 /**
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\LanguageTokenRepository")
@@ -31,13 +34,16 @@ class LanguageToken {
     private $translation = null;
 
     /**
-     * @inheritDoc
+     * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1)
      */
     public function __construct(){
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
  
- 
+    /**
+     * @inheritDoc
+     * @DataTable(label="Id", column="id", isSortable=1)
+     */
     public function getId() {
         return $this->id;
     }
@@ -45,7 +51,10 @@ class LanguageToken {
     public function setId($id) {
         $this->id = $id;
     }
- 
+    /**
+     * @inheritDoc
+     * @DataTable(label="Token", column="token", isSortable=1)
+     */
     public function getToken() {
         return $this->token;
     }
