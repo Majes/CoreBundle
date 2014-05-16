@@ -27,6 +27,11 @@ class Language {
 
     /** @ORM\column(type="boolean", name="is_active") */
     private $isActive;
+
+    /**
+     * @ORM\Column(name="host", type="string", length=255)
+     */
+    private $host;
     
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
@@ -78,6 +83,23 @@ class Language {
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+        return $this;
+    }
+
+    /**
+     * @DataTable(label="Url", column="host", isSortable=0)
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
         return $this;
     }
 }
