@@ -56,6 +56,15 @@ class SystemListener
         if(!empty($routeDoc)){
             $locale = $routeDoc->getOption('lang');
             $request->setLocale($locale);
+        }else{
+            //Check if domain is linked to a language
+            $domain = $request->server->get('HTTP_HOST');
+            $langByDomain = $this->entityManager->getRepository('MajesCoreBundle:Language')->findOneBy(
+                array('host' => $domain)
+                );
+            if(!empty($langByDomain))
+                $locale = $langByDomain->getLocale();
+
         }
 
         $request->setLocale($locale);
