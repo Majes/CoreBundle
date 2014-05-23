@@ -43,6 +43,12 @@ class LanguageType extends AbstractType
        		    new NotBlank()
        		)));
 
+        $builder->add('host', 'text', array(
+            'required' => true,
+            'constraints' => array(
+                new NotBlank()
+            )));
+
         $builder->add('is_active', 'checkbox', array(
             'required' => false));
 
