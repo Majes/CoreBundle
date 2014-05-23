@@ -290,7 +290,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritDoc
-     * @DataTable(label="Scl", column="social", isSortable=0)
      */
     public function getSocial()
     {
