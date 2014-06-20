@@ -44,7 +44,7 @@ class LanguageType extends AbstractType
        		)));
 
         $builder->add('host', 'text', array(
-            'required' => true,
+            'required' => false,
             'constraints' => array(
                 new NotBlank()
             )));
