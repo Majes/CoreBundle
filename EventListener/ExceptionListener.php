@@ -6,20 +6,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 class ExceptionListener
 {
     protected $templating;
     protected $kernel;
+    protected $container;
 
-    public function __construct(EngineInterface $templating, $kernel)
+    public function __construct(EngineInterface $templating, $kernel, Container $container)
     {
         $this->templating = $templating;
         $this->kernel = $kernel;
+        $this->container = $container;
     }
     
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
 
+        $request = $event->getRequest();
+        $locale = $this->container->getParameter('locale');
+        $request->setLocale($locale);
         // exception object
         $exception = $event->getException();
         // new Response object
