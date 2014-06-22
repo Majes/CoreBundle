@@ -13,41 +13,38 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class LanguageType extends AbstractType
 {
 
-	protected $session;
+    protected $session;
 
-	public function __construct(Session $session){
+    public function __construct(Session $session){
         $this->session = $session;
     }
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
-	{
-    	$resolver->setDefaults(array(
-    	    'data_class' => 'Majes\CoreBundle\Entity\Language',
-    	    'csrf_protection' => false,
-    	));
-	}
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Majes\CoreBundle\Entity\Language',
+            'csrf_protection' => false,
+        ));
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
 
         $builder->add('name', 'text', array(
-        	'required' => true,
-        	'constraints' => array(
-       		    new NotBlank()
-       		)));
-        
-        $builder->add('locale', 'text', array(
-        	'required' => true,
-        	'constraints' => array(
-       		    new NotBlank()
-       		)));
-
-        $builder->add('host', 'text', array(
-            'required' => false,
+            'required' => true,
             'constraints' => array(
                 new NotBlank()
             )));
+        
+        $builder->add('locale', 'text', array(
+            'required' => true,
+            'constraints' => array(
+                new NotBlank()
+            )));
+
+        $builder->add('host', 'text', array(
+            'required' => false));
 
         $builder->add('is_active', 'checkbox', array(
             'required' => false));
