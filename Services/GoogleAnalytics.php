@@ -61,7 +61,7 @@ class GoogleAnalytics{
 		$response = $client->setAssertionCredentials($cred);
 
 
-		if(!empty($stats)/* || is_null($response)*/){
+		if(!empty($stats) || is_null($response)){
 			return;
 		}
 		
