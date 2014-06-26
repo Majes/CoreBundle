@@ -44,8 +44,11 @@ class GoogleAnalytics{
 			$this->_noparams = true;
 			return false;
 		}
-		$key = file_get_contents(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12');
 
+		
+
+		$key = file_get_contents(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12');
+	
 		$cred = new \Google_Auth_AssertionCredentials(
 		  	// Replace this with the email address from the client.
 		  	$this->_params['service_email_address'],
@@ -54,14 +57,16 @@ class GoogleAnalytics{
 		  	$key
 		);
 
-		$client->setAssertionCredentials($cred);
+		
+		$response = $client->setAssertionCredentials($cred);
 
-		if(!empty($stats)){
+
+		if(!empty($stats)/* || is_null($response)*/){
 			return;
 		}
 		
 		$this->getAnalytics($analytics);
-
+		
 	}
 
 	public function isUp(){
