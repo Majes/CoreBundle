@@ -13,12 +13,15 @@ class ExceptionListener
     protected $templating;
     protected $kernel;
     protected $container;
+    protected $em;
 
     public function __construct(EngineInterface $templating, $kernel, Container $container)
     {
         $this->templating = $templating;
         $this->kernel = $kernel;
         $this->container = $container;
+
+        $this->em = $this->container->get('doctrine.orm.entity_manager');
     }
     
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -26,6 +29,30 @@ class ExceptionListener
 
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
+
+
+        if(isset($request->server)){
+            $domain = $request->server->get('HTTP_HOST');
+            $langByDomain = $this->em->getRepository('MajesCoreBundle:Language')->findOneBy(
+                    array('host' => $domain)
+                    );
+            if(!empty($langByDomain))
+                $locale = $langByDomain->getLocale();
+            else{
+                $PATH_INFO = $request->server->get('PATH_INFO');
+                if(!empty($PATH_INFO)){
+                    $path_array = explode('/', $PATH_INFO);
+                    $langByLocale = $this->em->getRepository('MajesCoreBundle:Language')->findOneBy(
+                        array('locale' => $path_array[1])
+                        );
+                    if(!empty($langByLocale))
+                        $locale = $langByLocale->getLocale();
+                }
+    
+            }
+        }
+
+
         $request->setLocale($locale);
         // exception object
         $exception = $event->getException();
