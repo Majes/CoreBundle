@@ -338,11 +338,11 @@ class IndexController extends Controller implements SystemController
         if(is_null($page)) $page = 1;
 
         $translations = $em->getRepository('MajesCoreBundle:LanguageToken')
-                ->findForAdmin($catalogues, $langs, $page, $_results_per_page);
+                ->findForAdmin($catalogues, $langs/*, $page, $_results_per_page*/);
         
 
         $loadmore = count($translations) > $_results_per_page ? true : false;
-        count($translations) > $_results_per_page ? array_pop($translations) : $translations;
+        //count($translations) > $_results_per_page ? array_pop($translations) : $translations;
 
 
         $all_catalogues = $em->getRepository('MajesCoreBundle:LanguageTranslation')

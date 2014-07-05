@@ -7,17 +7,21 @@ use Doctrine\ORM\EntityRepository;
 class LanguageTokenRepository extends EntityRepository {
  
 
-    public function findForAdmin($catalogues = null, $langs = null, $page = 1, $limit = 20)
+    public function findForAdmin($catalogues = null, $langs = null, $page = 1, $limit = null)
     {
 
-      $offset = ($page - 1) * $limit;
-      $limit++;
       
       $q = $this
             ->createQueryBuilder('t')
-            ->innerJoin('t.translations', 'lt')
-            ->setFirstResult( $offset )
+            ->innerJoin('t.translations', 'lt');
+
+        if(!is_null($limit)){
+            $offset = ($page - 1) * $limit;
+            $limit++;
+
+            $q = $q->setFirstResult( $offset )
             ->setMaxResults( $limit );
+        }
 
         if(!is_null($catalogues)){
 
