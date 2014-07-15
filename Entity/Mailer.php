@@ -11,13 +11,14 @@ use Majes\CoreBundle\Annotation\DataTable;
  *
  * @ORM\Table(name="core_mailer")
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\MailerRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Mailer
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -25,51 +26,54 @@ class Mailer
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
-    private $user;
+    private $user=null;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="subject", type="string", length=255)
+     * @ORM\Column(name="subject", type="string", length=255, nullable=false)
      */
     private $subject;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="template", type="string", length=255)
+     * @ORM\Column(name="template", type="string", length=255, nullable=false)
      */
     private $template;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="address_from", type="string", length=150)
+     * @ORM\Column(name="address_from", type="string", length=150, nullable=false)
      */
     private $addressFrom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="address_to", type="text")
+     * @ORM\Column(name="address_to", type="text", nullable=false)
      */
     private $addressTo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="html", type="text")
+     * @ORM\Column(name="html", type="text", nullable=false)
      */
     private $html;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
+
+    /**
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
+     */
+    private $updateDate;
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
@@ -248,4 +252,44 @@ class Mailer
     {
         return $this->createDate;
     }
+
+    /**
+     * Gets the value of updateDate.
+     *
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * Sets the value of updateDate.
+     *
+     * @param mixed $updateDate the update date
+     *
+     * @return self
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+    
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
+
 }

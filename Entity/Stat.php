@@ -9,48 +9,71 @@ use Majes\CoreBundle\Annotation\DataTable;
 /**
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\StatRepository")
  * @ORM\Table(name="core_stat")
+ * @ORM\HasLifecycleCallbacks
  */
 class Stat {
  
     /**
      * @ORM\Id 
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
  
-    /** @ORM\column(type="boolean", name="is_tablet") */
-    private $isTablet;
-
-    /** @ORM\column(type="boolean", name="is_mobile") */
-    private $isMobile;
- 
-    /** @ORM\column(type="datetime", name="begin_date") */
-    private $beginDate;
-
-    /** @ORM\column(type="datetime", name="end_date") */
-    private $endDate;
-
-    /** @ORM\column(type="integer", name="new_visits") */
-    private $newVisits;
-
-    /** @ORM\column(type="decimal", name="percent_new_visits") */
-    private $percentNewVisits;
-
-    /** @ORM\column(type="decimal", name="avg_time_to_site") */
-    private $avgTimeToSite;
-
-    /** @ORM\column(type="decimal", name="pageviews_per_visits") */
-    private $pageviewsPerVisits;
-
-    /** @ORM\column(type="boolean", name="current") */
-    private $current;
+    /**
+    * @ORM\column(type="boolean", name="is_tablet", nullable=false) 
+    */
+    private $isTablet=0;
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+    * @ORM\column(type="boolean", name="is_mobile", nullable=false) 
+    */
+    private $isMobile=0;
+ 
+    /**
+    * @ORM\column(type="datetime", name="begin_date", nullable=false) 
+    */
+    private $beginDate;
+
+    /**
+    * @ORM\column(type="datetime", name="end_date", nullable=false) 
+    */
+    private $endDate;
+
+    /**
+    * @ORM\column(type="integer", name="new_visits", nullable=false) 
+    */
+    private $newVisits;
+
+    /**
+    * @ORM\column(type="decimal", name="percent_new_visits", nullable=false) 
+    */
+    private $percentNewVisits;
+
+    /**
+    * @ORM\column(type="decimal", name="avg_time_to_site", nullable=false) 
+    */
+    private $avgTimeToSite;
+
+    /**
+    * @ORM\column(type="decimal", name="pageviews_per_visits", nullable=false) 
+    */
+    private $pageviewsPerVisits;
+
+    /**
+    * @ORM\column(type="boolean", name="current", nullable=false) 
+    */
+    private $current=0;
+
+    /**
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
+
+    /**
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
+     */
+    private $updateDate;
 
     
     /**
@@ -183,5 +206,57 @@ class Stat {
     public function getCreateDate()
     {
         return $this->createDate;
+    }
+
+    /**
+     * Sets the value of createDate.
+     *
+     * @param mixed $createDate the create date
+     *
+     * @return self
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of updateDate.
+     *
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * Sets the value of updateDate.
+     *
+     * @param mixed $updateDate the update date
+     *
+     * @return self
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
     }
 }

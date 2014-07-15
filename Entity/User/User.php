@@ -13,49 +13,50 @@ use Majes\MediaBundle\Entity\Media;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\User\UserRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements AdvancedUserInterface, \Serializable
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(name="social", type="json_array")
+     * @ORM\Column(name="social", type="json_array", nullable=false)
      */
     private $social;
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\MediaBundle\Entity\Media")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", nullable=false)
      */
     private $media;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $salt;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      */
     private $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="Role")
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="users")
      * @ORM\JoinTable(name="user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
@@ -64,49 +65,47 @@ class User implements AdvancedUserInterface, \Serializable
     private $roles;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
-    private $isActive;
+    private $isActive=0;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(name="firstname", type="string", length=150, nullable=false)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(name="lastname", type="string", length=150, nullable=false)
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=200)
+     * @ORM\Column(name="locale", type="string", length=200, nullable=false)
      */
     private $locale;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="wysiwyg", type="boolean", nullable=false)
      */
-    private $wysiwyg;
+    private $wysiwyg=1;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="tags", type="text", nullable=false)
      */
     private $tags;
 
     /**
-     * @ORM\Column(name="lastconnected_date", type="datetime")
+     * @ORM\Column(name="lastconnected_date", type="datetime", nullable=true)
      */
-    private $lastconnectedDate;
+    private $lastconnectedDate=null;
 
     /**
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="update_date", type="datetime")
+     * @ORM\Column(name="update_date", type="datetime", nullable=true)
      */
     private $updateDate;
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */
     private $createDate;
 
@@ -546,4 +545,18 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     public function entityRenderFront(){ return $this->entityRender();}
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
 }

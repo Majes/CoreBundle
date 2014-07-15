@@ -13,25 +13,30 @@ class Language {
  
     /**
      * @ORM\Id 
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
  
-    /** @ORM\column(type="string", length=200) */
+    /**
+    * @ORM\column(name="locale", type="string", length=200, nullable=false) 
+    */
     private $locale;
  
- 
-    /** @ORM\column(type="string", length=200) */
+    /**
+    * @ORM\column(name="name", type="string", length=200, nullable=false) 
+    */
     private $name;
 
-    /** @ORM\column(type="boolean", name="is_active") */
-    private $isActive;
+    /**
+    * @ORM\column(type="boolean", name="is_active", nullable=false) 
+    */
+    private $isActive=0;
 
     /**
-     * @ORM\Column(name="host", type="string", length=255)
+     * @ORM\Column(name="host", type="string", length=255, nullable=true)
      */
-    private $host;
+    private $host=null;
     
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)

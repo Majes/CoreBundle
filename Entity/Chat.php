@@ -10,29 +10,36 @@ use Majes\CoreBundle\Annotation\DataTable;
 /**
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\ChatRepository")
  * @ORM\Table(name="core_chat")
+ * @ORM\HasLifecycleCallbacks
  */
 class Chat {
  
     /**
-     * @ORM\Id 
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
   
  
-    /** @ORM\column(name="content",type="string") */
+    /**
+    * @ORM\Column(name="content", type="text", nullable=false) 
+    */
     private $content;
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
 
     /**
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
+     */
+    private $updateDate;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User", inversedBy="logs", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
     
@@ -89,6 +96,56 @@ class Chat {
     {
         return $this->createDate;
     }
+    /**
+     * Sets the value of createDate.
+     *
+     * @param mixed $createDate the create date
+     *
+     * @return self
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
 
-    
+        return $this;
+    }
+
+    /**
+     * Gets the value of updateDate.
+     *
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * Sets the value of updateDate.
+     *
+     * @param mixed $updateDate the update date
+     *
+     * @return self
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
 }

@@ -14,39 +14,39 @@ use Majes\CoreBundle\Annotation\DataTable;
 class Role implements RoleInterface
 {
     /**
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=30)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
-     * @ORM\Column(name="role", type="string", length=20, unique=true)
+     * @ORM\Column(name="role", type="string", length=100, unique=true, nullable=false)
      */
     private $role;
 
     /**
-     * @ORM\Column(name="bundle", type="string", length=255)
+     * @ORM\Column(name="bundle", type="string", length=50, nullable=false)
      */
-    private $bundle;
+    private $bundle='';
 
     /**
-     * @ORM\Column(name="internal", type="boolean")
+     * @ORM\Column(name="internal", type="boolean", nullable=false)
      */
-    private $internal;
+    private $internal=0;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text", nullable=false)
      */
     private $tags;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="User")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="roles")
      * 
      */
     private $users;

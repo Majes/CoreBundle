@@ -14,12 +14,15 @@ use Majes\CoreBundle\Annotation\DataTable;
 class LanguageToken {
  
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Id 
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
  
-    /** @ORM\column(type="string", length=200, unique=true) */
+    /**
+    * @ORM\column(name="token", type="string", length=200, unique=true, nullable=false) 
+    */
     private $token;
 
     /**

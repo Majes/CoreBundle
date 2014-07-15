@@ -9,34 +9,46 @@ use Majes\CoreBundle\Annotation\DataTable;
 /**
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\LogRepository")
  * @ORM\Table(name="core_log")
+ * @ORM\HasLifecycleCallbacks
  */
 class Log {
  
     /**
      * @ORM\Id 
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\GeneratedValue
      */
     private $id;
  
-    /** @ORM\column(type="string", length=5) */
+    /**
+    * @ORM\column(name="locale", type="string", length=5, nullable=false) 
+    */
     private $locale;
  
- 
-    /** @ORM\column(type="string", length=200) */
+    /**
+    * @ORM\column(name="name", type="string", length=200, nullable=false) 
+    */
     private $name;
 
-    /** @ORM\column(type="string", length=200) */
+    /**
+    * @ORM\column(name="route", type="string", length=200, nullable=false) 
+    */
     private $route;
 
-    /** @ORM\column(type="string") */
+    /**
+    * @ORM\column(name="params", type="text", nullable=false) 
+    */
     private $params;
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
+
+    /**
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
+     */
+    private $updateDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User", inversedBy="logs", cascade={"persist"})
@@ -131,4 +143,56 @@ class Log {
     {
         return $this->createDate;
     }
+    /**
+     * Sets the value of createDate.
+     *
+     * @param mixed $createDate the create date
+     *
+     * @return self
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of updateDate.
+     *
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * Sets the value of updateDate.
+     *
+     * @param mixed $updateDate the update date
+     *
+     * @return self
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
+
 }

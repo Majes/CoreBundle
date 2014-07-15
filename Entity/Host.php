@@ -11,37 +11,41 @@ use Majes\CoreBundle\Annotation\DataTable;
  *
  * @ORM\Table(name="core_host")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Host{
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="url", type="string", length=255, nullable=false)
      */
-    private $url;
+    private $url='';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
-    private $title;
+    private $title='';
 
     /**
-     * @ORM\Column(name="is_multilingual", type="boolean")
+     * @ORM\Column(name="is_multilingual", type="boolean", nullable=false)
      */
-    private $isMultilingual;
+    private $isMultilingual=1;
     
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
 
+    /**
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
+     */
+    private $updateDate;
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
@@ -137,6 +141,43 @@ class Host{
     {
         return $this->createDate;
     }
-    
 
+    /**
+     * Gets the value of updateDate.
+     *
+     * @return mixed
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * Sets the value of updateDate.
+     *
+     * @param mixed $updateDate the update date
+     *
+     * @return self
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+    
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
+
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
 }

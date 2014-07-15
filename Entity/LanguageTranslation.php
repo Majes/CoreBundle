@@ -14,27 +14,33 @@ use Majes\CoreBundle\Annotation\DataTable;
 class LanguageTranslation {
  
     /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\Id @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
  
-    /** @ORM\column(type="string", length=200) */
+    /**
+    * @ORM\column(name="catalogue", type="string", length=200, nullable=false) 
+    */
     private $catalogue;
  
  
-    /** @ORM\column(type="text") */
+    /**
+    * @ORM\column(name="translation", type="text", nullable=false) 
+    */
     private $translation;
  
  
-    /** @ORM\column(type="text") */
+    /**
+    * @ORM\column(name="locale", type="string", length=200, nullable=false) 
+    */
     private $locale;
  
     /**
-     * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\LanguageToken", fetch="EAGER")
-     * @ORM\JoinColumn(name="language_token_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\LanguageToken", inversedBy="translations", fetch="EAGER")
+     * @ORM\JoinColumn(name="language_token_id", referencedColumnName="id", nullable=true)
      */
-    private $token;
+    private $token=null;
 
     private $tokenString;
     private $lang;
