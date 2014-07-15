@@ -117,6 +117,7 @@ class User implements AdvancedUserInterface, \Serializable
     
     /**
     * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
+    * @ORM\Column(name="userdata_id", nullable=false)
     */
     private $userData;
 
