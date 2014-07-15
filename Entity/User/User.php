@@ -114,10 +114,16 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $logs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Majes\TeelBundle\Entity\UserAdress", mappedBy="user")
+     * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $userAdresses;
     
     /**
     * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
-    * @ORM\Column(name="userdata_id", nullable=false)
+    * @ORM\Column(name="userdata_id", type="integer", nullable=false)
     */
     private $userData;
 
