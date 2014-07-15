@@ -31,7 +31,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\MediaBundle\Entity\Media")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", nullable=true)
      */
     private $media;
 
@@ -114,6 +114,11 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $logs;
+    
+    /**
+    * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
+    */
+    private $userData;
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1)

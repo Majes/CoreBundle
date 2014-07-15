@@ -72,7 +72,7 @@
             </li>
             <li class="dropdown user hidden-xs">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    {% if app.user.getMedia() is not null %}<img src="{{ path('_media_load', {'id':app.user.getMedia().getId(), 'width': '34', 'height': '34', 'crop': '1'}) }}" />{% endif %}
+                    {% if app.user.getMedia() is not null %}<img src="{{ path('_media_load', {'id':app.user.getMedia().getId(), 'width': '34', 'height': '34', 'crop': '1'}) }}" />{% else %}<img src="{{ asset('bundles/majescore/images/user-s.png') }}" />{% endif %}
                     {{ app.user.username }}
                     <b class="caret"></b>
                 </a>
