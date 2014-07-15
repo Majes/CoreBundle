@@ -100,12 +100,12 @@ class User implements AdvancedUserInterface, \Serializable
     private $lastconnectedDate=null;
 
     /**
-     * @ORM\Column(name="update_date", type="datetime", nullable=true)
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
      */
     private $updateDate;
 
     /**
-     * @ORM\Column(name="create_date", type="datetime", nullable=true)
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
 
