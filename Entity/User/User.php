@@ -116,7 +116,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $logs;
 
     /**
-     * @ORM\OneToMany(targetEntity="Majes\TeelBundle\Entity\UserAdress", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Majes\TeelBundle\Entity\UserAddress", mappedBy="user")
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $userAdresses;
