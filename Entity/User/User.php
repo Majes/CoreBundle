@@ -122,8 +122,8 @@ class User implements AdvancedUserInterface, \Serializable
     private $userAdresses;
     
     /**
-    * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
-    * @ORM\Column(name="userdata_id", type="integer", nullable=false)
+    * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", mappedBy="id", cascade={"persist","remove"})
+    * @ORM\JoinColumn(name="userdata_id", nullable=false, referencedColumnName="id")
     */
     private $userData;
 
@@ -557,6 +557,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     public function entityRenderFront(){ return $this->entityRender();}
+    
     /**
      *
      * @ORM\PrePersist
