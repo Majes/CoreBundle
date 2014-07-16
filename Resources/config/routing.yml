@@ -1,5 +1,5 @@
 _admin_index:
-    pattern:  /administration
+    pattern:  /dashboard
     defaults: { _controller: MajesCoreBundle:Index:dashboard }
 
 _admin_login:
