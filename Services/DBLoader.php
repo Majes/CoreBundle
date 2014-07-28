@@ -24,7 +24,7 @@ class DBLoader implements LoaderInterface{
         
         //Load on the db for the specified local
         //$language = $this->languageRepository->getLanguage($locale);
-    
+
         $catalogue = new MessageCatalogue($locale);
 
         try{

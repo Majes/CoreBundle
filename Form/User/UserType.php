@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Majes\TeelBundle\Form\User\UserAddressType;
+use Majes\TeelBundle\Form\User\UserDataType;
 
 class UserType extends AbstractType
 {
@@ -75,6 +77,19 @@ class UserType extends AbstractType
             'required' => false,
             'first_name' => 'password',
             'second_name' => 'password_confirm'
+            ));
+        $builder->add('userdata', new UserDataType(), array(
+            'label' => 'Members Data'
+            ));
+
+        $builder->add('userAddresses', 'collection', array(
+            'type' => new UserAddressType(),
+            'label' => 'Addresses',
+            'prototype'=>true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'attr' => array('class' => 'list-group col-lg-11')
             ));
     }
 

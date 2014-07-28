@@ -40,7 +40,7 @@ class RoleType extends AbstractType
         $builder->add('bundle', 'text', array(
             'required' => false));
 
-        $builder->add('internal', 'checkbox', array(
+        $builder->add('isSystem', 'checkbox', array(
             'required' => false));
     }
 

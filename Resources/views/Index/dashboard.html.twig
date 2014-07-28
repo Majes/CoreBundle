@@ -142,6 +142,64 @@
           </div>
         <!-- End Chat -->
       </div>
+
+
+      {# Various widgets #}
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="widget-container fluid-height">
+            <div class="heading">
+              <i class="icon-dashboard"></i> {% trans %} Various Infos {% endtrans %}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="widget-container stats-container">
+
+            {% for widget in variouswidgets %}
+              {% if widget.items is defined %}
+              <div class="col-md-2">
+                <div class="number">
+                  <div class="{% if widget.number.icon is defined %} {{widget.number.icon}} {% endif %}"></div>
+                  {{ widget.number.value }}
+                </div>
+                <div class="text">
+                  {{ widget.label|trans }}
+                </div>
+                <div class="text">
+                  {% for item in widget.items %}
+                    {% if fileExists('bundles/majescore/images/flag-' ~ item.locale ~ '.png') %}
+                      <img src="{{ asset('bundles/majescore/images/flag-' ~ item.locale ~ '.png') }}"/>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+              <div class="col-md-2">
+                <div class="number">
+                  <div class="{% if widget.number.icon is defined %} {{widget.number.icon}} {% endif %}"></div>
+                  {{ widget.number.value }}
+                </div>
+                <div class="text">
+                  {{ widget.label|trans }}
+                </div>
+                <div class="text">
+                  {% if widget.active.value is defined %}
+                  <div class="{% if widget.active.icon is defined %} {{widget.active.icon}} {% endif %}"></div>
+                  {{ widget.active.value }}
+                  {% endif %}
+                  {% if widget.deleted.value is defined %}
+                  <div class="{% if widget.deleted.icon is defined %} {{widget.deleted.icon}} {% endif %}"></div>
+                  {{ widget.deleted.value }}
+                  {% endif %}
+                </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  
       <script>
       
       $(document).ready(function(){

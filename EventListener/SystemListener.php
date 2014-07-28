@@ -53,6 +53,7 @@ class SystemListener
         $locale = $request->getLocale();
         
         $routeDoc = $request->get('routeDocument');
+
         if(!empty($routeDoc)){
             $locale = $routeDoc->getOption('lang');
             $request->setLocale($locale);
@@ -80,7 +81,7 @@ class SystemListener
         }
 
         if ($controllerObject instanceof SystemController) {
-            
+
             $parameters = $this->container->getParameter('admin');
             $google = $this->container->getParameter('google');
             $facebook = $this->container->getParameter('facebook');
@@ -88,6 +89,7 @@ class SystemListener
 
             //try autologin via facebook, twitter or google
             $social = $this->container->get('majes.social');
+
             $user = $social->login();
 
             $wysiwyg = $parameters['wysiwyg'];
@@ -185,7 +187,7 @@ class SystemListener
 
        
         }
-       
 
     }
+
 }

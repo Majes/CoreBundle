@@ -19,6 +19,7 @@ class CoreExtension extends \Twig_Extension
             new \Twig_SimpleFunction('get', array($this, 'get')),
             new \Twig_SimpleFunction('getMimeType', array($this, 'getMimeType')),
             new \Twig_SimpleFunction('majesCountNotification', array($this, 'majesCountNotification')),
+            new \Twig_SimpleFunction('fileExists', array($this, 'fileExists')),
         );
     }
 
@@ -71,6 +72,10 @@ class CoreExtension extends \Twig_Extension
 
         $notification = $this->_container->get('majes.notification');
         return $notification->count($type);
+    }
+
+    public function fileExists($filename){
+        return file_exists($filename);
     }
 
     public function getName()

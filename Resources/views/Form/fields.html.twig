@@ -71,6 +71,42 @@
 {% endspaceless %}
 {% endblock form_widget_simple %}
 
+{% block collection_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_widget(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget_collection') }}
+{% endspaceless %}
+{% endblock collection_widget %}
+
+{% block form_widget_collection -%}
+    <ul {{ block('widget_container_attributes') }}>
+        {%- if form.parent is empty -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        {{- block('form_rows_collection') -}}
+        {{- form_rest(form) -}}
+    </ul>
+{%- endblock form_widget_collection %}
+
+{% block form_widget_collection_child -%}
+    <li class="list-group-item text-right">
+        {%- if form.parent is empty -%}
+            {{ form_errors(child) }}
+        {%- endif -%}
+        {{- form_widget(child) -}}
+        {{- form_rest(child) -}}
+    </li>
+{%- endblock form_widget_collection_child %}
+
+{% block form_rows_collection -%}
+    {% for child in form %}
+        {{ block('form_widget_collection_child') }}
+    {% endfor %}
+{%- endblock form_rows_collection %}
+
+
 {% block file_widget %}
     {% spaceless %}
 
@@ -121,21 +157,15 @@
 {% endblock choice_widget_expanded %}
 
 
-
-{% block collection_widget %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    {{ block('form_widget') }}
-{% endspaceless %}
-{% endblock collection_widget %}
-
 {% block text_widget %}
     {% set type = type|default('text') %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
 {% endblock text_widget %}
 
+{% block number_widget -%}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+{%- endblock number_widget %}
 
 {% block textarea_widget %}
 {% spaceless %}

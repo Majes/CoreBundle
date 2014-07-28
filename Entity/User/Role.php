@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Majes\CoreBundle\Annotation\DataTable;
 
+
 /**
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\User\RoleRepository")
@@ -36,9 +37,9 @@ class Role implements RoleInterface
     private $bundle='';
 
     /**
-     * @ORM\Column(name="internal", type="boolean", nullable=false)
+     * @ORM\Column(name="is_system", type="boolean", nullable=false)
      */
-    private $internal=0;
+    private $isSystem=0;
 
     /**
      * @ORM\Column(type="text", nullable=false)
@@ -50,6 +51,17 @@ class Role implements RoleInterface
      * 
      */
     private $users;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Majes\CmsBundle\Entity\Page", mappedBy="roles")
+     * 
+     */
+    private $pages;
+
+    /**
+     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     */
+    private $deleted=0;
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1)
@@ -99,11 +111,10 @@ class Role implements RoleInterface
 
     /**
      * @inheritDoc
-     * @DataTable(label="Int. use", column="internal", isSortable=0)
      */
-    public function getInternal()
+    public function getIsSystem()
     {
-        return $this->internal;
+        return $this->isSystem;
     }
 
     /**
@@ -120,6 +131,14 @@ class Role implements RoleInterface
     public function getUsers()
     {
         return $this->users->toArray();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPages()
+    {
+        return $this->pages->toArray();
     }
 
     /**
@@ -161,9 +180,9 @@ class Role implements RoleInterface
     /**
      * @inheritDoc
      */
-    public function setInternal($internal)
+    public function setIsSystem($isSystem)
     {
-        $this->internal = $internal;
+        $this->isSystem = $isSystem;
         return $this;
     }
 
@@ -183,4 +202,28 @@ class Role implements RoleInterface
     }
 
     public function entityRenderFront(){ return $this->entityRender();}
+
+    /**
+     * Gets the value of deleted.
+     *
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Sets the value of deleted.
+     *
+     * @param mixed $deleted the deleted
+     *
+     * @return self
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
 }

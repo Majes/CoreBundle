@@ -1,5 +1,5 @@
 _admin_index:
-    pattern:  /administration
+    pattern:  /
     defaults: { _controller: MajesCoreBundle:Index:dashboard }
 
 _admin_login:
@@ -34,6 +34,14 @@ _admin_domain_delete:
     pattern:  /domain/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:domainDelete }
 
+_admin_domain_undelete:
+    pattern:  /domain/undelete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:domainUndelete }
+
+_admin_domain_export:
+    pattern:  /domain/export
+    defaults: { _controller: MajesCoreBundle:Index:domainExport }
+
 _admin_languages:
     pattern:  /languages
     defaults: { _controller: MajesCoreBundle:Index:languages }
@@ -45,6 +53,10 @@ _admin_language_edit:
 _admin_language_delete:
     pattern:  /language/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageDelete }
+
+_admin_language_export:
+    pattern:  /language/export
+    defaults: { _controller: MajesCoreBundle:Index:languageExport }
 
 _admin_language_messages:
     pattern:  /language/messages
@@ -58,6 +70,10 @@ _admin_language_message_delete:
     pattern:  /language/message/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageMessageDelete }
 
+_admin_language_message_export:
+    pattern:  /language/message/export
+    defaults: { _controller: MajesCoreBundle:Index:languageMessageExport }
+
 _admin_users:
     pattern:  /users
     defaults: { _controller: MajesCoreBundle:Index:users }
@@ -65,6 +81,10 @@ _admin_users:
 _admin_user_edit:
     pattern:  /user/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:userEdit, id: null }
+
+_admin_user_export:
+    pattern:  /user/export/
+    defaults: { _controller: MajesCoreBundle:Index:userExport}
 
 _admin_user_activity:
     pattern:  /user/activity/{id}
@@ -78,6 +98,9 @@ _admin_user_delete:
     pattern:  /user/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:userDelete }
 
+_admin_user_undelete:
+    pattern:  /user/undelete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:userUndelete }
 
 _admin_roles:
     pattern:  /roles
@@ -90,3 +113,11 @@ _admin_role_edit:
 _admin_role_delete:
     pattern:  /role/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:roleDelete }
+
+_admin_role_undelete:
+    pattern:  /role/undelete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:roleUndelete }
+
+_admin_trashs:
+    pattern:  /trashs
+    defaults: { _controller: MajesCoreBundle:Index:trashs, context: full }

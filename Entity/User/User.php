@@ -5,8 +5,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Majes\CoreBundle\Annotation\DataTable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Majes\MediaBundle\Entity\Media;
+use Majes\TeelBundle\Entity\UserData;
 
 /**
  * Majes\CoreBundle\Entity\User\User
@@ -25,13 +27,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(name="social", type="json_array", nullable=false)
+     * @ORM\Column(name="social", type="json_array", nullable=true)
      */
     private $social;
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\MediaBundle\Entity\Media")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $media;
 
@@ -116,16 +118,20 @@ class User implements AdvancedUserInterface, \Serializable
     private $logs;
 
     /**
-     * @ORM\OneToMany(targetEntity="Majes\TeelBundle\Entity\UserAddress", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Majes\TeelBundle\Entity\UserAddress", mappedBy="user", cascade={"persist","remove"}, orphanRemoval=true)
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
-    private $userAdresses;
+    private $userAddresses;
     
     /**
-    * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", mappedBy="id", cascade={"persist","remove"})
-    * @ORM\JoinColumn(name="userdata_id", nullable=false, referencedColumnName="id")
+    * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
     */
-    private $userData;
+    private $userdata;
+
+    /**
+     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     */
+    private $deleted=0;
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1)
@@ -144,6 +150,8 @@ class User implements AdvancedUserInterface, \Serializable
 
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->logs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userAddresses = new \Doctrine\Common\Collections\ArrayCollection();
+
     }
 
     /**
@@ -371,7 +379,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritDoc
-     * @DataTable(label="Status", column="isActive", isSortable=1)
+     * @DataTable(label="Is Active", column="isActive", isSortable=1)
      */
     public function getIsActive()
     {
@@ -426,6 +434,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->logs->toArray();
     }
+
 
     /**
      * Get wysiwyg
@@ -490,7 +499,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function isEnabled()
     {
-        return $this->isActive;
+        return ($this->isActive && !$this->deleted);
     }
 
     /**
@@ -506,7 +515,9 @@ class User implements AdvancedUserInterface, \Serializable
 
         $roles_array = array();
         foreach($roles as $role){
-            $roles_array[] = $role->getId();
+            if(!$role->getDeleted()){
+                $roles_array[] = $role->getId();
+            }
         }
 
         if(in_array($role_id, $roles_array)) return true;
@@ -571,5 +582,95 @@ class User implements AdvancedUserInterface, \Serializable
         {
             $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
         }
+    }
+    /**
+     *
+     * @ORM\PrePersist
+     */
+    public function createUserdata()
+    {
+        
+        if(is_null($this->getUserdata()))
+        {
+            $this->setUserdata(new UserData());
+        }
+    }
+
+
+    /**
+     * Gets the value of userData.
+     */
+    public function getUserdata()
+    {
+        return $this->userdata;
+    }
+
+    /**
+     * Sets the value of userData.
+     */
+    public function setUserdata(UserData $userdata)
+    {
+        $this->userdata = $userdata;
+
+        return $this;
+    }
+
+    /**
+     * Add userAddress
+     *
+     * @param \Majes\CoreBundle\Entity\UserAddress $userAddresses
+     * @return User
+     */
+    public function addUserAddress(\Majes\Teelbundle\Entity\UserAddress $userAddress)
+    {
+        $userAddress->setUser($this);
+
+        if(!$this->userAddresses->contains($userAddress)){
+            $this->userAddresses->add($userAddress);
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Remove userAddress
+     *
+     * @param \Majes\CoreBundle\Entity\UserAddress $userAddresses
+     */
+    public function removeUserAddress(\Majes\Teelbundle\Entity\UserAddress $userAddress)
+    {
+        $this->userAddresses->removeElement($userAddress);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserAddresses()
+    {
+        return $this->userAddresses;
+    }
+
+    /**
+     * Gets the value of deleted.
+     *
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Sets the value of deleted.
+     *
+     * @param mixed $deleted the deleted
+     *
+     * @return self
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
     }
 }

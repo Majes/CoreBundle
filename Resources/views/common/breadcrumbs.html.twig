@@ -3,7 +3,7 @@
         <ul class="breadcrumb">
         	<li><a href="{{ path('_admin_index') }}"><i class="icon-home"></i></a></li>
         	<li>{{app.request.get('bundle')}}</li>
-          	<li class="active">{{ pageTitle }}</li>
+          	<li class="active">{{ pageTitle|trans }}</li>
         </ul>
     </div>
 </div>

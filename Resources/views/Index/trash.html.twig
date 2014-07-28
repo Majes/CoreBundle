@@ -1,0 +1,121 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Trash{% endblock %}
+
+{% block coreStyles %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/majesmedia/css/skin/minimalist.css') }}" media="all" rel="stylesheet" title="majescore" type="text/css" />
+{% endblock %}
+
+{% block coreScripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/majesmedia/js/flowplayer.min.js') }}" type="text/javascript"></script>
+    <script>
+    flowplayer.conf = {
+       swf: "/bundles/majesmedia/swf/flowplayer.swf",
+       splash: true
+    };
+    </script>
+    <script src="{{ asset('bundles/majesmedia/js/majesmedia.js') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+    
+<div class="container-fluid main-content">
+
+    {{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{{pageTitle}}</h1>
+    </div>
+     <div class="row">
+
+        <form action="{{ path('_admin_trashs') }}" method="get" id="formFilter">
+            <input type="hidden" name="page" value="{{ page }}"/>
+            <div class="col-lg-3">
+                <div class="widget-container fluid-height">
+                    <div class="widget-content">
+                        <div class="panel-group" id="accordion">
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <div class="panel-title">
+                                        <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>{% trans %}Filters{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse in" id="collapseBundle">
+                                    <div class="panel-body">
+                                        <label class="checkbox"><input {% if '' in chosen %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>{% trans %}All{% endtrans %}</span></label>
+
+                                        {% for choice in choices %}
+                                        <label class="checkbox"><input {% if choice in chosen %}checked="checked"{% endif %} name="types[]" type="checkbox" value="{{choice}}"><span>{{choice }}</span></label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>{% trans %}Filter{% endtrans %}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </form>
+
+        <!-- Gallery with filtering and actions -->
+        <div class="col-lg-9">
+            {% set params = {} %}
+            {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key): param.default}) %}{% endfor %}{% endif %}
+            <div class="widget-container fluid-height clearfix">
+                <div class="heading">
+                    <i class="icon-table"></i>{{ pageSubTitle }}
+                    {# {% if config.object.hasAdd %}<a href="{{ path(urls.add, params) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>{% endif %} #}
+                </div>
+                <div class="widget-content padded clearfix">
+                    <table class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <th class="check-header hidden-xs"></th>
+                            {% for head in headers %}
+                            <th class="{{head.isMobile ? 'hidden-xs' : ''}}{{head.isSortable ? '' : ' sorting_disabled'}}">{{head.label}}</th>
+                            {% endfor %}
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            {% for entity in entities %}
+                            <tr>
+                                <td class="check hidden-xs">
+                                    <input name="optionsRadios1" type="checkbox" value="option1">
+                                </td>
+                                {% for head in headers %}
+                                {% set column = head.label %}
+                                    <td>
+                                    {{ attribute(entity, column)}}
+                                    </td>
+                                {% endfor %}
+                                <td class="actions">
+                                    <div class="action-buttons">
+                                {% set params = {'id' : entity.Id} %}
+                                {% set urls = entity.actions %}
+                                        {% if urls.undelete is defined %}<a href="{{ path(urls.undelete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to do this ?{% endtrans %}')"><i class="icon-wrench"></i></a>{% endif %}
+                                        {% if urls.delete is defined %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to do this ?{% endtrans %}')"><i class="icon-trash"></i></a>{% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

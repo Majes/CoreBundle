@@ -17,6 +17,7 @@ class ExceptionListener
 
     public function __construct(EngineInterface $templating, $kernel, Container $container)
     {
+        return;
         $this->templating = $templating;
         $this->kernel = $kernel;
         $this->container = $container;
@@ -26,7 +27,7 @@ class ExceptionListener
     
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-
+        return;
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
 

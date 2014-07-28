@@ -4,6 +4,7 @@
 	<div class="heading">
   		<i class="icon-table"></i>{{ pageSubTitle }}
   		{% if config.object.hasAdd %}<a href="{{ path(urls.add, params) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>{% endif %}
+      {% if urls.export is defined %}<a href="{{ path(urls.export) }}" class="btn btn-primary-outline pull-right"><i class="icon-save"></i>{% trans %}Export{% endtrans %}</a>{% endif %}
 	</div>
 	<div class="widget-content padded clearfix">
   		<table class="table table-bordered table-striped{% if config.object.isDatatablejs %} dataTable{% endif %}">
@@ -32,7 +33,7 @@
                     {% set params = {'id' : data.id} %}
                     {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key):get(data, param.key)}) %}{% endfor %}{% endif %}
         			  	 	{% if urls.edit is defined %}<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>{% endif %}
-        			  	 	{% if urls.delete is defined %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this language?{% endtrans %}')"><i class="icon-trash"></i></a>{% endif %}
+        			  	 	{% if urls.delete is defined %}{% if data.isSystem is defined %}{% if not data.isSystem %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% else %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% endif %}
         			  	</div>
         			</td>
       			</tr>

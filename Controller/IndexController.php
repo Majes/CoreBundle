@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Majes\CoreBundle\Conversion\DataTableConverter;
 use Majes\CoreBundle\Entity\Language;
@@ -27,6 +28,9 @@ use Majes\CoreBundle\Form\User\RoleType;
 use Majes\CoreBundle\Form\Language\LanguageTokenType;
 use Majes\CoreBundle\Form\Language\LanguageTranslationType;
 use Majes\CoreBundle\Utils\TeelFunction;
+use Majes\CoreBundle\Annotation\DataTable;
+
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class IndexController extends Controller implements SystemController
 {
@@ -62,11 +66,34 @@ class IndexController extends Controller implements SystemController
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
         }
-        
+
+        // Various widgets
+        $variouswidgets=array('users' => array('label' => 'Users', 
+                                            'number' => array("icon" => "icon-user", "value" => count($em->getRepository('MajesCoreBundle:User\User')->findAll()) ), 
+                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCoreBundle:User\User')->findBy(array('isActive' => true, 'deleted' => false))) ), 
+                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCoreBundle:User\User')->findBy(array('deleted' => true)))) ),
+                                'domains' => array('label' => 'Domains', 
+                                            'number' => array("icon" => "icon-globe", "value" => count($em->getRepository('MajesCoreBundle:Host')->findAll()) ), 
+                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCoreBundle:Host')->findBy(array('deleted' => false))) ), 
+                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCoreBundle:Host')->findBy(array('deleted' => true)))) ),
+                                'pages' => array('label' => 'Pages', 
+                                            'number' => array("icon" => "icon-file-alt", "value" => count($em->getRepository('MajesCmsBundle:PageLang')->findAll()) ), 
+                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCmsBundle:PageLang')->findBy(array('deleted' => false))) ), 
+                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCmsBundle:PageLang')->findBy(array('deleted' => true)))) ),
+                                'media' => array('label' => 'Medias', 
+                                            'number' => array("icon" => "icon-picture", "value" => count($em->getRepository('MajesMediaBundle:Media')->findAll()) )),
+                                'language' => array('label' => 'Languages', 
+                                            'number' => array("icon" => "icon-flag-alt", "value" => count($em->getRepository('MajesCoreBundle:Language')->findAll()) ), 
+                                            'items' => $em->getRepository('MajesCoreBundle:Language')->findAll()),
+                                'activity' => array('label' => "Today's Activity",
+                                            'number' => array('icon' => 'icon-stackexchange', 'value' => count($em->getRepository('MajesCoreBundle:Log')->getActivityReal($this->_user->getId(), $type = 'day', $page = 1, $limit = 200)))) 
+
+        );
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
             'google' => $stats_lastmonth,
             'stats' => $global_stats,
-            'chat' => $chat));
+            'chat' => $chat,
+            'variouswidgets' => $variouswidgets));
     }
 
     /**
@@ -159,10 +186,12 @@ class IndexController extends Controller implements SystemController
             'object' => new Language(),
             'pageTitle' => $this->_translator->trans('Languages'),
             'pageSubTitle' => $this->_translator->trans('List off all languages currently available'),
+            'label' => 'language',
+            'message' => 'Are you sure you want to delete this language ?',
             'urls' => array(
                 'add' => '_admin_language_edit',
                 'edit' => '_admin_language_edit',
-                'delete' => '_admin_language_delete'
+                'export' => '_admin_language_export'
                 )
             ));
     }
@@ -188,7 +217,12 @@ class IndexController extends Controller implements SystemController
             if ($form->isValid()) {
 
                 if(is_null($language)) $language = $form->getData();
-
+                $kernel = $this->get('kernel');
+                $path = $kernel->locateResource('@MajesCoreBundle/Resources/translations');
+                $filename=$path."/messages.".$language->getLocale().".db";
+                if(!file_exists($filename)){
+                    fopen($filename, 'x');
+                } 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($language);
                 $em->flush();
@@ -223,13 +257,90 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($language)){
-            $em->remove($language);
-            $em->flush();
+            
         }
 
 
         return $this->redirect($this->get('router')->generate('_admin_languages', array()));
     }
+
+     /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageExportAction()
+    {
+
+        $reader = new AnnotationReader();
+        
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\Language');
+        $methods = $reflClass->getMethods();
+
+        $mapper=array();
+        foreach ($methods as $method) {
+            $classAnnotations = $reader->getMethodAnnotations($reflClass->getMethod($method->name));
+            foreach ($classAnnotations AS $annot) {
+                if ($annot instanceof DataTable) {
+                    $label = $annot->getLabel();
+                    $property = $annot->getColumn();
+                    $merger=array($label => $property);
+                    if(!empty($label) && !empty($property)){
+                        $mapper=array_merge($mapper, $merger);
+                    }
+                    
+                }
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $languagetranslations = $em->getRepository('MajesCoreBundle:Language')
+            ->findAll();
+
+        $csv=array();
+
+        array_push($csv, array_keys($mapper));
+        
+        foreach ($languagetranslations as $languagetranslation) {
+            $line=array();
+            foreach (array_values($mapper) as $property) {
+                if(gettype($accessor->getValue($languagetranslation, $property)) == "object"){
+                    if(get_class($accessor->getValue($languagetranslation, $property)) == "DateTime"){
+                        array_push($line, $accessor->getValue($languagetranslation, $property)->format('Y-m-d H:i:s'));
+                    }
+
+                }else{
+                    array_push($line, $accessor->getValue($languagetranslation, $property));
+                }
+            }
+            array_push($csv, $line);
+        }
+        $exportsDir=$this->get('kernel')->getRootDir()."/../web/exports";
+        $filename=$exportsDir."/Languages.csv";
+
+        if(!file_exists($exportsDir)){
+            mkdir($exportsDir);
+        }
+        $fp = fopen($filename, 'w');
+
+        foreach ($csv as $line) {
+            fputcsv($fp, $line);
+        }
+
+        fclose($fp);
+
+        $response = new Response();
+
+        // set headers
+        $response->headers->set('Content-Type', 'text/csv');
+        // $response->headers->set('Content-Length', $file['length']);
+        $response->headers->set('Content-Disposition', 'attachment;filename="Languages.csv"');
+
+        $response->setContent(file_get_contents($filename));
+        return $response;
+    }
+
 
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -239,17 +350,20 @@ class IndexController extends Controller implements SystemController
 
         $em = $this->getDoctrine()->getManager();
         $hosts = $em->getRepository('MajesCoreBundle:Host')
-            ->findAll();
+            ->findBy(array('deleted' => false));
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $hosts,
             'object' => new Host(),
+            'label' => "domains",
+            'message' => 'Are you sure you want to delete this domain ?',
             'pageTitle' => $this->_translator->trans('Domains'),
             'pageSubTitle' => $this->_translator->trans('List off all domains currently available'),
             'urls' => array(
                 'add' => '_admin_domain_edit',
                 'edit' => '_admin_domain_edit',
-                'delete' => '_admin_domain_delete'
+                'delete' => '_admin_domain_delete',
+                'export' => '_admin_domain_export'
                 )
             ));
     }
@@ -265,16 +379,30 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $host = $em->getRepository('MajesCoreBundle:Host')
             ->findOneById($id);
-
+       
+        if(!is_null($host)){
+            $oldhost=$host->getUrl();
+        }
 
         $form = $this->createForm(new HostType($request->getSession()), $host);
 
         if($request->getMethod() == 'POST'){
 
+
             $form->handleRequest($request);
             if ($form->isValid()) {
 
-                if(is_null($host)) $host = $form->getData();
+
+                if(is_null($host)){
+                    $host = $form->getData();
+                } else {
+                    $routes = $em->getRepository('MajesCmsBundle:Route')->findByHost($oldhost);
+                    foreach ($routes as $route) {
+                        $route->setHost($host->getUrl());
+                        $em->persist($route);
+                        $em->flush();
+                    }
+                }
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($host);
@@ -310,13 +438,132 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($host)){
-            //$em->remove($host);
-            //$em->flush();
+            $pages = $em->getRepository('MajesCmsBundle:Page')
+            ->findByHost($host);
+            foreach ($pages as $page) {
+                $page->setDeleted(true);
+                $pageLangs = $em->getRepository('MajesCmsBundle:PageLang')
+                    ->findBy(array("page" => $page));
+                foreach($pageLangs as $pagelang){
+                    $pagelang->setDeleted(true);
+                    $em->persist($pagelang);
+                    $em->flush();
+                }
+
+                $em->persist($page);
+                $em->flush();
+
+                //Set routes to table
+                $em->getRepository('MajesCmsBundle:Page')->generateRoutes($page->getMenu()->getRef(), $this->_is_multilingual);
+            }
+
+            $host->setDeleted(true);
+            $em->persist($host);
+            $em->flush();
         }
 
 
         return $this->redirect($this->get('router')->generate('_admin_domains', array()));
     }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function domainUndeleteAction($id){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $host = $em->getRepository('MajesCoreBundle:Host')
+            ->findOneById($id);
+
+        if(!is_null($host)){
+            $host->setDeleted(false);
+            $em->persist($host);
+            $em->flush();
+        }
+
+
+        return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
+    }
+
+     /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function DomainExportAction()
+    {
+
+        $reader = new AnnotationReader();
+        
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\Host');
+        $methods = $reflClass->getMethods();
+
+        $mapper=array();
+        foreach ($methods as $method) {
+            $classAnnotations = $reader->getMethodAnnotations($reflClass->getMethod($method->name));
+            foreach ($classAnnotations AS $annot) {
+                if ($annot instanceof DataTable) {
+                    $label = $annot->getLabel();
+                    $property = $annot->getColumn();
+                    $merger=array($label => $property);
+                    if(!empty($label) && !empty($property)){
+                        $mapper=array_merge($mapper, $merger);
+                    }
+                    
+                }
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $languagetranslations = $em->getRepository('MajesCoreBundle:Host')
+            ->findBy(array('deleted' => false));
+
+        $csv=array();
+
+        array_push($csv, array_keys($mapper));
+        
+        foreach ($languagetranslations as $languagetranslation) {
+            $line=array();
+            foreach (array_values($mapper) as $property) {
+                if(gettype($accessor->getValue($languagetranslation, $property)) == "object"){
+                    if(get_class($accessor->getValue($languagetranslation, $property)) == "DateTime"){
+                        array_push($line, $accessor->getValue($languagetranslation, $property)->format('Y-m-d H:i:s'));
+                    }
+
+                }else{
+                    array_push($line, $accessor->getValue($languagetranslation, $property));
+                }
+            }
+            array_push($csv, $line);
+        }
+        $exportsDir=$this->get('kernel')->getRootDir()."/../web/exports";
+        $filename=$exportsDir."/Hosts.csv";
+
+        if(!file_exists($exportsDir)){
+            mkdir($exportsDir);
+        }
+        $fp = fopen($filename, 'w');
+
+        foreach ($csv as $line) {
+            fputcsv($fp, $line);
+        }
+
+        fclose($fp);
+
+        $response = new Response();
+
+        // set headers
+        $response->headers->set('Content-Type', 'text/csv');
+        // $response->headers->set('Content-Length', $file['length']);
+        $response->headers->set('Content-Disposition', 'attachment;filename="Hosts.csv"');
+
+        $response->setContent(file_get_contents($filename));
+        return $response;
+    }
+
 
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -348,7 +595,6 @@ class IndexController extends Controller implements SystemController
         $all_catalogues = $em->getRepository('MajesCoreBundle:LanguageTranslation')
             ->listCatalogues();
 
-
         return $this->render('MajesCoreBundle:Index:language-messages.html.twig', array(
             'pageTitle' => $this->_translator->trans('Languages'),
             'object' => new LanguageToken(),
@@ -360,10 +606,13 @@ class IndexController extends Controller implements SystemController
             'all_langs' => $this->_langs,
             'datas' => $translations,
             'all_catalogues' => $all_catalogues,
+            'label' => 'translation',
+            'message' => 'Are you sure you want to delete this translation ?',
             'urls' => array(
                 'add' => '_admin_language_message_edit',
                 'edit' => '_admin_language_message_edit',
                 'delete' => '_admin_language_message_delete',
+                'export' => '_admin_language_message_export',
                 'params' => array()
                 )
             ));
@@ -470,6 +719,75 @@ class IndexController extends Controller implements SystemController
             ));
     }
 
+     /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageMessageExportAction()
+    {
+
+        $reader = new AnnotationReader();
+        
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\LanguageTranslation');
+        $methods = $reflClass->getMethods();
+
+        $mapper=array();
+        foreach ($methods as $method) {
+            $classAnnotations = $reader->getMethodAnnotations($reflClass->getMethod($method->name));
+            foreach ($classAnnotations AS $annot) {
+                if ($annot instanceof DataTable) {
+                    $label = $annot->getLabel();
+                    $property = $annot->getColumn();
+                    $merger=array($label => $property);
+                    if(!empty($label) && !empty($property)){
+                        $mapper=array_merge($mapper, $merger);
+                    }
+                    
+                }
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $languagetranslations = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+            ->findAll();
+
+        $csv=array();
+
+        array_push($csv, array_keys($mapper));
+        
+        foreach ($languagetranslations as $languagetranslation) {
+            $line=array();
+            foreach (array_values($mapper) as $property) {
+                array_push($line, $accessor->getValue($languagetranslation, $property));
+            }
+            array_push($csv, $line);
+        }
+        $exportsDir=$this->get('kernel')->getRootDir()."/../web/exports";
+        $filename=$exportsDir."/Traductions.csv";
+
+        if(!file_exists($exportsDir)){
+            mkdir($exportsDir);
+        }
+        $fp = fopen($filename, 'w');
+
+        foreach ($csv as $line) {
+            fputcsv($fp, $line);
+        }
+
+        fclose($fp);
+
+        $response = new Response();
+
+        // set headers
+        $response->headers->set('Content-Type', 'text/csv');
+        // $response->headers->set('Content-Length', $file['length']);
+        $response->headers->set('Content-Disposition', 'attachment;filename="Traductions.csv"');
+
+        $response->setContent(file_get_contents($filename));
+        return $response;
+    }
    
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -479,17 +797,20 @@ class IndexController extends Controller implements SystemController
 
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('MajesCoreBundle:User\User')
-            ->findAll();
+            ->findBy(array('deleted' => false));
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $users,
             'object' => new User(),
             'pageTitle' => 'Users',
             'pageSubTitle' => $this->_translator->trans('List off all users currently "created"'),
+            'label' => 'user',
+            'message' => 'Are you sure you want to delete this user ?',
             'urls' => array(
                 'add' => '_admin_user_edit',
                 'edit' => '_admin_user_edit',
-                'delete' => '_admin_user_delete'
+                'delete' => '_admin_user_delete',
+                'export' => '_admin_user_export'
                 )
             ));
     }
@@ -503,8 +824,7 @@ class IndexController extends Controller implements SystemController
         $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('MajesCoreBundle:User\User')
-            ->findOneById($id);
+        $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
 
         $form = $this->createForm(new UserType($request->getSession()), $user);
         
@@ -559,10 +879,8 @@ class IndexController extends Controller implements SystemController
                     $user->setMedia($media);
                 }
                 
-
                 $em->persist($user);
                 $em->flush();
-
                 return $this->redirect($this->get('router')->generate('_admin_user_edit', array('id' => $user->getId())));
 
             }else{
@@ -589,6 +907,84 @@ class IndexController extends Controller implements SystemController
             'form' => $form->createView(),
             'form_role' => $form_role));
     }
+
+     /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function UserExportAction()
+    {
+
+        $reader = new AnnotationReader();
+        
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\User\User');
+        $methods = $reflClass->getMethods();
+
+        $mapper=array();
+        foreach ($methods as $method) {
+            $classAnnotations = $reader->getMethodAnnotations($reflClass->getMethod($method->name));
+            foreach ($classAnnotations AS $annot) {
+                if ($annot instanceof DataTable) {
+                    $label = $annot->getLabel();
+                    $property = $annot->getColumn();
+                    $merger=array($label => $property);
+                    if(!empty($label) && !empty($property)){
+                        $mapper=array_merge($mapper, $merger);
+                    }
+                    
+                }
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $languagetranslations = $em->getRepository('MajesCoreBundle:User\User')
+            ->findBy(array('deleted' => false));
+
+        $csv=array();
+
+        array_push($csv, array_keys($mapper));
+        
+        foreach ($languagetranslations as $languagetranslation) {
+            $line=array();
+            foreach (array_values($mapper) as $property) {
+                if(gettype($accessor->getValue($languagetranslation, $property)) == "object"){
+                    if(get_class($accessor->getValue($languagetranslation, $property)) == "DateTime"){
+                        array_push($line, $accessor->getValue($languagetranslation, $property)->format('Y-m-d H:i:s'));
+                    }
+
+                }else{
+                    array_push($line, $accessor->getValue($languagetranslation, $property));
+                }
+            }
+            array_push($csv, $line);
+        }
+        $exportsDir=$this->get('kernel')->getRootDir()."/../web/exports";
+        $filename=$exportsDir."/Users.csv";
+
+        if(!file_exists($exportsDir)){
+            mkdir($exportsDir);
+        }
+        $fp = fopen($filename, 'w');
+
+        foreach ($csv as $line) {
+            fputcsv($fp, $line);
+        }
+
+        fclose($fp);
+
+        $response = new Response();
+
+        // set headers
+        $response->headers->set('Content-Type', 'text/csv');
+        // $response->headers->set('Content-Length', $file['length']);
+        $response->headers->set('Content-Disposition', 'attachment;filename="Users.csv"');
+
+        $response->setContent(file_get_contents($filename));
+        return $response;
+    }
+
 
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -697,12 +1093,37 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($user)){
-            $em->remove($user);
+            foreach ($user->getRoles() as $role) {
+                $user->removeRole($role);
+            }
+            $user->setDeleted(true);
+            $em->persist($user);
             $em->flush();
         }
 
 
         return $this->redirect($this->get('router')->generate('_admin_users', array()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function userUndeleteAction($id){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('MajesCoreBundle:User\User')
+            ->findOneById($id);
+
+        if(!is_null($user)){
+            $user->setDeleted(false);
+            $em->persist($user);
+            $em->flush();
+        }
+
+
+        return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
     }
 
 
@@ -713,11 +1134,13 @@ class IndexController extends Controller implements SystemController
     public function rolesAction(){
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('MajesCoreBundle:User\Role')
-            ->findAll();
+            ->findBy(array('deleted' => false));
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $roles,
             'object' => new Role(),
+            'label' => 'roles',
+            'message' => 'Are you sure you want to delete this role ?',
             'pageTitle' => $this->_translator->trans('Roles'),
             'pageSubTitle' => $this->_translator->trans('List off all roles currently available'),
             'urls' => array(
@@ -782,12 +1205,115 @@ class IndexController extends Controller implements SystemController
         $role = $em->getRepository('MajesCoreBundle:User\Role')
             ->findOneById($id);
 
-        if(!is_null($role)){
-            $em->remove($role);
+        if(!is_null($role) && !$role->getIsSystem()){
+            foreach ($role->getUsers() as $user) {
+                $user->removeRole($role);
+            }
+            foreach ($role->getPages() as $page) {
+                $page->removeRole($role);
+            }
+            $role->setDeleted(true);
+            $em->persist($role);
             $em->flush();
         }
 
 
         return $this->redirect($this->get('router')->generate('_admin_roles', array()));
     }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function roleUndeleteAction($id){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $role = $em->getRepository('MajesCoreBundle:User\Role')
+            ->findOneById($id);
+
+        if(!is_null($role)){
+            $role->setDeleted(false);
+            $em->persist($role);
+            $em->flush();
+        }
+
+
+        return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function TrashsAction($context)
+    {
+        $_results_per_page = 10; 
+
+        $em = $this->getDoctrine()->getManager();
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $request = $this->getRequest();
+        $session = $this->get('session');
+
+        $filter = $request->get("types");
+
+        $loadmore = false;
+
+        $headers = array(array('isMobile' => true, 'isSortable' => true, 'label' => 'Id'),
+                    array('isMobile' => true, 'isSortable' => true, 'label' => 'Type'),
+                    array('isMobile' => true, 'isSortable' => true, 'label' => 'Name'));
+
+        $trash=$session->get('menu')['trash'];
+
+        $choices = array();
+
+        foreach ($trash['entities'] as $choice) {
+            $choices[]=$choice['label'];   
+        }
+
+        $entities = array();
+        if(is_null($filter) || in_array("", $filter)){
+            foreach ($trash['entities'] as $entity) {
+                $collection = $em->getRepository($entity['bundle'].'Bundle:'.$entity['entity'])->findBy(array("deleted"=> true));
+                foreach($collection as $iteration){
+                    $pseudoEntity=array(
+                        'Id' => $iteration->getId(),
+                        'Name' => $accessor->getValue($iteration, $entity['title']),
+                        'Type' => $entity['label'],
+                        'actions' => array(
+                            'undelete' => '_admin_'.strtolower($entity['label']).'_undelete')
+                        );
+                    array_push($entities, $pseudoEntity);
+                }
+            }
+        }elseif(!is_null($filter) && !in_array("", $filter)){
+            foreach ($trash['entities'] as $entity) {
+                if(in_array($entity['label'], $filter)){
+                    $collection = $em->getRepository($entity['bundle'].'Bundle:'.$entity['entity'])->findBy(array("deleted"=> true));
+                    foreach($collection as $iteration){
+                        $pseudoEntity=array(
+                            'Id' => $iteration->getId(),
+                            'Name' => $accessor->getValue($iteration, $entity['title']),
+                            'Type' => $entity['label'],
+                            'actions' => array(
+                                'undelete' => '_admin_'.strtolower($entity['label']).'_undelete')
+                            );
+                        array_push($entities, $pseudoEntity);
+                    }
+                }
+            }
+        }
+        return $this->render('MajesCoreBundle:Index:trash.html.twig', array(
+            'pageTitle' => $this->_translator->trans('Trash'),
+            'pageSubTitle' => $this->_translator->trans('List of all objects trashed'),
+            'page' => 1,
+            'chosen' => $filter,
+            'choices' => $choices,
+            'headers' => $headers,
+            'entities' => $entities,
+            ));
+    }
+
+
 }

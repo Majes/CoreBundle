@@ -24,7 +24,7 @@ class UserRoleType extends AbstractType
     {
         
     	$roles = $this->em->getRepository('MajesCoreBundle:User\Role')
-            ->findAll();
+            ->findBy(array('deleted' => false));
 
         $roles_array = array();$roles_has = array();
         $bundle = null;

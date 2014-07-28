@@ -181,7 +181,7 @@ class Translator implements TranslatorInterface
         if (null === $locale) {
             $locale = $this->getLocale();
         }
-var_dump($locale);exit;
+
         if (null === $domain) {
             $domain = 'messages';
         }

@@ -6,13 +6,13 @@
 							<li class="{{ key }}{% if menu.submenu is defined %} dropdown{% endif %}">
 								<a {% if (key in app.request.get('_route')) and key != 'admin' %}class="current"{% endif %} {% if menu.route is defined %}href="{{ path(menu.route) }}"{% else %}href="#" data-toggle="dropdown"{% endif %}>
 									<span aria-hidden="true" class="{{ menu.icon }}"></span> 
-									{{ menu.label }}{% if menu.submenu is defined %}<b class="caret"></b>{% endif %}
+									{{ menu.label|trans }}{% if menu.submenu is defined %}<b class="caret"></b>{% endif %}
 								</a>
 
 								{% if menu.submenu is defined %}<ul class="dropdown-menu">
 									{% for submenuItem in menu.submenu %}
 									<li>
-										<a href="{{ path(submenuItem.route) }}">{{ submenuItem.label }}</a>
+										<a href="{{ path(submenuItem.route) }}">{{ submenuItem.label|trans }}</a>
 									</li>
 									{% endfor %}
 								</ul>{% endif %}
