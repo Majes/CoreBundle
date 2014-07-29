@@ -17,7 +17,7 @@ class ExceptionListener
 
     public function __construct(EngineInterface $templating, $kernel, Container $container)
     {
-        return;
+
         $this->templating = $templating;
         $this->kernel = $kernel;
         $this->container = $container;
@@ -27,7 +27,7 @@ class ExceptionListener
     
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        return;
+
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
 
@@ -68,9 +68,7 @@ class ExceptionListener
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
         } else {
-            $statusCode = $response->getStatusCode();
-            if($statusCode == 200) header("Location: /install");
-            
+            $statusCode = $response->getStatusCode();            
             if(empty($statusCode))
                 $response->setStatusCode($exception->getCode() != 0 ? $exception->getCode() : 500);
         }

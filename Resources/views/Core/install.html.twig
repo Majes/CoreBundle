@@ -31,10 +31,6 @@
                <li>
                   {% if permissions.dir_media_private >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/private/media'
                 </li>
-                <li>
-                  <i class="icon-remove" style="color: red"></i> DataBase / Tables exists
-                  {% if db_exists == false %}<br/><small>Please run 'php app/console doctrine:database:create' before install</small>{% endif %}
-                </li>
 
                 <li>
                   <i class="icon-remove" style="color: red"></i> Domain url (without http) / admin email / admin password<br><br>
@@ -62,7 +58,7 @@
               </ol>
               
 
-            {% if db_exists and permission_status %}<input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Complete install"/>{% endif %}
+            {% if permission_status %}<input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Complete install"/>{% endif %}
         </form>
     </div>
     <!-- End Login Screen -->

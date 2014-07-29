@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Majes\CoreBundle\Entity\Language;
 use Majes\CoreBundle\Entity\Log;
@@ -51,6 +52,20 @@ class SystemListener
         $controller = $event->getController();
         $request = $event->getRequest();
         $locale = $request->getLocale();
+
+
+        //Check if an admin user exists
+        $_route = $request->get('_route');
+        if(!empty($_route) && $_route != '_majes_install' && $_route != '_majes_install_db'){
+
+            $userAdmin = $this->entityManager->getRepository('MajesCoreBundle:User\User')->findOneById(1);
+
+            if(empty($userAdmin)){
+                $redirectUrl = $this->router->generate('_majes_install');
+                header('Location: '.$redirectUrl);
+                exit;
+            }
+        }
         
         $routeDoc = $request->get('routeDocument');
 
