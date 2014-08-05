@@ -28,7 +28,7 @@ services:
 
     majescore.twig.core_extension:
         class: Majes\CoreBundle\Twig\CoreExtension
-        arguments:  ["@service_container"]
+        arguments:  ["@service_container","@doctrine.orm.entity_manager"]
         tags:
             - { name: twig.extension }
 

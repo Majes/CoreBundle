@@ -23,22 +23,10 @@
         	      	<ul class="nav nav-tabs pull-right" data-tabs="tabs" id="tabs">
         	        	<li class="active">
 							<a data-toggle="tab" href="#tab1">
-								<i class="icon-user"></i>
+								{% if icon is not null %}<i class="{{icon}}"></i>{% endif %}
 								<span>{% trans %}Details{% endtrans %}  </span>
 							</a>
         	        	</li>
-        	        	{% if user is not null %}<li>
-        	          		<a data-toggle="tab" href="#tab2">
-        	          			<i class="icon-cog"></i>
-        	          			<span>{% trans %}Roles{% endtrans %}  </span>
-        	          		</a>
-        	        	</li>
-        	        	<li>
-        	          		<a data-toggle="tab" href="#tab3">
-        	          			<i class="icon-stackexchange"></i>
-        	          			<span>{% trans %}Activity{% endtrans %}  </span>
-        	          		</a>
-        	        	</li>{% endif %}
         	      	</ul>
         	    </div>
 	
@@ -67,34 +55,6 @@
 	    	  			</div>
 	    	  			{{ form_end(form) }}
 	    	  		</div>
-	    	  		{% if user is not null %}<div class="tab-pane" id="tab2">
-
-						{% form_theme form_role 'MajesCoreBundle:Form:fields.html.twig' %}
-	    	    		{{ form_start(form_role, { 'attr': {'class': 'form-horizontal'} }) }}
-	    	    		<div class="col-md-3">
-							
-	    	  			</div>
-	    				<div class="col-md-6">
-	    	    			
-	    	    			<div class="widget-content padded">
-	    	    		  		
-								{{ form_errors(form_role) }}
-	    	    				{{ form_widget(form_role) }}
-			
-	    	    		  		<div class="form-actions col-lg-offset-3 col-lg-9">
-	    	    		    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
-	    	    		    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
-	    	    		  		</div>
-								
-	    	    			</div>
-	    	  			</div>
-	    	  			{{ form_end(form_role) }}
-	    	  		</div>
-	    	  		<div class="tab-pane" id="tab3">
-						
-						{{ render(controller('MajesCoreBundle:Index:userActivity', { 'id': user.id })) }}
-
-        	  		</div>{% endif %}
 	    	  	</div>
 	    	  	
 	    	</div>
@@ -102,8 +62,9 @@
 	</div>
 
 </div>
-
+{% for collection in collections %}
 <script>$(document).ready(function(){
-            CoreAdmin.Common.collectionHolder('usertype_userAddresses', 'Adress');
+            CoreAdmin.Common.collectionHolder('{{ collection.holder }}', '{{ collection.label }}');
         })</script>
+{% endfor %}
 {% endblock %}

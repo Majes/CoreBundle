@@ -38,20 +38,20 @@ CoreAdmin.Common = {
       	window.location.href = 'data:text/csv;charset=UTF-8,'
                             + encodeURIComponent(csv);
 	},
-	collectionHolder: function(){
+	collectionHolder: function(collection, object){
 		// get the div holding the collection
-    	var collectionHolder = $('ul#usertype_userAddresses');
+    	var collectionHolder = $('ul#'+collection);
 
     	// add a link « add an address »
-    	var $addTagLink = $('<a href="#" class="btn btn-primary add_link">Add address</a>');
-   		var $newLinkLi = $('<li  class="list-group-item text-right"></li>').append($addTagLink);
+    	var $addTagLink = $('<a href="#" class="btn btn-primary add_link"> Add '+ object +'</a>');
+   		var $newLinkLi = $('<div  class="list-group-item text-right"></div>').append($addTagLink);
    		collectionHolder.append($newLinkLi);
 		// addTagFormFirst(collectionHolder , $newLinkLi);
     	jQuery(document).ready(function() {
 		    
-		    // collectionHolder.find('li').each(function() {
-		    // 	addTagFormDeleteLink($(this));
-	    	// });
+		    collectionHolder.find('li').each(function() {
+		    	addTagFormDeleteLink($(this));
+	    	});
 
 		    // ajoute l'ancre « ajouter un tag » et li à la balise ul
 		    collectionHolder.append($newLinkLi);
@@ -96,7 +96,7 @@ CoreAdmin.Common = {
 		    addTagFormDeleteLink($newFormLi);
 		}
 		function addTagFormDeleteLink($tagFormLi) {
-		    var $removeFormA = $('<a href="#" class="btn btn-default-outline remove_link">Remove address</a>');
+		    var $removeFormA = $('<a href="#" class="btn btn-default-outline remove_link">Remove '+object+'</a>');
 		    $tagFormLi.append($removeFormA);
 
 		    $removeFormA.on('click', function(e) {

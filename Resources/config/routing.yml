@@ -121,3 +121,19 @@ _admin_role_undelete:
 _admin_trashs:
     pattern:  /trashs
     defaults: { _controller: MajesCoreBundle:Index:trashs, context: full }
+
+_admin_listboxs_list:
+    pattern:  /cms/listboxs
+    defaults: { _controller: MajesCoreBundle:Index:listboxs}
+
+_admin_listbox_edit:
+    pattern:  /cms/listbox/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:listboxEdit, id: null}
+
+_admin_listbox_delete:
+    pattern:  /cms/listbox/delete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:listboxDelete}
+
+_admin_listbox_undelete:
+    pattern:  /cms/listbox/undelete/{id}
+    defaults: { _controller: MajesCoreBundle:Index:listboxUndelete}

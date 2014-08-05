@@ -18,6 +18,7 @@ use Majes\CoreBundle\Entity\User\Role;
 use Majes\MediaBundle\Entity\Media;
 use Majes\CoreBundle\Entity\Chat;
 use Majes\CoreBundle\Entity\Host;
+use Majes\CoreBundle\Entity\ListBox;
 
 use Majes\CoreBundle\Form\User\Myaccount;
 use Majes\CoreBundle\Form\User\UserType;
@@ -27,6 +28,7 @@ use Majes\CoreBundle\Form\User\UserRoleType;
 use Majes\CoreBundle\Form\User\RoleType;
 use Majes\CoreBundle\Form\Language\LanguageTokenType;
 use Majes\CoreBundle\Form\Language\LanguageTranslationType;
+use Majes\CoreBundle\Form\ListBoxType;
 use Majes\CoreBundle\Utils\TeelFunction;
 use Majes\CoreBundle\Annotation\DataTable;
 
@@ -1313,6 +1315,138 @@ class IndexController extends Controller implements SystemController
             'headers' => $headers,
             'entities' => $entities,
             ));
+    }
+    /**
+     * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
+     *
+     */
+    public function listboxsAction()
+    {
+        
+        $em = $this->getDoctrine()->getManager();
+        $listbox = $em->getRepository('MajesCoreBundle:ListBox')
+            ->findBy(array("deleted" => false));
+        
+        return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
+            'datas' => $listbox,
+            'object' => new ListBox(),
+            'label' => 'listbox',
+            'message' => 'Are you sure you want to delete this list ?',
+            'pageTitle' => $this->_translator->trans('Lists management'),
+            'pageSubTitle' => $this->_translator->trans('List of all available lists'),
+            'urls' => array(
+                'add' => '_admin_listbox_edit',
+                'edit' => '_admin_listbox_edit',
+                'delete' => '_admin_listbox_delete'
+                )
+            ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
+     *
+     */
+    public function listboxEditAction($id)
+    {
+        
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $listbox = $em->getRepository('MajesCoreBundle:ListBox')
+            ->findOneById($id);
+
+        
+        $form = $this->createForm(new ListBoxType($request->getSession()), $listbox);
+
+        if($request->getMethod() == 'POST'){
+
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+
+                if(is_null($listbox)) $listbox = $form->getData();
+                    $content=array();
+                    foreach ($listbox->getContent() as $item) {
+                        if(is_null($item['key'])) $item['key']=date("dmy").mt_rand();
+                        if(is_null($item['slug'])) $item['slug']=strtolower(str_replace(" ", "-", $item['value']));
+                        array_push($content, $item);
+                    }
+                    $i=0;
+                    foreach ($content as $item) {
+                        $k=0;
+                        for($j=$i-1 ;$j>=0; $j-- ){
+                            if($content[$j]['slug'] == $content[$i]['slug']) $k++;
+                        }
+                        if($k>0) $content[$i]['slug'] .= (string)$k;
+                        $i++;
+                    }
+                    $listbox->setContent($content);
+
+                $em->persist($listbox);
+                $em->flush();
+
+                return $this->redirect($this->get('router')->generate('_admin_listbox_edit', array('id' => $listbox->getId())));
+
+            }else{
+                foreach ($form->getErrors() as $error) {
+                    echo $message[] = $error->getMessage();
+                }
+            }
+        }
+
+        $pageSubTitle = empty($block) ? $this->_translator->trans('Add a new list') : $this->_translator->trans('Edit List'). ' ' . $listbox->getName();
+        
+
+        return $this->render('MajesCoreBundle:Index:entity-edit.html.twig', array(
+            'icon' => 'icon-list-ul',
+            'collections' => array(array('label' => 'Item', 'holder' => 'listboxtype_content')),
+            'pageTitle' => $this->_translator->trans('List'),
+            'pageSubTitle' => $pageSubTitle,
+            'entity' => $listbox,
+            'form' => $form->createView(),
+            'form_role' => null));
+    }
+
+    /**
+     * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
+     *
+     */
+    public function listboxDeleteAction($id) {
+
+        $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+
+        $list = $em->getRepository('MajesCoreBundle:ListBox')
+                ->findOneById($id);
+
+        if (!is_null($list)) {
+
+            $list->setDeleted(true);
+            $em->persist($list);
+            $em->flush();
+        }
+        
+        return $this->redirect($this->get('router')->generate('_admin_listboxs_list', array()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
+     *
+     */
+    public function listboxUndeleteAction($id) {
+
+        $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+
+        $list = $em->getRepository('MajesCmsBundle:List')
+                ->findOneById($id);
+
+        if (!is_null($list)) {
+            $list->setDeleted(false);
+            $em->persist($list);
+            $em->flush();
+        }
+        
+        return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
     }
 
 
