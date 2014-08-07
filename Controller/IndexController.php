@@ -721,10 +721,37 @@ class IndexController extends Controller implements SystemController
             ));
     }
 
-     /**
+    /**
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
+    public function LanguageMessageDeleteAction($id){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $translation = $em->getRepository('MajesCoreBundle:LanguageToken')
+            ->findOneById($id);
+
+        if(!is_null($translation)){
+            $translations = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+            ->findBy(array('token' => $translation->getId()));
+            foreach($translations as $translate){
+                $em->remove($translate);
+                $em->flush();
+            }
+            
+            $em->remove($translation);
+            $em->flush();
+        }
+
+
+        return $this->redirect($this->get('router')->generate('_admin_language_messages', array()));
+    }
+
+    /**
+    * @Secure(roles="ROLE_SUPERADMIN")
+    *
+    */
     public function languageMessageExportAction()
     {
 
