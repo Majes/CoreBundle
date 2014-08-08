@@ -30,7 +30,6 @@ class ListBoxItemType extends AbstractType
 
 
         $builder->add('key', 'hidden', array(
-            'attr' => array('disabled' => 'disabled'),
         	));
 
         $builder->add('slug', 'text', array(
