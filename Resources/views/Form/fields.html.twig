@@ -113,7 +113,7 @@
     {{ block('form_widget') }}
     {% if (media_id is not null) %}
         <div class="media-container" style="margin: 15px 0 0">
-        {{ teelMediaLoad(media_id, 200, 150, true, asset('bundles/majesmedia/img/icon-document.png'))|raw }}
+        {{ teelMediaLoad(media_id, 200, 150, false, asset('bundles/majesmedia/img/icon-document.png'))|raw }}
         </div>
     {% endif %}
 
