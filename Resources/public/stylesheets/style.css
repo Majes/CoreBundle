@@ -1416,7 +1416,8 @@ th:active {
   position: relative;
   background: black; }
   .gallery-item img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     -webkit-transition: opacity 0.3s;
     -moz-transition: opacity 0.3s;
     transition: opacity 0.3s; }
