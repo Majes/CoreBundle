@@ -150,7 +150,11 @@ class ListBox
      */
     public function getContent()
     {
-        return $this->content;
+        $temp_content=array();
+        foreach ($this->content as $value) {
+            $temp_content[$value['key']]=$value;
+        }
+        return $temp_content;
     }
 
     /**
