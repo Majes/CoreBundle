@@ -31,7 +31,7 @@
                <li>
                   {% if permissions.dir_media_private >= '0775' %}<i class="icon-ok" style="color: green"></i>{% else %}<i class="icon-remove" style="color: red"></i>{% endif %} permission on 'app/private/media'
                 </li>
-
+                {% if not hasAdmin %}
                 <li>
                   <i class="icon-remove" style="color: red"></i> Domain url (without http) / admin email / admin password<br><br>
                   <div class="form-group">
@@ -55,6 +55,7 @@
                       </div>
                     </div>
                 </li>
+                {% endif %}
               </ol>
               
 

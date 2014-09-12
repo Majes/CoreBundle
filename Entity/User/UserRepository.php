@@ -69,5 +69,18 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $result;
     }
 
+    public function findOneByRole($role)
+    {
+        $q = $this
+            ->createQueryBuilder('u')
+            ->innerJoin('u.roles', 'r')
+            ->where('r.id = :role')
+            ->setParameter('role', $role)
+            ->getQuery();
+
+        $result = $q->getOneOrNullResult();
+
+        return $result;
+    }
     
 }

@@ -343,6 +343,30 @@ class IndexController extends Controller implements SystemController
         return $response;
     }
 
+     
+    public function SitemapAction($host_id = null){
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $CmsServices = $this->container->get('majescms.cms_service');
+        $TeelServices = $this->container->get('majesteel.teel_service');
+
+        $host = $em->getRepository('MajesCoreBundle:Host')->findOneById($host_id);
+
+        $sitemap = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>');
+        $sitemap->addAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+
+        if(!is_null($host)){
+            $sitemap = $CmsServices->Sitemap($sitemap, $host->getUrl());
+            $sitemap = $TeelServices->Sitemap($sitemap, $host->getUrl());
+        }else{
+            $sitemap = $CmsServices->Sitemap($sitemap, null);
+            $sitemap = $TeelServices->Sitemap($sitemap, null);
+        }
+        $response = new Response($sitemap->asXML());
+        $response->headers->set('Content-Type', 'text/xml');
+        return $response;
+    }
 
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -1390,23 +1414,26 @@ class IndexController extends Controller implements SystemController
             $form->handleRequest($request);
             if ($form->isValid()) {
 
-                if(is_null($listbox)) $listbox = $form->getData();
-                    $content=array();
-                    foreach ($listbox->getContent() as $item) {
-                        if(is_null($item['key'])) $item['key']=date("dmy").mt_rand();
-                        if(is_null($item['slug'])) $item['slug']=strtolower(str_replace(" ", "-", $item['value']));
-                        array_push($content, $item);
+                if(is_null($listbox)) 
+                    $listbox = $form->getData();
+
+                $content=array();
+                               
+                foreach ($form->get('content')->getData() as $item) {
+                    if(is_null($item['key'])) $item['key']=date("dmy").mt_rand();
+                    if(is_null($item['slug'])) $item['slug']=strtolower(str_replace(" ", "-", $item['value']));
+                    array_push($content, $item);
+                }
+                $i=0;
+                foreach ($content as $item) {
+                    $k=0;
+                    for($j=$i-1 ;$j>=0; $j-- ){
+                        if($content[$j]['slug'] == $content[$i]['slug']) $k++;
                     }
-                    $i=0;
-                    foreach ($content as $item) {
-                        $k=0;
-                        for($j=$i-1 ;$j>=0; $j-- ){
-                            if($content[$j]['slug'] == $content[$i]['slug']) $k++;
-                        }
-                        if($k>0) $content[$i]['slug'] .= (string)$k;
-                        $i++;
-                    }
-                    $listbox->setContent($content);
+                    if($k>0) $content[$i]['slug'] .= (string)$k;
+                    $i++;
+                }
+                $listbox->setContent($content);
 
                 $em->persist($listbox);
                 $em->flush();

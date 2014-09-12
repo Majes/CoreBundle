@@ -23,7 +23,10 @@ class CoreController extends Controller
         //Check permissions
 
         //Check database
-        $userAdmin = $this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\User')->findOneById(1);
+        $userAdmin = $this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\User')->findOneByRole(3);
+
+        $userAdmin = is_null($userAdmin) ? false : true;
+        
 
         if(!is_dir(__DIR__ . '/../../../../../../web/media'))
             mkdir(__DIR__ . '/../../../../../../web/media', 0775);
@@ -45,8 +48,7 @@ class CoreController extends Controller
         if($permission_status && !empty($userAdmin))
            return $this->redirect($this->get('router')->generate('_admin_index'));
 
-        return $this->render('MajesCoreBundle:Core:install.html.twig', array(
-            'auth' => true, 'permissions' => $permissions, 'permission_status' => $permission_status));
+        return $this->render('MajesCoreBundle:Core:install.html.twig', array('hasAdmin' => $userAdmin, 'auth' => true, 'permissions' => $permissions, 'permission_status' => $permission_status));
     }
 
     public function installDbAction()
