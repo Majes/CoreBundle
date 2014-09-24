@@ -33,6 +33,7 @@ use Majes\CoreBundle\Utils\TeelFunction;
 use Majes\CoreBundle\Annotation\DataTable;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class IndexController extends Controller implements SystemController
 {
@@ -843,7 +844,7 @@ class IndexController extends Controller implements SystemController
     }
    
     /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function usersAction(){
@@ -851,6 +852,13 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $users = $em->getRepository('MajesCoreBundle:User\User')
             ->findBy(array('deleted' => false));
+        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
+            $users = array_filter($users,function($user){
+                if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())){
+                    return false;
+                } 
+                return true;
+            });            
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $users,
@@ -869,7 +877,7 @@ class IndexController extends Controller implements SystemController
     }
 
     /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function userEditAction($id){
@@ -878,6 +886,11 @@ class IndexController extends Controller implements SystemController
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
+
+        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
+            if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()))
+                throw new AccessDeniedException();
+                
 
         $form = $this->createForm(new UserType($request->getSession()), $user);
         
@@ -962,7 +975,7 @@ class IndexController extends Controller implements SystemController
     }
 
      /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function UserExportAction()
@@ -1040,7 +1053,7 @@ class IndexController extends Controller implements SystemController
 
 
     /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function userActivityAction($id){
@@ -1083,7 +1096,7 @@ class IndexController extends Controller implements SystemController
     }
 
     /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function userRoleAction($id){
@@ -1135,7 +1148,7 @@ class IndexController extends Controller implements SystemController
     }
 
     /**
-     * @Secure(roles="ROLE_SUPERADMIN")
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
     public function userDeleteAction($id){
