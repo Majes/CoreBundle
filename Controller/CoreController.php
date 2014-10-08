@@ -131,5 +131,9 @@ class CoreController extends Controller
         return $this->redirect($this->get('router')->generate('_admin_index'));
     }
 
+    public function MaintenanceAction()
+    {   
+        return $this->render('MajesTeelBundle:Exception:maintenance.html.twig');
+    }
     
 }

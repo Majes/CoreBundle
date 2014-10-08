@@ -154,8 +154,12 @@ class SystemListener
             }
             
             $env = $this->container->get( 'kernel' )->getEnvironment();
-            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') 
-                die('Maintenance');
+            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') {
+                $redirectUrl = $this->router->generate($parameters['maintenance_route']);
+                header('Location: '.$redirectUrl);
+                exit;               
+                // $this->render(redirectUrl($parameters['maintenance_route']));
+            }
 
             $language_rowset = $this->entityManager->getRepository('MajesCoreBundle:Language')->findAll();
 
