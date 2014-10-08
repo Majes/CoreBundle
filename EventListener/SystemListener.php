@@ -104,12 +104,20 @@ class SystemListener
 
             //try autologin via facebook, twitter or google
             $social = $this->container->get('majes.social');
-
+            
             $user = $social->login();
 
             $wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
             $is_multilingual = $this->container->getParameter('is_multilingual');
+            
+            $env = $this->container->get( 'kernel' )->getEnvironment();
+            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') {
+                $redirectUrl = $this->router->generate($parameters['maintenance_route']);
+                header('Location: '.$redirectUrl);
+                exit;               
+                // $this->render(redirectUrl($parameters['maintenance_route']));
+            }
 
             try{
                 $token = $this->securityContext->getToken();
@@ -153,13 +161,6 @@ class SystemListener
                 $request->attributes->set('action',     $matches[4]);
             }
             
-            $env = $this->container->get( 'kernel' )->getEnvironment();
-            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') {
-                $redirectUrl = $this->router->generate($parameters['maintenance_route']);
-                header('Location: '.$redirectUrl);
-                exit;               
-                // $this->render(redirectUrl($parameters['maintenance_route']));
-            }
 
             $language_rowset = $this->entityManager->getRepository('MajesCoreBundle:Language')->findAll();
 
