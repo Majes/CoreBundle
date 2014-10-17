@@ -226,7 +226,49 @@
 
 {% block text_widget %}
     {% set type = type|default('text') %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+    {% if datepicker %}
+        <div class="input-group date datepicker">
+            <input type="text" {{ block('widget_attributes') }} {% if value is not null %}value="{{ value }}" {% endif %} class="form-control"/>
+            <span class="input-group-addon"><i class="icon icon-calendar"></i></span>
+        </div>
+        <script>
+             $('#{{id}}').datepicker({ format : 'dd/mm/yyyy' });
+        </script>
+    {% elseif spanned is not null %}
+        <div class="input-group">
+            <span class="input-group-addon">{{spanned}}</span>
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+        </div>
+    {% elseif linked is not null %}
+        <div class="input-group">
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+            <span class="input-group-btn"><button id='{{id}}Button' class="btn btn-default" type="button" data-ajax="{{linked.ajax}}" data-url="{{path(linked.path, linked.options)}}">Get it</button></span> 
+        </div>
+        <script>
+            $('#{{id}}Button').click(function(event) {
+                event.preventDefault();
+                if($(event.target).data('ajax')){
+                    $.ajax({
+                        url: $(event.target).data('url')
+                    })
+                    .done(function(data) {
+                        data = jQuery.parseJSON(data);
+                        $('#{{id}}').val(data.token);
+                    })
+                    .fail(function() {
+                        alert("L'action n'a pu être effectuée, merci de réessayer ulterieurement");
+                    });
+                }else{
+                    window.open($(event.target).data('url'),'window','width=900,height=550');
+                }
+                
+            
+        });
+        </script>
+    {% else %}
+        {% if type == 'text' %}{% if spanned is not null %}<span class="input-group-addon">{{spanned}}</span>{% endif %}{% endif %}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
+    {% endif %}
 {% endblock text_widget %}
 
 {% block number_widget -%}
@@ -236,16 +278,49 @@
 
 {% block textarea_widget %}
 {% spaceless %}
-    <textarea {{ block('widget_attributes') }} class="form-control">{{ value }}</textarea>
+    {% if rte %}
+        <textarea {{ block('widget_attributes') }} class="form-control rte">{{ value }}</textarea>
+
+        <script>
+        tinymce.EditorManager.execCommand('mceRemoveEditor',true, "{{id}}");
+        tinymce.init({
+            mode : "exact",
+            selector: "textarea#{{id}}",
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table contextmenu paste mediapicker textcolor colorpicker"
+            ],
+            style_formats_merge: true,
+            custom_elements : 'mycustomblock,~mycustominline',
+            relative_urls: false,
+            toolbar1: "insertfile undo redo | styleselect |  link image ",
+            toolbar2: "bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
+
+            image_advtab: true ,
+            
+            external_filemanager_path:"{{ path('_media_picker', {'context':'tinymce'}) }}",
+            filemanager_title:"Media picker" ,
+            external_plugins: { "mediapicker" : "{{ asset('bundles/majesmedia/plugins/mediapicker/plugin.js') }}"}
+         }); 
+        </script>
+    {% else %}
+        <textarea {{ block('widget_attributes') }} class="form-control">{{ value }}</textarea>        
+    {% endif %}
 {% endspaceless %}
 {% endblock textarea_widget %}
 
 
 {% block checkbox_widget %}
     <label class="checkbox">
-        <input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
-        <span>{{label}}</span>
-    </label>
+        <input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %} {% if switched is not empty %}data-on="{{switched.colorOn}}" data-off="{{switched.colorOff}}" data-on-label="{{switched.labelOn}}" data-off-label="{{switched.labelOff}}" {% endif %}/>
+        {% if switched is null or switched is empty %}<span>{{label}}</span>{% endif %}
+    </label> 
+    {% if switched %}
+    <script>
+        $('#{{id}}').bootstrapSwitch();
+    </script>
+    {% endif %}
 {% endblock checkbox_widget %}
 
 {% block password_widget %}
@@ -255,3 +330,17 @@
 {% block email_widget %}
     <input type="email" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control email"/>
 {% endblock email_widget %}
+
+{% block date_widget -%}
+    {% if widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
+    {% else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw -}}
+        </div>
+    {%- endif %}
+{%- endblock date_widget %}

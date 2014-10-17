@@ -2,7 +2,7 @@
 		<div class="nav-collapse">
 				<ul class="nav">
 						{% set adminmenu = app.session.get('menu') %}
-						{% for key, menu in adminmenu %}
+						{% for key, menu in adminmenu if is_granted(menu.role) %}
 							<li class="{{ key }}{% if menu.submenu is defined %} dropdown{% endif %}">
 								<a {% if (key in app.request.get('_route')) and key != 'admin' %}class="current"{% endif %} {% if menu.route is defined %}href="{{ path(menu.route) }}"{% else %}href="#" data-toggle="dropdown"{% endif %}>
 									<span aria-hidden="true" class="{{ menu.icon }}"></span> 
@@ -10,16 +10,14 @@
 								</a>
 
 								{% if menu.submenu is defined %}<ul class="dropdown-menu">
-									{% for submenuItem in menu.submenu %}
+									{% for submenuItem in menu.submenu if is_granted(submenuItem.role) %}
 									<li>
 										<a href="{{ path(submenuItem.route) }}">{{ submenuItem.label|trans }}</a>
 									</li>
 									{% endfor %}
 								</ul>{% endif %}
 							</li>
-						{% endfor %}
-
-						
+						{% endfor %}	
 				</ul>
 		</div>
 </div>

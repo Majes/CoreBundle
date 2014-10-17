@@ -55,7 +55,7 @@ class LogRepository extends EntityRepository {
 
     }
 
-    public function getActivityReal($user_id, $type = 'day', $page = 1, $limit = 20){
+    public function getActivityReal($type = 'day', $page = 1, $limit = 20){
 
         $offset = ($page - 1) * $limit;
         $limit++;
@@ -90,11 +90,8 @@ class LogRepository extends EntityRepository {
         $query = $this->createQueryBuilder('l')
             ->setFirstResult( $offset )
             ->setMaxResults( $limit )
-            ->innerJoin('l.user', 'u')
-            ->where('u.id = :id')
-            ->andWhere('l.createDate >= :date')
+            ->where('l.createDate >= :date')
             ->andWhere('l.route LIKE :route1 OR l.route LIKE :route2')
-            ->setParameter('id', $user_id)
             ->setParameter('date', $date)
             ->setParameter('route1', '%delete%')
             ->setParameter('route2', '%edit%')

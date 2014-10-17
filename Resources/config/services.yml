@@ -31,6 +31,31 @@ services:
         tags:
             - { name: form.type_extension, alias: file }
 
+    majescore.spanned_extension:
+        class: Majes\CoreBundle\Form\Extension\SpannedTypeExtension
+        tags:
+            - { name: form.type_extension, alias: text }
+
+    majescore.rte_extension:
+        class: Majes\CoreBundle\Form\Extension\RteTypeExtension
+        tags:
+            - { name: form.type_extension, alias: textarea }
+
+    majescore.datepicker_extension:
+        class: Majes\CoreBundle\Form\Extension\DatepickerTypeExtension
+        tags:
+            - { name: form.type_extension, alias: text }
+
+    majescore.switched_extension:
+        class: Majes\CoreBundle\Form\Extension\SwitchedTypeExtension
+        tags:
+            - { name: form.type_extension, alias: checkbox }
+
+    majescore.linked_extension:
+        class: Majes\CoreBundle\Form\Extension\LinkedTypeExtension
+        tags:
+            - { name: form.type_extension, alias: text }
+
     majescore.twig.core_extension:
         class: Majes\CoreBundle\Twig\CoreExtension
         arguments:  ["@service_container","@doctrine.orm.entity_manager"]

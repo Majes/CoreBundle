@@ -69,29 +69,10 @@ class IndexController extends Controller implements SystemController
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
         }
-
+        
         // Various widgets
-        $variouswidgets=array('users' => array('label' => 'Users', 
-                                            'number' => array("icon" => "icon-user", "value" => count($em->getRepository('MajesCoreBundle:User\User')->findAll()) ), 
-                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCoreBundle:User\User')->findBy(array('isActive' => true, 'deleted' => false))) ), 
-                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCoreBundle:User\User')->findBy(array('deleted' => true)))) ),
-                                'domains' => array('label' => 'Domains', 
-                                            'number' => array("icon" => "icon-globe", "value" => count($em->getRepository('MajesCoreBundle:Host')->findAll()) ), 
-                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCoreBundle:Host')->findBy(array('deleted' => false))) ), 
-                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCoreBundle:Host')->findBy(array('deleted' => true)))) ),
-                                'pages' => array('label' => 'Pages', 
-                                            'number' => array("icon" => "icon-file-alt", "value" => count($em->getRepository('MajesCmsBundle:PageLang')->findAll()) ), 
-                                            'active'=> array("icon" => "icon-ok", "value" => count($em->getRepository('MajesCmsBundle:PageLang')->findBy(array('deleted' => false))) ), 
-                                            'deleted' => array("icon" => "icon-trash", "value" =>count($em->getRepository('MajesCmsBundle:PageLang')->findBy(array('deleted' => true)))) ),
-                                'media' => array('label' => 'Medias', 
-                                            'number' => array("icon" => "icon-picture", "value" => count($em->getRepository('MajesMediaBundle:Media')->findAll()) )),
-                                'language' => array('label' => 'Languages', 
-                                            'number' => array("icon" => "icon-flag-alt", "value" => count($em->getRepository('MajesCoreBundle:Language')->findAll()) ), 
-                                            'items' => $em->getRepository('MajesCoreBundle:Language')->findAll()),
-                                'activity' => array('label' => "Today's Activity",
-                                            'number' => array('icon' => 'icon-stackexchange', 'value' => count($em->getRepository('MajesCoreBundle:Log')->getActivityReal($this->_user->getId(), $type = 'day', $page = 1, $limit = 200)))) 
-
-        );
+        $TeelServices = $this->container->get('majesteel.teel_service');
+        $variouswidgets=$TeelServices->getWidgets();
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
             'google' => $stats_lastmonth,
             'stats' => $global_stats,
