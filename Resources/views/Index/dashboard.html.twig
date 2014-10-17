@@ -157,7 +157,7 @@
           <div class="widget-container stats-container">
 
             {% for widget in variouswidgets %}
-              {% if widget.items is defined %}
+              {% if widget.flags is defined or widget.images is defined %}
               <div class="col-md-2">
                 <div class="number">
                   <div class="{% if widget.number.icon is defined %} {{widget.number.icon}} {% endif %}"></div>
@@ -167,11 +167,18 @@
                   {{ widget.label|trans }}
                 </div>
                 <div class="text">
-                  {% for item in widget.items %}
-                    {% if fileExists('bundles/majescore/images/flag-' ~ item.locale ~ '.png') %}
-                      <img src="{{ asset('bundles/majescore/images/flag-' ~ item.locale ~ '.png') }}"/>
-                    {% endif %}
-                  {% endfor %}
+                  {% if widget.flags is defined  %}
+                    {% for item in widget.flags %}
+                      {% if fileExists('bundles/majescore/images/flag-' ~ item.locale ~ '.png') %}
+                        <img src="{{ asset('bundles/majescore/images/flag-' ~ item.locale ~ '.png') }}"/>
+                      {% endif %}
+                    {% endfor %}
+                  {% elseif widget.images is defined %}
+                    {% for item in widget.images %}
+                        {% set options = {'class' : 'picture'} %}
+                        {{ teelMediaLoad(item.id, 70, 70, false, asset('bundles/majesmedia/img/icon-document.png'), options)|raw }}
+                    {% endfor %}
+                  {% endif %}
                 </div>
               </div>
               {% else %}
