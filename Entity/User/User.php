@@ -608,7 +608,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Sets the value of userData.
      */
-    public function setUserdata(UserData $userdata)
+    public function setUserdata(\Majes\Teelbundle\Entity\UserData $userdata)
     {
         $this->userdata = $userdata;
 
