@@ -84,7 +84,7 @@ class CoreController extends Controller
                 }
             }
              
-            $reqs = split(";",$query);// on sépare les requêtes
+            $reqs = explode(";",$query);// on sépare les requêtes
             foreach($reqs as $req){ // et on les éxécute
                 if (!mysql_query($req, $conn) && trim($req)!=""){
                     die("ERROR : ".$req); // stop si erreur 
