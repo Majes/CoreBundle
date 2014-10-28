@@ -146,9 +146,9 @@ blockquote{border-color: #ddd;}
   top: 35%;
 }
 
+
 .rounded {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-
