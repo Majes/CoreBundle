@@ -1,0 +1,25 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Authentification{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+
+      <!-- Login Screen -->
+    <div class="login-wrapper opacity">
+            <img  src="{{ asset('bundles/majescore/images/logo-login@2x.png') }}" />
+            <form action="{{ path('_admin_forgot') }}" method="post" name="forgotr_form">
+                  <div class="form-group">
+                        <div class="input-group">
+                              <span class="input-group-addon"><i class="icon-envelope"></i></span>
+                              <input class="form-control" type="text" name="_username" value="" />
+                        </div>
+                  </div>
+                  <input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Get New Password"/>
+            </form>
+    </div>
+    <!-- End Login Screen -->
+
+{% endblock %}
+      

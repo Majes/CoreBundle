@@ -134,3 +134,21 @@ hr{border-bottom: 1px solid #fff;border-top: 1px solid #ddd;}
 
 
 blockquote{border-color: #ddd;}
+
+.gallery-item.rounded {
+  -webkit-border-radius: 75px;
+  -moz-border-radius: 75px;
+  border-radius: 75px;
+  width: 150px;
+  height: 150px;
+}
+.gallery-item.rounded .actions {
+  top: 35%;
+}
+
+.rounded {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+

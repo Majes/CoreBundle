@@ -10,6 +10,10 @@ _admin_login_check:
     pattern:   /authentification_check
     defaults: { _controller: MajesCoreBundle:Auth:login_check }
 
+_admin_forgot:
+    pattern:   /forgot_password
+    defaults: { _controller: MajesCoreBundle:Auth:forgot }
+
 _admin_logout:
     pattern:   /deconnexion
     defaults: { _controller: MajesCoreBundle:Auth:logout }

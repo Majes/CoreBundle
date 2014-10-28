@@ -175,7 +175,7 @@
                     {% endfor %}
                   {% elseif widget.images is defined %}
                     {% for item in widget.images %}
-                        {% set options = {'class' : 'picture'} %}
+                        {% set options = {'class' : 'picture rounded'} %}
                         {{ teelMediaLoad(item.id, 70, 70, false, asset('bundles/majesmedia/img/icon-document.png'), options)|raw }}
                     {% endfor %}
                   {% endif %}
