@@ -48,7 +48,7 @@ class CoreExtension extends \Twig_Extension
 
         if($format == 'datetime'){
             if(is_null($value)) return '';
-            return $value->format('d/m/Y');
+            return '<span style="display:none">'.$value->format('Y/m/d').'</span>'.$value->format('d/m/Y');
         }else
             return $value;
 

@@ -24,7 +24,7 @@
               {% for config_item in config.column %}
               {% set column = config_item.column %}
         			<td {{config_item.isMobile ? 'class="hidden-xs"' : ''}}>
-                {{ get(data, config_item.column, config_item.format)}}
+                {{ get(data, config_item.column, config_item.format)|raw }}
               </td>
               {% endfor %}
         			<td class="actions">
