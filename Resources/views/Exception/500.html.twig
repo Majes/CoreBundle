@@ -2,13 +2,26 @@
 
 {% block title %}MajesCore - Error 500{% endblock %}
 
-{% block content_header '' %}
 
 {% block content %}
 
 	
-	<h2>{% trans %}Server has return an error{% endtrans %} "{{ code }}".</h2>
-	<blockquote>{{message}}</blockquote>
+<body class="fourofour bg-warning">
+    <!-- Login Screen -->
+    <div class="fourofour-container">
+      <h1>
+        500
+      </h1>
+      <h2>
+        500 Error! Something broke!
+      </h2>
+      <p>{{message}}</p>
+      <h3 class="title">{% trans %}Support{% endtrans %}</h3>
+							<p class="intro">{% trans %}You need technical or functional support on how to use majeS'teel, please feel free to contact us.{% endtrans %}</p>
+      <a class="btn btn-lg btn-default-outline" href="{{ path('_majesteel_index') }}"><i class="fa fa-home"></i>Return to the homepage</a>
+    </div>
+    <!-- End Login Screen -->
+  </body>
 					
 
 {% endblock %}

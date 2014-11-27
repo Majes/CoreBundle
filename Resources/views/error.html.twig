@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-          MajesCore - Dashboard
+          {% block title %}MajesCore - Error {% endblock %}
         </title>
         
         <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700" media="all" rel="stylesheet" type="text/css" />
@@ -66,13 +66,13 @@
         <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 
     </head>
-    <body class="{% if auth is defined %}login{% endif %}">
-        {% if app.user is not null %}
+    {% block content %}<body class="{% if auth is defined %}login{% endif %}">
+        {# {% if app.user is not null %}
         {{ include(
             'MajesCoreBundle:common:header.html.twig'
-        ) }}
+        ) }} #}
         
-        {% endif %}
+        {# {% endif %} #}
         
         <div class="container-fluid main-content">
             <div class="page-title">
@@ -87,7 +87,7 @@
                         
                         <div class="widget-content padded">
         
-                        {% block content %}{% endblock %}
+                        
 
                         </div>
                     </div>
@@ -98,5 +98,5 @@
         
         </div>
 
-    </body>
+    </body>{% endblock %}
 </html>

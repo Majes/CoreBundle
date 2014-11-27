@@ -31,6 +31,8 @@ class ExceptionListener
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
 
+        if($this->container->get('kernel')->getEnvironment() == 'dev')
+            return;
 
         if(isset($request->server)){
             $domain = $request->server->get('HTTP_HOST');
@@ -52,15 +54,13 @@ class ExceptionListener
     
             }
         }
-
-
+        
         $request->setLocale($locale);
         // exception object
         $exception = $event->getException();
         // new Response object
         $response = new Response();
         // set response content
-
 
         // HttpExceptionInterface is a special type of exception
         // that holds status code and header details
