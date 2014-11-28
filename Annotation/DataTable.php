@@ -15,6 +15,7 @@ class DataTable
     private $hasAdd = 1;
     private $hasPreview = 1;
     private $isDatatablejs = 1;
+    private $ajaxUrl = '';
     private $format = 'text';
     private $column;
      
@@ -83,6 +84,11 @@ class DataTable
     public function getIsDatatablejs()
     {
         return $this->isDatatablejs;
+    }
+
+    public function getAjaxUrl()
+    {
+        return $this->ajaxUrl;
     }
 
     public function getFormat()

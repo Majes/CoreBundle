@@ -29,6 +29,7 @@ class DataTableConverter
                 $convertedObject['object']['hasAdd'] = $annotation->getHasAdd();
                 $convertedObject['object']['hasPreview'] = $annotation->getHasPreview();
                 $convertedObject['object']['isDatatablejs'] = $annotation->getIsDatatablejs();
+                $convertedObject['object']['ajaxUrl'] = $annotation->getAjaxUrl();
             }else{
 
                 

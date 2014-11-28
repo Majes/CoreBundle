@@ -299,7 +299,7 @@
     # =============================================================================
     */
 
-    $(".dataTable").dataTable({
+    $(".dataTable:not(.ajaxTable)").dataTable({
       "sPaginationType": "full_numbers",
       aoColumnDefs: [
         {
@@ -307,6 +307,19 @@
           aTargets: [0, -1, "sorting_disabled"]
         }
       ]
+    });
+
+    $(".dataTable.ajaxTable").dataTable({
+      "sPaginationType": "full_numbers",
+      aoColumnDefs: [
+        {
+          bSortable: false,
+          aTargets: [0, -1, "sorting_disabled"]
+        }
+      ],
+      "processing": true,
+      "serverSide": true,
+      "ajax": $(this).data('url')
     });
     /*
     # =============================================================================
