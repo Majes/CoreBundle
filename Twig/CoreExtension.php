@@ -9,10 +9,12 @@ class CoreExtension extends \Twig_Extension
 {
     private $_container;
     private $_em;
+    private $_router;
 
-    public function __construct(ContainerInterface $container = null, $em){
+    public function __construct(ContainerInterface $container = null, $em, $router){
         $this->_em = $em;
         $this->_container = $container;
+        $this->_router = $router;
     }
 
     public function getFunctions()
@@ -25,7 +27,8 @@ class CoreExtension extends \Twig_Extension
             new \Twig_SimpleFunction('fileExists', array($this, 'fileExists')),
             new \Twig_SimpleFunction('setupAttribute', array($this, 'setupAttribute')),
             new \Twig_SimpleFunction('getListbox', array($this, 'getListbox')),
-            new \Twig_SimpleFunction('getRoutes', array($this, 'getRoutes'))
+            new \Twig_SimpleFunction('getRoutes', array($this, 'getRoutes')),
+            new \Twig_SimpleFunction('dataTableJson', array($this, 'dataTableJson'))
         );
     }
 
@@ -41,6 +44,42 @@ class CoreExtension extends \Twig_Extension
 
     }
 
+    public function dataTableJson($dataTemp){
+
+        $config = $this->dataTable($dataTemp['object'], $dataTemp['datas']);
+        $params = array();
+        $rows = array();
+        foreach ($dataTemp['datas'] as $data) {
+
+            //config actions
+            $actions = '';
+            if($config['object']['hasPreview']) $actions .= '<a class="table-actions" href=""><i class="icon-eye-open"></i></a>';
+            $params['id'] = $data->getId();
+            if(isset($dataTemp['urls']['params']))
+                foreach($dataTemp['urls']['params'] as $key => $param)
+                    $params[] = array($key => $coreTwig->get($data, $param['key']));
+
+            if(isset($dataTemp['urls']['edit']))
+                $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['edit'], $params).'" class="table-actions"><i class="icon-pencil"></i></a>';
+
+            if(isset($dataTemp['urls']['delete']))
+                if(method_exists($data, 'getIsSystem') && !$data['isSystem']) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
+                elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
+
+            unset($row);
+            $row[] = '';
+            foreach($config['column'] as $config_item){
+                $row[] = $this->get($data, $config_item['column'], $config_item['format']);
+            }
+            $row[] = $actions;
+            $rows[] = $row;
+
+        }
+
+        return array("draw" => 1, "recordsTotal" => 1,"recordsFiltered" => 1, "data" => $rows);
+
+    }
+
     public function get($object, $property, $format = null){
         
         $function = 'get'.ucfirst($property);
@@ -48,7 +87,7 @@ class CoreExtension extends \Twig_Extension
 
         if($format == 'datetime'){
             if(is_null($value)) return '';
-            return '<span style="display:none">'.$value->format('Y/m/d').'</span>'.$value->format('d/m/Y');
+            return $value->format('d/m/Y');
         }else
             return $value;
 
