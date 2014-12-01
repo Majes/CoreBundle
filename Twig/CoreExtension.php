@@ -44,11 +44,12 @@ class CoreExtension extends \Twig_Extension
 
     }
 
-    public function dataTableJson($dataTemp){
+    public function dataTableJson($dataTemp, $draw = 1){
 
         $config = $this->dataTable($dataTemp['object'], $dataTemp['datas']);
         $params = array();
         $rows = array();
+        $count = 0;
         foreach ($dataTemp['datas'] as $data) {
 
             //config actions
@@ -73,10 +74,10 @@ class CoreExtension extends \Twig_Extension
             }
             $row[] = $actions;
             $rows[] = $row;
-
+            $count++;
         }
 
-        return array("draw" => 1, "recordsTotal" => 1,"recordsFiltered" => 1, "data" => $rows);
+        return array("draw" => $draw, "recordsTotal" => count($dataTemp['datas']),"recordsFiltered" => $count, "data" => $rows);
 
     }
 
