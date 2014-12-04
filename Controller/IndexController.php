@@ -415,6 +415,15 @@ class IndexController extends Controller implements SystemController
                 }
 
                 $em->clear();
+
+                //Clear translation cache
+                foreach ($this->_langs as $_lang) {
+                    $lang = $_lang->getLocale();
+                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php')) 
+                        unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php');
+                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta')) 
+                        unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta');
+                }
                 
             }else{
                 foreach ($form->getErrors() as $error) {
