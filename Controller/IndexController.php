@@ -24,6 +24,7 @@ use Majes\CoreBundle\Form\User\Myaccount;
 use Majes\CoreBundle\Form\User\UserType;
 use Majes\CoreBundle\Form\HostType;
 use Majes\CoreBundle\Form\Language\LanguageType;
+use Majes\CoreBundle\Form\Language\LanguageImportType;
 use Majes\CoreBundle\Form\User\UserRoleType;
 use Majes\CoreBundle\Form\User\RoleType;
 use Majes\CoreBundle\Form\Language\LanguageTokenType;
@@ -323,6 +324,112 @@ class IndexController extends Controller implements SystemController
 
         $response->setContent(file_get_contents($filename));
         return $response;
+    }
+
+     /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageImportAction()
+    {
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $this->createForm(new LanguageImportType());
+
+        if($request->getMethod() == 'POST'){
+
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+
+                $date = new \DateTime();
+                $temp = $this->get('kernel')->getRootDir()."/private/import/languages";
+                $form['csv']->getData()->move($temp, '/'.$date->format('d_m_Y').'.csv');
+
+                $count = 0; $rows= array();
+                if (($handle = fopen($temp.'/'.$date->format('d_m_Y').'.csv', "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+
+
+
+                        $num = count($data);
+                        
+                        $rows[$count]['id'] = $data[0];
+                        $rows[$count]['catalogue'] = $data[1] == '' ? 'messages' : $data[1];
+                        $rows[$count]['token'] = $data[2];
+
+                        
+                        for ($c=0; $c < $num; $c++) {
+                            if($c > 2){
+                                if($count > 0){
+                                    $key = $c - 3;
+                                    if(isset($rows[0]['languages'][$key])) $rows[$count]['languages'][$rows[0]['languages'][$key]] = $data[$c];
+                                }
+                                else
+                                    $rows[$count]['languages'][] = utf8_decode($data[$c]);
+                            }
+                        }
+
+                        $count++;
+                    }
+                    fclose($handle);
+                }
+
+                $token = $em->getRepository('MajesCoreBundle:LanguageToken');
+                $languageTranslation = $em->getRepository('MajesCoreBundle:LanguageTranslation');
+                //Import language
+                foreach ($rows as $key => $row) {
+                    if($key > 0){
+                        $tokenRow = $token->findOneByToken($row['token']);
+                        
+                        if(empty($tokenRow)){
+                            $tokenRow = new LanguageToken();
+                            $tokenRow->setToken($row['token']);
+
+                            $em->persist($tokenRow);
+                            $em->flush();
+                        }
+
+                        $tokenId = $tokenRow->getId();
+                        foreach($row['languages'] as $localeToken => $translationToken){
+                            $languageTranslationRow = $languageTranslation->findOneBy(array(
+                                'locale' => $localeToken,
+                                'catalogue' => $row['catalogue'],
+                                'token' => $tokenRow
+                                ));
+                            if(empty($languageTranslationRow))
+                                $languageTranslationRow = new LanguageTranslation();
+
+                            $languageTranslationRow->setLocale($localeToken);
+                            $languageTranslationRow->setTranslation($translationToken);
+                            $languageTranslationRow->setCatalogue($row['catalogue']);
+                            $languageTranslationRow->setToken($tokenRow);
+
+                            $em->persist($languageTranslationRow);
+                            $em->flush();
+                        }
+
+
+                    }
+                }
+
+                $em->clear();
+                
+            }else{
+                foreach ($form->getErrors() as $error) {
+                    echo $message[] = $error->getMessage();
+                }
+            }
+        }
+
+        $pageSubTitle = $this->_translator->trans('Import the CSV file') ;
+
+        return $this->render('MajesCoreBundle:Index:language-import.html.twig', array(
+            'pageTitle' => 'Languages',
+            'pageSubTitle' => $pageSubTitle,
+            'form' => $form->createView()));
+
     }
 
      

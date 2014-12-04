@@ -50,6 +50,10 @@ _admin_languages:
     pattern:  /languages
     defaults: { _controller: MajesCoreBundle:Index:languages }
 
+_admin_languages_import:
+    pattern:  /languages/import
+    defaults: { _controller: MajesCoreBundle:Index:languageImport }
+
 _admin_language_edit:
     pattern:  /language/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageEdit, id: null }
