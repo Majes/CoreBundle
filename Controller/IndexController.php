@@ -69,15 +69,11 @@ class IndexController extends Controller implements SystemController
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
         }
-        
-        // Various widgets
-        $TeelServices = $this->container->get('majesteel.teel_service');
-        $variouswidgets=$TeelServices->getWidgets();
+
         return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
             'google' => $stats_lastmonth,
             'stats' => $global_stats,
-            'chat' => $chat,
-            'variouswidgets' => $variouswidgets));
+            'chat' => $chat));
     }
 
     /**
