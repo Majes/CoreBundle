@@ -1,0 +1,50 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Dashboard{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+<div class="container-fluid main-content">
+
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+	<div class="row">
+	    <div class="widget-container fluid-height clearfix">
+	    	<div class="heading">
+	        	<i class="icon-user"></i> {% trans %}%pageSubTitle%{% endtrans %}
+	        </div>
+
+			{% form_theme form 'MajesCoreBundle:Form:fields.html.twig' %}
+	        {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
+	        <div class="col-md-3">
+				
+	      	</div>
+	    	<div class="col-md-6">
+	        	
+	        	<div class="widget-content padded">
+	          		
+					{{ form_errors(form) }}
+	        		{{ form_widget(form) }}
+
+	          		<div class="form-actions col-lg-offset-3 col-lg-9">
+	            		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
+	            		<a href="{{ path('_admin_languages') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	          		</div>
+					
+	        	</div>
+	      	</div>
+	      	{{ form_end(form) }}
+	    </div>
+	</div>
+
+</div>
+
+
+{% endblock %}
