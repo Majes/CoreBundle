@@ -54,10 +54,31 @@ class ExceptionListener
     
             }
         }
-        
+       
         $request->setLocale($locale);
         // exception object
         $exception = $event->getException();
+
+        if(!empty($_user) && !is_string($_user)){
+            $params = array_merge($request->query->all(),  $request->request->all(), $request->get('_route_params'));
+            
+            if(!is_null($request->get('_route'))){
+
+                $log = new Log();
+                $log->setUser($_user);
+                $log->setName('ExceptionListener');
+                $log->setRoute($request->get('_route'));
+                $log->setLocale($locale);
+                $log->setParams(json_encode($params));
+                $log->setStatus(json_encode($exception->getStatusCode()));
+                $log->setException(json_encode($exception->getMessage()));
+                
+                $this->entityManager->persist($log);
+                $this->entityManager->flush();
+            }
+            $wysiwyg = $parameters['wysiwyg'] ? $_user->getWysiwyg() : false;
+        }
+
         // new Response object
         $response = new Response();
         // set response content
@@ -65,12 +86,16 @@ class ExceptionListener
         // HttpExceptionInterface is a special type of exception
         // that holds status code and header details
         if ($exception instanceof HttpExceptionInterface) {
+            
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
+
         } else {
-            $statusCode = $response->getStatusCode();            
-            if(empty($statusCode))
+
+            $statusCode = $response->getStatusCode();
+            if(empty($statusCode) || $statusCode == 200)
                 $response->setStatusCode($exception->getCode() != 0 ? $exception->getCode() : 500);
+
         }
 
         if($this->templating->exists('MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig'))
