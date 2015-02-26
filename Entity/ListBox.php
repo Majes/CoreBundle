@@ -156,6 +156,18 @@ class ListBox
         }
         return $temp_content;
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function getContentAsKeyValue()
+    {
+        $temp_content=array();
+        foreach ($this->content as $value) {
+            $temp_content[$value['slug']]=$value['value'];
+        }
+        return $temp_content;
+    }
 
     /**
      * Sets the value of content.
