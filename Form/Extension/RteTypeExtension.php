@@ -45,7 +45,7 @@ class RteTypeExtension extends AbstractTypeExtension
             if (null !== $parentData) {
                 $rte = $options['rte'];
             } else {
-                $rte = null;
+                $rte = true;
             }
 
             // set an "image_url" variable that will be available when rendering this field
