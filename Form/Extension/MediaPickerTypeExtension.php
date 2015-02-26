@@ -45,7 +45,7 @@ class MediaPickerTypeExtension extends AbstractTypeExtension
             if (null !== $parentData) {
                 $mediapicker = $options['mediapicker'];
             } else {
-                $mediapicker = null;
+                $mediapicker = true;
             }
 
             // set an "image_url" variable that will be available when rendering this field
