@@ -45,7 +45,7 @@ class Select2TypeExtension extends AbstractTypeExtension
             if (null !== $parentData) {
                 $select2 = $options['select2'];
             } else {
-                $select2 = null;
+                $select2 = true;
             }
 
             // set an "image_url" variable that will be available when rendering this field
