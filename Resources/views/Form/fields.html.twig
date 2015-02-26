@@ -323,6 +323,13 @@
     {% endif %}
 {% endblock checkbox_widget %}
 
+{% block radio_widget %}
+    <label class="radio col-lg-2">
+        <input type="radio" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %} />
+        <span>{{label}}</span>
+    </label>
+{% endblock radio_widget %}
+
 {% block password_widget %}
     <input type="password" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control" autocomplete="off"/>
 {% endblock password_widget %}
