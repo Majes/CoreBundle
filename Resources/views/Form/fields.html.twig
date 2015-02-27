@@ -59,9 +59,9 @@
                 <label for="myaccount_is_active" class="control-label col-lg-3">{% trans %}Preview{% endtrans %}</label>
                 <div class="col-lg-9">
                     {% if data is not null %}
-                    <img src="{{ teelMediaLoad(data.id, 200, 200, false, asset('bundles/majesmedia/img/icon-document.png'),{ 'src' : true })|raw }}" width="200" title="{{data.title}}" id="previewpicker"/>
+                    <img src="{{ teelMediaLoad(data.id, 200, 200, false, asset('bundles/majesmedia/img/icon-document.png'),{ 'src' : true })|raw }}" width="200" title="{{data.title}}" id="preview{{id}}"/>
                     {% else %}
-                    <img src="" title="" id="previewpicker" width="200"/>
+                    <img src="" title="" id="preview{{id}}" width="200"/>
                     {% endif %}
                 </div>
             </div>
@@ -69,24 +69,24 @@
             <div class="form-group">
                 <label for="myaccount_media" class="control-label col-lg-3"> Media </label>
                 <div class="col-lg-9">
-                    <input type="hidden" id="picker_id" name="{{full_name}}[id]" value="{% if data is not null %}{{data.id}}{% endif %}" >
+                    <input type="hidden" id="{{id}}_id" name="{{full_name}}[id]" value="{% if data is not null %}{{data.id}}{% endif %}" >
                     <div class="widget-container fluid-height">
                         <div class="heading tabs">
-                            <ul class="nav nav-tabs pull-right" data-tabs="tabs" id="tabs{{name}}">
+                            <ul class="nav nav-tabs pull-right" data-tabs="tabs" id="{{id}}_tabs">
                                 <li class="active">
-                                    <a data-toggle="tab" href="#tab1{{name}}"><i class="icon-comments"></i><span>{% trans %}Upload new file{% endtrans %}</span></a>
+                                    <a data-toggle="tab" href="#{{id}}_tab1"><i class="icon-comments"></i><span>{% trans %}Upload new file{% endtrans %}</span></a>
                                 </li>
                                 <li>
-                                    <a data-toggle="tab" href="#tab2{{name}}" class="triggerMediaPicker"><i class="icon-user"></i><span>{% trans %}Existing media{% endtrans %}</span></a>
+                                    <a data-toggle="tab" href="#{{id}}_tab2" class="triggerMediaPicker"><i class="icon-user"></i><span>{% trans %}Existing media{% endtrans %}</span></a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-content" id="my-tab-content{{name}}">
-                            <div class="tab-pane lol active" id="tab1{{name}}" style="padding: 10px;">
+                            <div class="tab-pane active" id="{{id}}_tab1" style="padding: 10px;">
                                 <input type="file" name="{{full_name}}[value]">
                             </div>
-                            <div class="tab-pane" id="tab2{{name}}">
-                                <iframe src="{{path('_media_picker', {'context': 'cms'})}}?ref=picker" style="width: 100%; border: 0; height: 500px;"></iframe>
+                            <div class="tab-pane" id="{{id}}_tab2">
+                                <iframe src="{{path('_media_picker', {'context': 'cms'})}}?ref={{id}}" style="width: 100%; border: 0; height: 500px;"></iframe>
                             </div>
 
                         </div>
