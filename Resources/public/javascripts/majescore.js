@@ -49,7 +49,7 @@ CoreAdmin.Common = {
 		// addTagFormFirst(collectionHolder , $newLinkLi);
     	jQuery(document).ready(function() {
 		    
-		    collectionHolder.find('li').each(function() {
+		    collectionHolder.find('li.list-group-item').each(function() {
 		    	addTagFormDeleteLink($(this));
 	    	});
 
