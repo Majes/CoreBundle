@@ -25,7 +25,8 @@ class Mailer
         $this->_admin_email = $admin_email;
         $this->_mailerDb = new TeelMailer();
 
-        $_user = $context->getToken()->getUser();
+        $token = $context->getToken();
+        $_user = !empty($token) ? $context->getToken()->getUser() : null;
         if(!empty($_user) && !is_string($_user)){
             $this->_mailerDb->setUser($_user);
         }
