@@ -134,7 +134,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $deleted=0;
 
     /**
-     * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1)
+     * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1, ajaxUrl="_admin_users")
      */
     public function __construct()
     {

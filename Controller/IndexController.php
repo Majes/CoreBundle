@@ -3,6 +3,7 @@
 namespace Majes\CoreBundle\Controller;
 
 use Majes\CoreBundle\Controller\SystemController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -943,18 +944,53 @@ class IndexController extends Controller implements SystemController
     public function usersAction(){
 
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository('MajesCoreBundle:User\User')
-            ->findBy(array('deleted' => false));
+        /*$users = $em->getRepository('MajesCoreBundle:User\User')
+            ->findBy(array('deleted' => false));*/
+
+        $request = $this->getRequest();
+
         if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
             $users = array_filter($users,function($user){
                 if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())){
                     return false;
                 } 
                 return true;
-            });            
+            });     
+
+        if ($request->isXmlHttpRequest()){
+
+            /**
+             * Get data from datatable
+             */
+            $draw = $request->get('draw', 1);
+            $length = $request->get('length', 10);
+            $start = $request->get('start', 0);
+            $columns = $request->get('columns');
+            $orderNum = $request->get('order');
+            $order = $orderNum[0]['column'];
+            $search = $request->get('search');
+
+            $users = $em->getRepository('MajesCoreBundle:User\User')->findForAdmin($start, $length, $search['value']);
+
+            $coreTwig = $this->container->get('majescore.twig.core_extension');           
+            $dataTemp = array(
+                'object' => new User(),
+                'datas' => !empty($users) ? $users : null,
+                'message' => $this->_translator->trans('Are you sure you want to delete this user ?'),
+                'urls' => array(
+                    'edit'   => '_admin_user_edit',
+                    'delete' => '_admin_user_delete'
+                ));
+            $data = $coreTwig->dataTableJson($dataTemp, $draw);
+                
+            return new JsonResponse($data);
+
+
+        
+        }else{       
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
-            'datas' => $users,
+            'datas' => null,
             'object' => new User(),
             'pageTitle' => 'Users',
             'pageSubTitle' => $this->_translator->trans('List off all users currently "created"'),
@@ -967,6 +1003,7 @@ class IndexController extends Controller implements SystemController
                 'export' => '_admin_user_export'
                 )
             ));
+        }
     }
 
     /**

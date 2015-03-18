@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -81,6 +82,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $result = $q->getOneOrNullResult();
 
         return $result;
+    }
+    
+    public function findForAdmin($offset = 0, $limit = 10, $search = ''){
+        $qb = $this->createQueryBuilder('s');
+
+        if(!empty($search))
+            $qb->where('s.email like :search or s.lastname like :search or s.firstname like :search')
+                ->setParameter('search', '%'.$search.'%');
+
+        $qb
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($qb, $fetchJoinCollection = true);
+
+        //$query = $qb->getQuery();
+        return $paginator;
     }
     
 }
