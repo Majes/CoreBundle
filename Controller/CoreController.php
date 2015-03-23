@@ -122,6 +122,7 @@ class CoreController extends Controller
             if(!is_null($admin)){
                 $admin->setPassword(sha1($password));
                 $admin->setEmail($email);
+                $admin->setUsernam($email);
 
                 $em->persist($admin);
                 $em->flush();
