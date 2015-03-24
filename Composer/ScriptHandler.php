@@ -23,7 +23,13 @@ class ScriptHandler
         $options = self::getOptions($event);
         $appDir = $options['symfony-app-dir'];
 
-        static::executeCommand($event, $appDir, 'doctrine:database:create', $options['process-timeout']);
+        try{
+            static::executeCommand($event, $appDir, 'doctrine:database:create', $options['process-timeout']);
+        }
+        catch(\RuntimeException $e){
+            
+        }
+
         static::executeCommand($event, $appDir, 'doctrine:schema:update --force', $options['process-timeout']);
     }
 
