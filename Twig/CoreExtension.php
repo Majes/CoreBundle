@@ -144,8 +144,11 @@ class CoreExtension extends \Twig_Extension
 
     public function getListbox($id)
     {
-        $list = $this->_em->getRepository('MajesCoreBundle:ListBox')
-        ->findOneBy(array('deleted' => false, 'id' => $id));  
+        if(is_numeric($id))
+            $list = $this->_em->getRepository('MajesCoreBundle:ListBox')->findOneBy(array('deleted' => false, 'id' => $id));
+        else
+            $list = $this->_em->getRepository('MajesCoreBundle:ListBox')->findOneBy(array('deleted' => false, 'name' => $id));
+
         return $list;
     }
 
