@@ -71,8 +71,13 @@ class IndexController extends Controller implements SystemController
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
         }
-
-        return $this->render('MajesCoreBundle:Index:dashboard.html.twig', array(
+        
+        if($this->get('templating')->exists('MajesTeelBundle:Admin:dashboard.html.twig'))
+            $template_twig = 'MajesTeelBundle:Admin:dashboard.html.twig';
+        else 
+            $template_twig = 'MajesCoreBundle:Index:dashboard.html.twig';
+        
+        return $this->render($template_twig, array(
             'google' => $stats_lastmonth,
             'stats' => $global_stats,
             'chat' => $chat));
