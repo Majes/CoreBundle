@@ -9,7 +9,6 @@
   <div class="widget-content padded clearfix">
       <table class="table table-bordered table-striped{% if config.object.isDatatablejs %} dataTable{% if config.object.ajaxUrl is not empty %} ajaxTable{% endif %}{% endif %}" {% if config.object.ajaxUrl is not empty %}data-url="{{path(config.object.ajaxUrl)}}"{% endif %}>
         <thead>
-            <th class="check-header hidden-xs"></th>
             {% for config_item in config.column %}
             <th class="{{config_item.isMobile ? 'hidden-xs' : ''}}{{config_item.isSortable ? '' : ' sorting_disabled'}}">{{config_item.label}}</th>
             {% endfor %}
@@ -19,9 +18,6 @@
         <tbody>
           {% for data in datas %}
             <tr>
-              <td class="check hidden-xs">
-                  <input name="optionsRadios1" type="checkbox" value="option1">
-              </td>
               {% for config_item in config.column %}
               {% set column = config_item.column %}
               <td {{config_item.isMobile ? 'class="hidden-xs"' : ''}}>
