@@ -46,7 +46,7 @@ class CoreExtension extends \Twig_Extension
 
     public function dataTableJson($dataTemp, $draw = 1){
 
-        $config = $this->dataTable($dataTemp['object'], $dataTemp['datas']);
+        $config = $this->dataTable($dataTemp['object']);
         $params = array();
         $rows = array();
         $count = 0;
