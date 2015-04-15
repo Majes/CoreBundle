@@ -32,7 +32,7 @@ class CoreExtension extends \Twig_Extension
         );
     }
 
-    public function dataTable($object, $objects){
+    public function dataTable($object){
         
 
         $reader = new AnnotationReader();
