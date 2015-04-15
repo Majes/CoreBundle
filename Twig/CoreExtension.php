@@ -68,7 +68,6 @@ class CoreExtension extends \Twig_Extension
                 elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
 
             unset($row);
-            $row[] = '';
             foreach($config['column'] as $config_item){
                 $row[] = $this->get($data, $config_item['column'], $config_item['format']);
             }
