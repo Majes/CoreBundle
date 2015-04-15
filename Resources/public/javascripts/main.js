@@ -309,6 +309,7 @@
       ]
     });
 
+    var ajaxUrl = $(".dataTable.ajaxTable").data('url');
     $(".dataTable.ajaxTable").dataTable({
       "sPaginationType": "full_numbers",
       aoColumnDefs: [
@@ -319,7 +320,7 @@
       ],
       "processing": true,
       "serverSide": true,
-      "ajax": ''
+      "ajax": {"url": ajaxUrl, "type": "POST"}
     });
     /*
     # =============================================================================
