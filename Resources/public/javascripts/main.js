@@ -304,7 +304,7 @@
       aoColumnDefs: [
         {
           bSortable: false,
-          aTargets: [0, -1]
+          aTargets: [-1]
         }
       ]
     });
@@ -315,12 +315,12 @@
       aoColumnDefs: [
         {
           bSortable: false,
-          aTargets: [0, -1]
+          aTargets: [-1]
         }
       ],
       "processing": true,
       "serverSide": true,
-      "ajax": {"url": ajaxUrl, "type": "POST"}
+      "ajax": ""
     });
     /*
     # =============================================================================
