@@ -1,0 +1,88 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Dashboard{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+<div class="container-fluid main-content">
+
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+	<div class="row">
+          <div class="col-sm-2">
+            <!--<a class="btn btn-block btn-primary compose-btn" href="#">Compose</a>-->
+            <ul class="list-group">
+				
+              	<li class="list-group-item active">
+              	  <a href="#">
+              	    <p>
+              	      <span class="badge">2</span>Sent
+              	    </p>
+              	  </a>
+              	</li>
+              	<li class="list-group-item">
+              	  <a href="#">
+              	    <p>
+              	      <span class="badge">1</span>Error
+              	    </p>
+              	  </a>
+              	</li>
+              	<li class="list-group-item">
+              	  <a href="#">
+              	    <p>
+              	      Trash
+              	    </p>
+              	  </a>
+              	</li>
+            </ul>
+          </div>
+          <div class="col-sm-10 messages">
+            <div class="widget-container">
+              <div class="col-sm-3 message-list">
+                <ul class="list-group">
+                	{% for _email in emails %}
+                		{% set username = _email.addressFrom|split('@') %}
+                  <li class="list-group-item{% if _email.id == email.id %} active{% endif %}">
+                    <a href="{{path('_admin_management_emails_edit', {id: _email.id})}}">
+                      <div class="status unread"></div>
+                      <h2>
+                        {{username[0]}}<span>{{_email.createDate|date('d/m/y')}}</span>
+                      </h2>
+                      <p>
+                        {{_email.subject}}
+                      </p>
+                    </a>
+                  </li>
+                  	{% endfor %}
+                </ul>
+              </div>
+              <div class="col-sm-9 message-content">
+                <div class="message-header">
+                  <p class="date pull-right text-muted">
+                    {{email.createDate|date('d/m/Y H:i')}}
+                  </p>
+                  <p>
+                    <strong>{% if email.user is not empty %}{{email.user.email}}{% else %}System{% endif %}</strong><br><span class="text-muted">To: {{email.addressTo}}</span><br>{{email.subject}}
+                  </p>
+                  <div class="btn-group message-actions">
+                    <button class="btn btn-sm btn-default-outline"><i class="icon-trash"></i></button><button class="btn btn-sm btn-default-outline"><i class="icon-envelope"></i></button><button class="btn btn-sm btn-default-outline"><i class="icon-long-arrow-right"></i></button>
+                  </div>
+                </div>
+                <div class="message-text">
+                  	{{email.html|raw}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+</div>
+
+
+{% endblock %}

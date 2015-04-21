@@ -149,3 +149,12 @@ _admin_listbox_undelete:
 _admin_sitemap:
     pattern:  /sitemap/{host_id}
     defaults: { _controller: MajesCoreBundle:Index:sitemap }
+
+
+_admin_management_emails:
+    pattern:  /emails
+    defaults: { _controller: MajesCoreBundle:Index:emails }
+
+_admin_management_emails_edit:
+    pattern:  /email/edit/{id}
+    defaults: { _controller: MajesCoreBundle:Index:emailEdit, id: null }

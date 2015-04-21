@@ -2,7 +2,13 @@
 
 namespace Majes\CoreBundle\Entity;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * MailerRepository
@@ -12,4 +18,70 @@ use Doctrine\ORM\EntityRepository;
  */
 class MailerRepository extends EntityRepository
 {
+	public function search(array $setup, array $filters = array()){
+
+		//Get setup
+		$offset = $setup['offset'];
+		$limit = $setup['limit'];
+		$search = $setup['search'];
+		$sort = $setup['sort'];
+		$dir = $setup['dir'];
+		$group = isset($setup['group']) ? $group : null;
+
+
+        $qb = $this->createQueryBuilder('s');
+
+        if(!empty($search))
+            $qb->where('s.addressFrom like :search or s.addressTo like :search or s.subject like :search')
+                ->setParameter('search', '%'.$search.'%');
+
+        //Additionnal filters
+        $parameters = array(); $conditions = array();
+        foreach($filters as $key => $value){
+            if($key == 'dateCreated'){
+                $conditions[] = $qb->expr()->like('s.' . $key, ':' . $key);
+                $parameters[$key] =  $value.'%';
+            }
+            else{
+                if(is_null($value)){
+                    $conditions[] = $qb->expr()->isNull('s.' . $key);
+                }else{
+                    $conditions[] = $qb->expr()->eq('s.' . $key, ':' . $key);
+                    $parameters[$key] =  $value;
+                }
+            }
+
+        }
+        if(count($conditions)>0)
+        {
+            $conditions = call_user_func_array(array($qb->expr(), 'andx'), $conditions);
+            $qb->where($conditions);
+        }        
+        if(count($parameters)>0)
+        {
+            $qb->setParameters($parameters);
+        }
+        //End Additionnal filters
+
+        if(!empty($sort)){
+        	$dir = empty($dir)? 'asc' : $dir;
+        	$qb->orderBy('s.'.$sort, $dir);
+        }
+
+        if(isset($group) && is_array($group) && count($group) > 0){
+        	foreach ($group as $value) {
+        		$qb->addGroupBy('s.'.$value);
+        	}
+        }
+
+        $qb
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        $paginator = new Paginator($qb, $fetchJoinCollection = true);
+
+        //$query = $qb->getQuery();
+        return $paginator;
+    }
+
 }

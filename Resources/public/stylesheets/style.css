@@ -2818,6 +2818,133 @@ ul.timeline {
     font-weight: 400;
     margin-bottom: 0; }
 
+
+/*----------------------------------------------------------------------------------- */
+/*  Messages */
+/*----------------------------------------------------------------------------------- */
+.compose-btn {
+  margin-bottom: 10px; }
+
+.messages {
+  height: 650px; }
+  .messages .widget-container {
+    height: 100%; }
+  .messages .message-list {
+    padding: 0;
+    height: 100%; }
+    .messages .message-list .list-group {
+      box-shadow: none;
+      margin: 0;
+      border-right: 1px solid #dddddd;
+      height: 100%;
+      overflow-y: auto; }
+      .messages .message-list .list-group .list-group-item:last-child p {
+        border-bottom: 1px solid #dddddd; }
+      .messages .message-list .list-group .list-group-item a {
+        position: relative; }
+        .messages .message-list .list-group .list-group-item a .status {
+          width: 10px;
+          height: 10px;
+          float: left;
+          border-radius: 50%;
+          margin-top: 13px; }
+          .messages .message-list .list-group .list-group-item a .status.unread {
+            background-color: #007aff; }
+        .messages .message-list .list-group .list-group-item a .favorite {
+          position: absolute;
+          left: 13px;
+          top: 30px;
+          display: none; }
+          .messages .message-list .list-group .list-group-item a .favorite.fa-star-o {
+            color: #aaaaaa; }
+          .messages .message-list .list-group .list-group-item a .favorite.fa-star {
+            color: #f0ad44;
+            display: block; }
+        .messages .message-list .list-group .list-group-item a h2 {
+          font-size: 14px;
+          font-weight: 600;
+          padding: 10px 10px 0 20px;
+          margin-bottom: 4px; }
+          .messages .message-list .list-group .list-group-item a h2 span {
+            float: right;
+            font-size: 12px;
+            font-weight: 400; }
+        .messages .message-list .list-group .list-group-item a p {
+          padding-top: 0;
+          padding-left: 20px;
+          font-size: 13px; }
+      .messages .message-list .list-group .list-group-item:hover a .favorite {
+        display: block; }
+  .messages .message-content {
+    padding: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding-left: 20px; }
+    .messages .message-content .message-header {
+      position: relative;
+      padding: 15px 15px 5px 0;
+      border-bottom: 1px solid #dddddd; }
+      .messages .message-content .message-header .date {
+        font-size: 13px; }
+      .messages .message-content .message-header .message-actions {
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        margin: 0 0 0 -64px; }
+        .messages .message-content .message-header .message-actions .btn {
+          font-size: 14px;
+          width: 32px;
+          padding: 0;
+          background: white;
+          height: 24px;
+          line-height: 1.6; }
+          .messages .message-content .message-header .message-actions .btn:hover {
+            background: #bbbbbb; }
+          .messages .message-content .message-header .message-actions .btn .fa {
+            margin: 0; }
+    .messages .message-content .message-text {
+      padding: 30px 15px 15px 0; }
+
+/*----------------------------------------------------------------------------------- */
+/*  List groups */
+/*----------------------------------------------------------------------------------- */
+.list-group {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0; }
+  .list-group .list-group-item.active a, .list-group .list-group-item.active:hover a, .list-group .list-group-item.active:focus a {
+    color: white;
+    background-color: #007aff; }
+  .list-group .list-group-item.active p, .list-group .list-group-item.active:hover p, .list-group .list-group-item.active:focus p {
+    border-bottom: 0; }
+  .list-group .list-group-item.active .badge, .list-group .list-group-item.active:hover .badge, .list-group .list-group-item.active:focus .badge {
+    color: #007aff;
+    background-color: white; }
+
+.list-group-item {
+  border: 0;
+  margin-bottom: 0;
+  padding: 0; }
+  .list-group-item a {
+    color: #666666;
+    display: block;
+    padding: 0 0 0 15px; }
+    .list-group-item a:hover {
+      background-color: #f2f2f2; }
+  .list-group-item p {
+    margin-bottom: 0;
+    padding: 10px 15px 10px 0;
+    border-bottom: 1px solid #dddddd; }
+  .list-group-item .badge {
+    float: right; }
+  .list-group-item:first-child {
+    border-radius: 0; }
+  .list-group-item:last-child {
+    border-radius: 0; }
+    .list-group-item:last-child p {
+      border-bottom: 0; }
+
+
 /*----------------------------------------------------------------------------------- */
 /*  404 Page */
 /*----------------------------------------------------------------------------------- */

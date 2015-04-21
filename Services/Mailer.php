@@ -60,6 +60,8 @@ class Mailer
         if(!is_null($template) && $this->_templating->exists($template)){
             $body = $this->_templating->render($template, $data);
             $this->_email->setContentType('text/html');
+
+            $this->_mailerDb->setTemplate($template);
         }
 
         $this->_email->setBody($body);
@@ -78,11 +80,16 @@ class Mailer
         if(empty($to))
             $this->setTo($this->_admin_email);
 
-        $this->_mailer->send($this->_email);
+        $sent = $this->_mailer->send($this->_email);
+
+        if($sent)
+            $this->_mailerDb->setBooSent((boolean) $sent);
 
         //Save email in database
         $this->_em->persist($this->_mailerDb);
-        $this->_em->flush();  
+        $this->_em->flush(); 
+
+        return $sent; 
 
     }
 

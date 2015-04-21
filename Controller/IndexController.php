@@ -20,6 +20,7 @@ use Majes\MediaBundle\Entity\Media;
 use Majes\CoreBundle\Entity\Chat;
 use Majes\CoreBundle\Entity\Host;
 use Majes\CoreBundle\Entity\ListBox;
+use Majes\CoreBundle\Entity\Mailer as TeelMailer;
 
 use Majes\CoreBundle\Form\User\Myaccount;
 use Majes\CoreBundle\Form\User\UserType;
@@ -36,6 +37,7 @@ use Majes\CoreBundle\Annotation\DataTable;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Form\Exception\NotFoundHttpException;
 
 class IndexController extends Controller implements SystemController
 {
@@ -71,7 +73,7 @@ class IndexController extends Controller implements SystemController
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
         }
-        
+
         if($this->get('templating')->exists('MajesTeelBundle:Admin:dashboard.html.twig'))
             $template_twig = 'MajesTeelBundle:Admin:dashboard.html.twig';
         else 
@@ -1651,5 +1653,101 @@ class IndexController extends Controller implements SystemController
         return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
     }
 
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
+     *
+     */
+    public function emailsAction(){
+
+        $em = $this->getDoctrine()->getManager();
+        $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()){
+
+            /**
+             * Get data from datatable
+             */
+            $draw = $request->get('draw', 1);
+            $length = $request->get('length', 10);
+            $start = $request->get('start', 0);
+            $columns = $request->get('columns');
+            $orderNum = $request->get('order');
+            $ordeDir  = $orderNum[0]['dir'];
+            $order = $orderNum[0]['column'];
+            $search = $request->get('search', '');
+
+            $coreTwig = $this->container->get('majescore.twig.core_extension');     
+            $config = $coreTwig->dataTable(new TeelMailer());
+            //Get column to sort
+            foreach($config['column'] as $key => $column) if($key == (int)$order) $sort = $column['column'];
+
+            $emails = $em->getRepository('MajesCoreBundle:Mailer')
+                ->search(array(
+                    'offset' => $start,
+                    'limit' => $length,
+                    'search' => $search['value'],
+                    'sort' => $sort,
+                    'dir' => $ordeDir
+                ));
+
+        
+            $dataTemp = array(
+                'object' => new TeelMailer(),
+                'datas' => !empty($emails) ? $emails : null,
+                'urls' => array(
+                    'edit'   => '_admin_management_emails_edit',
+                ));
+
+            $data = $coreTwig->dataTableJson($dataTemp, $draw);
+                
+            return new JsonResponse($data);
+
+
+        
+        }else{       
+
+            return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
+                'datas' => null,
+                'object' => new TeelMailer(),
+                'pageTitle' => 'Emails',
+                'pageSubTitle' => $this->_translator->trans('List of all emails sent'),
+                'label' => 'user',
+                'message' => 'Are you sure you want to delete this email ?',
+                'urls' => array(
+                    'add' => '_admin_management_emails_edit',
+                    'edit' => '_admin_management_emails_edit',
+                    )
+                ));
+        }
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
+     *
+     */
+    public function emailEditAction($id){
+
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);               
+
+        if(empty($email))
+            throw new NotFoundHttpException('Requested data does not exist.');
+
+        $emails = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
+            'addressTo' => $email->getAddressTo()
+            )); 
+
+        $pageSubTitle = $email->getSubject() . ' - From: '.$email->getAddressFrom().' - To: '.$email->getAddressTo();
+
+
+        return $this->render('MajesCoreBundle:Index:email-edit.html.twig', array(
+            'pageTitle' => $this->_translator->trans('Email envoyé à').' '.$email->getAddressTo(),
+            'pageSubTitle' => $pageSubTitle,
+            'email' => $email,
+            'emails' => $emails));
+    }
 
 }

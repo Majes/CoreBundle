@@ -76,11 +76,24 @@ class Mailer
     private $updateDate;
 
     /**
-     * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
+     * @ORM\Column(name="boo_read", type="boolean")
+     */
+    private $booRead = 0;
+
+    /**
+     * @ORM\Column(name="boo_sent", type="boolean")
+     */
+    private $booSent = 0;
+
+    /**
+     * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=1, ajaxUrl="_admin_management_emails")
      */
     public function __construct(){
         $this->createDate = new \DateTime();
+        $this->updateDate = new \DateTime();
         $this->template = '';
+        $this->booRead = 0;
+        $this->booSent = 0;
     }
 
     /**
@@ -150,7 +163,7 @@ class Mailer
 
     /**
      * Get template
-     *
+     * @DataTable(label="Template", column="template", isSortable=1, isSortable=1)
      * @return string 
      */
     public function getTemplate()
@@ -290,6 +303,54 @@ class Mailer
         {
             $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
         }
+    }
+
+    /**
+     * Set booRead
+     *
+     * @param boolean $booRead
+     * @return Mailer
+     */
+    public function setBooRead($booRead)
+    {
+        $this->booRead = $booRead;
+    
+        return $this;
+    }
+
+    /**
+     * Get booRead
+     * @DataTable(label="Read", column="booRead", isSortable=1)
+     *
+     * @return boolean 
+     */
+    public function getBooRead()
+    {
+        return $this->booRead;
+    }
+
+    /**
+     * Set booSent
+     *
+     * @param boolean $booSent
+     * @return Mailer
+     */
+    public function setBooSent($booSent)
+    {
+        $this->booSent = $booSent;
+    
+        return $this;
+    }
+
+    /**
+     * Get booSent
+     * @DataTable(label="Sent", column="booSent", isSortable=1)
+     *
+     * @return boolean 
+     */
+    public function getBooSent()
+    {
+        return $this->booSent;
     }
 
 }
