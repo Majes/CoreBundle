@@ -158,3 +158,8 @@ _admin_management_emails:
 _admin_management_emails_edit:
     pattern:  /email/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:emailEdit, id: null }
+
+
+_admin_management_emails_send:
+    pattern:  /email/send/{id}
+    defaults: { _controller: MajesCoreBundle:Index:emailSend }

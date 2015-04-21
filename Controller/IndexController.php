@@ -1663,6 +1663,8 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
 
+        
+
         if ($request->isXmlHttpRequest()){
 
             /**
@@ -1729,16 +1731,27 @@ class IndexController extends Controller implements SystemController
     public function emailEditAction($id){
 
         $request = $this->getRequest();
+        $sent = $request->get('sent', 1);
 
         $em = $this->getDoctrine()->getManager();
         $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);               
 
-        if(empty($email))
+        if(empty($email)){
             throw new NotFoundHttpException('Requested data does not exist.');
+        }
 
-        $emails = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
-            'addressTo' => $email->getAddressTo()
-            )); 
+        $email->setBooRead(1);
+        $em->flush($email);
+
+        $emailsSent = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
+            'addressTo' => $email->getAddressTo(),
+            'booSent' => 1
+            ), array('createDate' => "DESC")); 
+
+        $emailsError = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
+            'addressTo' => $email->getAddressTo(),
+            'booSent' => 0
+            ), array('createDate' => "DESC")); 
 
         $pageSubTitle = $email->getSubject() . ' - From: '.$email->getAddressFrom().' - To: '.$email->getAddressTo();
 
@@ -1747,7 +1760,39 @@ class IndexController extends Controller implements SystemController
             'pageTitle' => $this->_translator->trans('Email envoyé à').' '.$email->getAddressTo(),
             'pageSubTitle' => $pageSubTitle,
             'email' => $email,
-            'emails' => $emails));
+            'emails' => $sent ? $emailsSent : $emailsError,
+            'sent' => $sent,
+            'count' => array('sent' => count($emailsSent), 'error' => count($emailsError))));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
+     *
+     */
+    public function emailSendAction($id){
+
+        $request = $this->getRequest();
+        $sent = $request->get('sent', 1);
+
+        $em = $this->getDoctrine()->getManager();
+        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);               
+
+        if(empty($email)){
+            throw new NotFoundHttpException('Requested data does not exist.');
+        }
+
+        
+        $mailer = $this->container->get('majes.mailer');
+
+        $mailer->setSubject($email->getSubject());
+        $mailer->setFrom($email->getAddressFrom());
+        $mailer->setBody($email->getHtml(), null, array());
+
+        $mailer->setTo($email->getAddressTo());
+        $result = $mailer->send();
+
+        return $this->redirect($this->get('router')->generate('_admin_management_emails_edit', array('id' => $id, 'sent' => $sent)));
+
     }
 
 }
