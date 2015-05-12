@@ -30,6 +30,7 @@ class SystemListener
     public $_default_lang;
     public $_translator;
     public $_env;
+    public $_host;
     public $_is_multilingual;
 
     private $entityManager = null;
@@ -78,10 +79,19 @@ class SystemListener
             $langByDomain = $this->entityManager->getRepository('MajesCoreBundle:Language')->findOneBy(
                 array('host' => $domain)
                 );
+
+
             if(!empty($langByDomain))
                 $locale = $langByDomain->getLocale();
 
         }
+
+        $host = $this->entityManager->getRepository('MajesCoreBundle:Host')->findOneBy(
+                array('url' => $domain)
+            );
+
+
+        $this->_host = empty($host) ? null : $host;
 
         $request->setLocale($locale);
         $controllerObject = $controller[0];
@@ -171,6 +181,7 @@ class SystemListener
             $controllerObject->_env = $env;
             $controllerObject->_user = $_user;
             $controllerObject->_lang = $locale;
+            $controllerObject->_host = $this->_host;
             $controllerObject->_langs = $language_rowset;
             $controllerObject->_default_lang = $default_lang;
             $controllerObject->_translator = $controllerObject->get('translator');
