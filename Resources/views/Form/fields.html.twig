@@ -224,6 +224,33 @@
 {% endblock choice_widget_expanded %}
 
 
+
+{% block datetime_widget %}
+    {% if widget == 'single_text' %}
+        {% if datepicker %}
+        <div class="input-group date datepicker">
+            <input type="text" {{ block('widget_attributes') }} {% if value is not null %}value="{{ value }}" {% endif %} class="form-control"/>
+            <span class="input-group-addon"><i class="icon icon-calendar"></i></span>
+        </div>
+        <script>
+             $('#{{id}}').datepicker({ format : 'yyyy-mm-dd' });
+        </script>
+        {% else %}
+        {{- block('form_widget_simple') -}}
+        {% endif %}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- form_errors(form.date) -}}
+            {{- form_errors(form.time) -}}
+            {{- form_widget(form.date) -}}
+            {{- form_widget(form.time) -}}
+        </div>
+    {%- endif -%}
+{% endblock datetime_widget %}
+
+
+
+
 {% block text_widget %}
     {% set type = type|default('text') %}
     {% if datepicker %}
@@ -232,7 +259,7 @@
             <span class="input-group-addon"><i class="icon icon-calendar"></i></span>
         </div>
         <script>
-             $('#{{id}}').datepicker({ format : 'dd/mm/yyyy' });
+             $('#{{id}}').datepicker({ format : 'yyyy-mm-dd' });
         </script>
     {% elseif spanned is not null %}
         <div class="input-group">

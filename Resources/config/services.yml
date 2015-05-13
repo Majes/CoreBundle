@@ -46,6 +46,12 @@ services:
         tags:
             - { name: form.type_extension, alias: text }
 
+
+    majescore.datepicker_extension_datetime:
+        class: Majes\CoreBundle\Form\Extension\Datepicker2TypeExtension
+        tags:
+            - { name: form.type_extension, alias: datetime }
+
     majescore.switched_extension:
         class: Majes\CoreBundle\Form\Extension\SwitchedTypeExtension
         tags:
