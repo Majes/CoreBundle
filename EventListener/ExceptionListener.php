@@ -5,6 +5,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
@@ -13,14 +14,16 @@ class ExceptionListener
     protected $templating;
     protected $kernel;
     protected $container;
+    private $securityContext = null;
     protected $em;
 
-    public function __construct(EngineInterface $templating, $kernel, Container $container)
+    public function __construct(EngineInterface $templating, $kernel, Container $container, SecurityContext $securityContext)
     {
 
         $this->templating = $templating;
         $this->kernel = $kernel;
         $this->container = $container;
+        $this->securityContext = $securityContext;
 
         $this->em = $this->container->get('doctrine.orm.entity_manager');
     }
@@ -30,6 +33,11 @@ class ExceptionListener
 
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
+
+        $token = $this->securityContext->getToken();
+        $firewall = empty($token) ? '' : $token->getProviderKey();
+
+        $firewall = $firewall == 'admin_area' ? 'admin' : 'front';
 
         $this->container->enterScope('request');
         $this->container->set('request', $request, 'request');
@@ -57,7 +65,7 @@ class ExceptionListener
     
             }
         }
-       
+
         $request->setLocale($locale);
         // exception object
         $exception = $event->getException();
@@ -101,10 +109,8 @@ class ExceptionListener
 
         }
 
-        if($this->templating->exists('MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig'))
+        if($firewall == 'front' && $this->templating->exists('MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig'))
             $template = 'MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig';
-        elseif($this->templating->exists('MajesTeelBundle:Exception:'.$response->getStatusCode().'.html.twig'))
-            $template = 'MajesCmsBundle:Exception:'.$response->getStatusCode().'.html.twig';
         else
             $template = 'MajesCoreBundle:Exception:'.$response->getStatusCode().'.html.twig';
 

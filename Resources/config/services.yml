@@ -7,7 +7,7 @@ services:
 
     kernel.listener.exception_listener:
         class: Majes\CoreBundle\EventListener\ExceptionListener
-        arguments: [@templating, @kernel, @service_container]
+        arguments: [@templating, @kernel, @service_container, "@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
