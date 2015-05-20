@@ -31,6 +31,9 @@ class ExceptionListener
         $request = $event->getRequest();
         $locale = $this->container->getParameter('locale');
 
+        $this->container->enterScope('request');
+        $this->container->set('request', $request, 'request');
+
         if($this->container->get('kernel')->getEnvironment() == 'dev')
             return;
 
