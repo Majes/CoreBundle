@@ -31,6 +31,9 @@
                     {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key):get(data, param.key)}) %}{% endfor %}{% endif %}
                     {% if urls.edit is defined %}<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>{% endif %}
                     {% if urls.delete is defined %}{% if data.isSystem is defined %}{% if not data.isSystem %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% else %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% endif %}
+                    {% for action, url in urls %}{% if action not in ['edit', 'export', 'add', 'delete', 'params'] %}
+                    <a href="{{ path(url.path, params) }}" class="table-actions"><i class="{{url.icon}}"></i></a>
+                    {% endif %}{% endfor %}
                   </div>
               </td>
             </tr>

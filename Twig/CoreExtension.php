@@ -67,6 +67,16 @@ class CoreExtension extends \Twig_Extension
                 if(method_exists($data, 'getIsSystem') && !$data['isSystem']) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
                 elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
 
+            foreach($dataTemp['urls'] as $action => $url){
+
+                if(!in_array($action, array('edit', 'export', 'add', 'delete', 'params'))){
+
+                    $actions .= '<a href="'.$this->_router->generate($url['path'], $params).'" class="table-actions"><i class="'.$url['icon'].'"></i></a>';
+
+                }
+
+            }
+
             unset($row);
             foreach($config['column'] as $config_item){
                 $row[] = $this->get($data, $config_item['column'], $config_item['format']);
