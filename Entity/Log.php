@@ -122,7 +122,7 @@ class Log {
     /**
      * @inheritDoc
      */
-    public function setUser(\Majes\CoreBundle\Entity\User\User $user)
+    public function setUser(\Majes\CoreBundle\Entity\User\User $user = null)
     {
         $this->user = $user;
         return $this;
