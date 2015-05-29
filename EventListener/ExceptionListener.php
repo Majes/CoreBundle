@@ -35,7 +35,13 @@ class ExceptionListener
         $locale = $this->container->getParameter('locale');
 
         $token = $this->securityContext->getToken();
-        $firewall = empty($token) ? '' : $token->getProviderKey();
+        if($token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken || $token instanceof FOS\OAuthServerBundle\Security\Authentication\Token\OAuthToken){
+            $firewall = '';
+        }
+        else{
+
+            $firewall = (empty($token) || !method_exists($token, 'getProviderKey')) ? '' : $token->getProviderKey();
+        }
 
         $firewall = $firewall == 'admin_area' ? 'admin' : 'front';
 
