@@ -142,7 +142,7 @@ class SystemListener
                 }
 
                 if(!empty($_user) && !is_string($_user)){
-                    $params = array_merge($request->query->all(),  $request->request->all(), $request->get('_route_params'));
+                    $params = array_merge($request->query->all(),  $request->request->all(), (array) $request->get('_route_params'));
                     
                     if(!is_null($request->get('_route'))){
                         $log = new Log();
