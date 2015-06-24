@@ -89,7 +89,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         if(!empty($search))
             $qb->where('s.email like :search or s.lastname like :search or s.firstname like :search')
+                ->andWhere('s.deleted = 0')
                 ->setParameter('search', '%'.$search.'%');
+        else
+            $qb->where('s.deleted = 0');
 
         $qb
             ->setFirstResult($offset)
