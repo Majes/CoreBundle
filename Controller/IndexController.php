@@ -956,13 +956,8 @@ class IndexController extends Controller implements SystemController
 
         $request = $this->getRequest();
 
-        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
-            $users = array_filter($users,function($user){
-                if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())){
-                    return false;
-                } 
-                return true;
-            });     
+        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN') && !$this->get('security.context')->isGranted('ROLE_ADMIN_USER'))
+            throw new AccessDeniedException(); 
 
         if ($request->isXmlHttpRequest()){
 
@@ -1025,7 +1020,8 @@ class IndexController extends Controller implements SystemController
         $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
 
         if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
-            if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()))
+            if(!$this->_user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())
+              && !$this->_user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_ADMIN_USER'))->getId()) )
                 throw new AccessDeniedException();
                 
 
@@ -1296,6 +1292,9 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($user)){
+            if( $this->get('security.context')->isGranted('ROLE_ADMIN_USER') && $user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()) )
+              throw new AccessDeniedException();
+
             foreach ($user->getRoles() as $role) {
                 $user->removeRole($role);
             }
