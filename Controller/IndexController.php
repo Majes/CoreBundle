@@ -53,7 +53,7 @@ class IndexController extends Controller implements SystemController
         if($request->getMethod() == 'POST'){
 
             $chatObj = new Chat();
-            
+
             $chatObj->setUser($this->_user);
             $chatObj->setContent($request->get('content'));
 
@@ -67,18 +67,19 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $chat = $em->getRepository('MajesCoreBundle:Chat')
             ->findForDashboard();
-        
+
         $stats_lastmonth = $ga->pastMonth();
         $global_stats = array();
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;
+            break;
         }
 
         if($this->get('templating')->exists('MajesTeelBundle:Admin:dashboard.html.twig'))
             $template_twig = 'MajesTeelBundle:Admin:dashboard.html.twig';
-        else 
+        else
             $template_twig = 'MajesCoreBundle:Index:dashboard.html.twig';
-        
+
         return $this->render($template_twig, array(
             'google' => $stats_lastmonth,
             'stats' => $global_stats,
@@ -132,7 +133,7 @@ class IndexController extends Controller implements SystemController
 
                     $this->_user->setMedia($media);
                 }
-                
+
                 $em->persist($this->_user);
                 $em->flush();
 
@@ -211,7 +212,7 @@ class IndexController extends Controller implements SystemController
                 $filename=$path."/messages.".$language->getLocale().".db";
                 if(!file_exists($filename)){
                     fopen($filename, 'x');
-                } 
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($language);
                 $em->flush();
@@ -246,7 +247,7 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($language)){
-            
+
         }
 
 
@@ -261,7 +262,7 @@ class IndexController extends Controller implements SystemController
     {
 
         $reader = new AnnotationReader();
-        
+
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\Language');
@@ -278,7 +279,7 @@ class IndexController extends Controller implements SystemController
                     if(!empty($label) && !empty($property)){
                         $mapper=array_merge($mapper, $merger);
                     }
-                    
+
                 }
             }
         }
@@ -290,7 +291,7 @@ class IndexController extends Controller implements SystemController
         $csv=array();
 
         array_push($csv, array_keys($mapper));
-        
+
         foreach ($languagetranslations as $languagetranslation) {
             $line=array();
             foreach (array_values($mapper) as $property) {
@@ -358,12 +359,12 @@ class IndexController extends Controller implements SystemController
 
 
                         $num = count($data);
-                        
+
                         $rows[$count]['id'] = $data[0];
                         $rows[$count]['catalogue'] = $data[1] == '' ? 'messages' : $data[1];
                         $rows[$count]['token'] = $data[2];
 
-                        
+
                         for ($c=0; $c < $num; $c++) {
                             if($c > 2){
                                 if($count > 0){
@@ -386,7 +387,7 @@ class IndexController extends Controller implements SystemController
                 foreach ($rows as $key => $row) {
                     if($key > 0){
                         $tokenRow = $token->findOneByToken($row['token']);
-                        
+
                         if(empty($tokenRow)){
                             $tokenRow = new LanguageToken();
                             $tokenRow->setToken($row['token']);
@@ -423,12 +424,12 @@ class IndexController extends Controller implements SystemController
                 //Clear translation cache
                 foreach ($this->_langs as $_lang) {
                     $lang = $_lang->getLocale();
-                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php')) 
+                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php'))
                         unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php');
-                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta')) 
+                    if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta'))
                         unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta');
                 }
-                
+
             }else{
                 foreach ($form->getErrors() as $error) {
                     echo $message[] = $error->getMessage();
@@ -445,7 +446,7 @@ class IndexController extends Controller implements SystemController
 
     }
 
-     
+
     public function SitemapAction($host_id = null){
         $request = $this->getRequest();
 
@@ -507,7 +508,7 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $host = $em->getRepository('MajesCoreBundle:Host')
             ->findOneById($id);
-       
+
         if(!is_null($host)){
             $oldhost=$host->getUrl();
         }
@@ -623,7 +624,7 @@ class IndexController extends Controller implements SystemController
     {
 
         $reader = new AnnotationReader();
-        
+
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\Host');
@@ -640,7 +641,7 @@ class IndexController extends Controller implements SystemController
                     if(!empty($label) && !empty($property)){
                         $mapper=array_merge($mapper, $merger);
                     }
-                    
+
                 }
             }
         }
@@ -652,7 +653,7 @@ class IndexController extends Controller implements SystemController
         $csv=array();
 
         array_push($csv, array_keys($mapper));
-        
+
         foreach ($languagetranslations as $languagetranslation) {
             $line=array();
             foreach (array_values($mapper) as $property) {
@@ -698,7 +699,7 @@ class IndexController extends Controller implements SystemController
      *
      */
     public function languageMessagesAction(){
-        $_results_per_page = 20; 
+        $_results_per_page = 20;
         $request = $this->getRequest();
 
         $catalogues = $request->get('catalogues');
@@ -714,7 +715,7 @@ class IndexController extends Controller implements SystemController
 
         $translations = $em->getRepository('MajesCoreBundle:LanguageToken')
                 ->findForAdmin($catalogues, $langs/*, $page, $_results_per_page*/);
-        
+
 
         $loadmore = count($translations) > $_results_per_page ? true : false;
         //count($translations) > $_results_per_page ? array_pop($translations) : $translations;
@@ -751,7 +752,7 @@ class IndexController extends Controller implements SystemController
      *
      */
     public function languageMessageEditAction($id)
-    {   
+    {
         $token_id = $id;
         $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
@@ -771,7 +772,7 @@ class IndexController extends Controller implements SystemController
 
         //Get token
         if(!is_null($languagetranslation)){
-            
+
             $token = $languagetranslation->getToken();
             foreach($token->getTranslations() as $token_translation){
                 $translations[$token_translation->getLocale()]['value'] = $token_translation->getTranslation();
@@ -790,7 +791,7 @@ class IndexController extends Controller implements SystemController
             }
 
             $token->setToken($request->get('token'));
-            
+
             $em->persist($token);
             $em->flush();
 
@@ -798,7 +799,7 @@ class IndexController extends Controller implements SystemController
 
             $form_translations = $request->get('translations');
             foreach ($form_translations as $form_translation_lang => $form_translation) {
-                
+
                 //Get translation if exists in db
                 $form_translation_temp = $em->getRepository('MajesCoreBundle:LanguageTranslation')
                     ->findOneBy(array('token' => $token_id, 'locale' => $form_translation_lang));
@@ -817,19 +818,19 @@ class IndexController extends Controller implements SystemController
             //Clear translation cache
             foreach ($this->_langs as $_lang) {
                 $lang = $_lang->getLocale();
-                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php')) 
+                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php'))
                     unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php');
-                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta')) 
+                if(is_file($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta'))
                     unlink($this->get('kernel')->getCacheDir().'/translations/catalogue.'.$lang.'.php.meta');
             }
-           
+
 
             //Set routes to table
             return $this->redirect($this->get('router')->generate('_admin_language_message_edit', array('id' => $token_id)));
 
-         
 
-            
+
+
         }
 
         $edit = !is_null($token_id) ? 1 : 0;
@@ -865,7 +866,7 @@ class IndexController extends Controller implements SystemController
                 $em->remove($translate);
                 $em->flush();
             }
-            
+
             $em->remove($translation);
             $em->flush();
         }
@@ -882,7 +883,7 @@ class IndexController extends Controller implements SystemController
     {
 
         $reader = new AnnotationReader();
-        
+
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\LanguageTranslation');
@@ -899,7 +900,7 @@ class IndexController extends Controller implements SystemController
                     if(!empty($label) && !empty($property)){
                         $mapper=array_merge($mapper, $merger);
                     }
-                    
+
                 }
             }
         }
@@ -911,7 +912,7 @@ class IndexController extends Controller implements SystemController
         $csv=array();
 
         array_push($csv, array_keys($mapper));
-        
+
         foreach ($languagetranslations as $languagetranslation) {
             $line=array();
             foreach (array_values($mapper) as $property) {
@@ -943,7 +944,7 @@ class IndexController extends Controller implements SystemController
         $response->setContent(file_get_contents($filename));
         return $response;
     }
-   
+
     /**
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
@@ -956,8 +957,13 @@ class IndexController extends Controller implements SystemController
 
         $request = $this->getRequest();
 
-        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN') && !$this->get('security.context')->isGranted('ROLE_ADMIN_USER'))
-            throw new AccessDeniedException(); 
+        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
+            $users = array_filter($users,function($user){
+                if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())){
+                    return false;
+                }
+                return true;
+            });
 
         if ($request->isXmlHttpRequest()){
 
@@ -974,7 +980,7 @@ class IndexController extends Controller implements SystemController
 
             $users = $em->getRepository('MajesCoreBundle:User\User')->findForAdmin($start, $length, $search['value']);
 
-            $coreTwig = $this->container->get('majescore.twig.core_extension');           
+            $coreTwig = $this->container->get('majescore.twig.core_extension');
             $dataTemp = array(
                 'object' => new User(),
                 'datas' => !empty($users) ? $users : null,
@@ -984,12 +990,12 @@ class IndexController extends Controller implements SystemController
                     'delete' => '_admin_user_delete'
                 ));
             $data = $coreTwig->dataTableJson($dataTemp, $draw);
-                
+
             return new JsonResponse($data);
 
 
-        
-        }else{       
+
+        }else{
 
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => null,
@@ -1020,18 +1026,17 @@ class IndexController extends Controller implements SystemController
         $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
 
         if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
-            if(!$this->_user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())
-              && !$this->_user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_ADMIN_USER'))->getId()) )
+            if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()))
                 throw new AccessDeniedException();
-                
+
 
         $form = $this->createForm(new UserType($request->getSession()), $user);
-        
+
         if($request->getMethod() == 'POST'){
             if(!is_null($user)){
                 $_current_password = $user->getPassword();
             }
-                        
+
             $form->handleRequest($request);
             if ($form->isValid()) {
 
@@ -1048,7 +1053,7 @@ class IndexController extends Controller implements SystemController
                     $factory = $this->container->get('security.encoder_factory');
                     $encoder = $factory->getEncoder($user);
                     $pwd = $encoder->encodePassword($password, $user->getSalt());
-                    
+
                     $user->setPassword($pwd);
                     //$user->setPassword(sha1($pwd));
                 }
@@ -1056,7 +1061,7 @@ class IndexController extends Controller implements SystemController
                 $user->setUsername($user->getEmail());
 
                 $em = $this->getDoctrine()->getManager();
-                
+
                 /*Media*/
                 $media = $user->getMedia();
                 $file = $form['media']->getData();
@@ -1077,7 +1082,7 @@ class IndexController extends Controller implements SystemController
 
                     $user->setMedia($media);
                 }
-                
+
                 $em->persist($user);
                 $em->flush();
                 return $this->redirect($this->get('router')->generate('_admin_user_edit', array('id' => $user->getId())));
@@ -1115,7 +1120,7 @@ class IndexController extends Controller implements SystemController
     {
 
         $reader = new AnnotationReader();
-        
+
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\User\User');
@@ -1132,7 +1137,7 @@ class IndexController extends Controller implements SystemController
                     if(!empty($label) && !empty($property)){
                         $mapper=array_merge($mapper, $merger);
                     }
-                    
+
                 }
             }
         }
@@ -1144,7 +1149,7 @@ class IndexController extends Controller implements SystemController
         $csv=array();
 
         array_push($csv, array_keys($mapper));
-        
+
         foreach ($languagetranslations as $languagetranslation) {
             $line=array();
             foreach (array_values($mapper) as $property) {
@@ -1191,7 +1196,7 @@ class IndexController extends Controller implements SystemController
      */
     public function userActivityAction($id){
 
-        $_results_per_page = 10; 
+        $_results_per_page = 10;
 
         $request = $this->getRequest();
 
@@ -1224,7 +1229,7 @@ class IndexController extends Controller implements SystemController
                 'page' => $page,
                 'id' => $id
                 ));
-       
+
 
     }
 
@@ -1272,7 +1277,7 @@ class IndexController extends Controller implements SystemController
                 foreach ($form_role->getErrors() as $error) {
                     echo $message[] = $error->getMessage();
                 }
-       
+
             }
         }
 
@@ -1292,9 +1297,6 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($user)){
-            if( $this->get('security.context')->isGranted('ROLE_ADMIN_USER') && $user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()) )
-              throw new AccessDeniedException();
-
             foreach ($user->getRoles() as $role) {
                 $user->removeRole($role);
             }
@@ -1450,7 +1452,7 @@ class IndexController extends Controller implements SystemController
      */
     public function TrashsAction($context)
     {
-        $_results_per_page = 10; 
+        $_results_per_page = 10;
 
         $em = $this->getDoctrine()->getManager();
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -1471,7 +1473,7 @@ class IndexController extends Controller implements SystemController
         $choices = array();
 
         foreach ($trash['entities'] as $choice) {
-            $choices[]=$choice['label'];   
+            $choices[]=$choice['label'];
         }
 
         $entities = array();
@@ -1522,11 +1524,11 @@ class IndexController extends Controller implements SystemController
      */
     public function listboxsAction()
     {
-        
+
         $em = $this->getDoctrine()->getManager();
         $listbox = $em->getRepository('MajesCoreBundle:ListBox')
             ->findBy(array("deleted" => false));
-        
+
         return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
             'datas' => $listbox,
             'object' => new ListBox(),
@@ -1548,14 +1550,14 @@ class IndexController extends Controller implements SystemController
      */
     public function listboxEditAction($id)
     {
-        
+
         $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $listbox = $em->getRepository('MajesCoreBundle:ListBox')
             ->findOneById($id);
 
-        
+
         $form = $this->createForm(new ListBoxType($request->getSession()), $listbox);
 
         if($request->getMethod() == 'POST'){
@@ -1563,11 +1565,11 @@ class IndexController extends Controller implements SystemController
             $form->handleRequest($request);
             if ($form->isValid()) {
 
-                if(is_null($listbox)) 
+                if(is_null($listbox))
                     $listbox = $form->getData();
 
                 $content=array();
-                               
+
                 foreach ($form->get('content')->getData() as $item) {
                     if(is_null($item['key'])) $item['key']=date("dmy").mt_rand();
                     if(is_null($item['slug'])) $item['slug']=strtolower(str_replace(" ", "-", $item['value']));
@@ -1597,7 +1599,7 @@ class IndexController extends Controller implements SystemController
         }
 
         $pageSubTitle = empty($block) ? $this->_translator->trans('Add a new list') : $this->_translator->trans('Edit List'). ' ' . $listbox->getName();
-        
+
 
         return $this->render('MajesCoreBundle:Index:entity-edit.html.twig', array(
             'icon' => 'icon-list-ul',
@@ -1627,7 +1629,7 @@ class IndexController extends Controller implements SystemController
             $em->persist($list);
             $em->flush();
         }
-        
+
         return $this->redirect($this->get('router')->generate('_admin_listboxs_list', array()));
     }
 
@@ -1648,7 +1650,7 @@ class IndexController extends Controller implements SystemController
             $em->persist($list);
             $em->flush();
         }
-        
+
         return $this->redirect($this->get('router')->generate('_admin_trashs', array()));
     }
 
@@ -1662,7 +1664,7 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
 
-        
+
 
         if ($request->isXmlHttpRequest()){
 
@@ -1678,7 +1680,7 @@ class IndexController extends Controller implements SystemController
             $order = $orderNum[0]['column'];
             $search = $request->get('search', '');
 
-            $coreTwig = $this->container->get('majescore.twig.core_extension');     
+            $coreTwig = $this->container->get('majescore.twig.core_extension');
             $config = $coreTwig->dataTable(new TeelMailer());
             //Get column to sort
             foreach($config['column'] as $key => $column) if($key == (int)$order) $sort = $column['column'];
@@ -1692,7 +1694,7 @@ class IndexController extends Controller implements SystemController
                     'dir' => $ordeDir
                 ));
 
-        
+
             $dataTemp = array(
                 'object' => new TeelMailer(),
                 'datas' => !empty($emails) ? $emails : null,
@@ -1701,12 +1703,12 @@ class IndexController extends Controller implements SystemController
                 ));
 
             $data = $coreTwig->dataTableJson($dataTemp, $draw);
-                
+
             return new JsonResponse($data);
 
 
-        
-        }else{       
+
+        }else{
 
             return $this->render('MajesCoreBundle:common:datatable.html.twig', array(
                 'datas' => null,
@@ -1733,7 +1735,7 @@ class IndexController extends Controller implements SystemController
         $sent = $request->get('sent', 1);
 
         $em = $this->getDoctrine()->getManager();
-        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);               
+        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);
 
         if(empty($email)){
             throw new NotFoundHttpException('Requested data does not exist.');
@@ -1745,12 +1747,12 @@ class IndexController extends Controller implements SystemController
         $emailsSent = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
             'addressTo' => $email->getAddressTo(),
             'booSent' => 1
-            ), array('createDate' => "DESC")); 
+            ), array('createDate' => "DESC"));
 
         $emailsError = $em->getRepository('MajesCoreBundle:Mailer')->findBy(array(
             'addressTo' => $email->getAddressTo(),
             'booSent' => 0
-            ), array('createDate' => "DESC")); 
+            ), array('createDate' => "DESC"));
 
         $pageSubTitle = $email->getSubject() . ' - From: '.$email->getAddressFrom().' - To: '.$email->getAddressTo();
 
@@ -1774,13 +1776,13 @@ class IndexController extends Controller implements SystemController
         $sent = $request->get('sent', 1);
 
         $em = $this->getDoctrine()->getManager();
-        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);               
+        $email = $em->getRepository('MajesCoreBundle:Mailer')->findOneById($id);
 
         if(empty($email)){
             throw new NotFoundHttpException('Requested data does not exist.');
         }
 
-        
+
         $mailer = $this->container->get('majes.mailer');
 
         $mailer->setSubject($email->getSubject());
