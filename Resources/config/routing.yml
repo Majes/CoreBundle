@@ -66,6 +66,10 @@ _admin_language_export:
     pattern:  /language/export
     defaults: { _controller: MajesCoreBundle:Index:languageExport }
 
+_admin_language_parse:
+    pattern:  /languages/messages/parse
+    defaults: { _controller: MajesCoreBundle:Index:languageParse }
+
 _admin_language_messages:
     pattern:  /language/messages
     defaults: { _controller: MajesCoreBundle:Index:languageMessages }

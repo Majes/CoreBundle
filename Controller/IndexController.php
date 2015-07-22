@@ -742,9 +742,50 @@ class IndexController extends Controller implements SystemController
                 'edit' => '_admin_language_message_edit',
                 'delete' => '_admin_language_message_delete',
                 'export' => '_admin_language_message_export',
+                'parse' => '_admin_language_parse',
                 'params' => array()
                 )
             ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_SUPERADMIN")
+     *
+     */
+    public function languageParseAction(){
+        $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $translator = $this->container->get('majescore.translator');
+
+        $messages = $translator->workTrads('MajesTeelBundle');
+
+        foreach($messages as $message){
+            switch ($message['state']) {
+                case 0:
+                    $token = $em->getRepository('MajesCoreBundle:LanguageToken')->findOneByToken($message['sanitized']);
+                    if(is_null($token)){
+                        $token = new LanguageToken();
+                        $token->setToken($message['sanitized']);
+                        $token->setStatus($message['formatState']);
+
+                        $em->persist($token);
+                        $em->flush();
+                    }
+                    break 1;
+                case 1:
+                    $token = $em->getRepository('MajesCoreBundle:LanguageToken')->findOneByToken($message['id']);
+                    if(!is_null($token)){
+                        $token->setStatus($message['formatState']);
+                        $em->flush();
+                    }
+                    break 1;
+                default:
+                    # code...
+                    break 1;
+            }
+        }
+        return $this->redirect($this->get('router')->generate('_admin_language_messages', array()));
     }
 
     /**
@@ -811,6 +852,7 @@ class IndexController extends Controller implements SystemController
                 }
 
                 $form_translation_temp->setTranslation($form_translation);
+                $token->setStatus('<div class="label label-success pull-right">Edited</div>');
                 $em->persist($form_translation_temp);
                 $em->flush();
             }
@@ -1297,6 +1339,9 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($user)){
+            if( $this->get('security.context')->isGranted('ROLE_ADMIN_USER') && $user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()) )
+              throw new AccessDeniedException();
+
             foreach ($user->getRoles() as $role) {
                 $user->removeRole($role);
             }

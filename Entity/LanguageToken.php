@@ -12,18 +12,23 @@ use Majes\CoreBundle\Annotation\DataTable;
  * @ORM\Table(name="core_language_token")
  */
 class LanguageToken {
- 
+
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\Column(type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
- 
+
     /**
-    * @ORM\column(name="token", type="string", length=200, unique=true, nullable=false) 
+    * @ORM\column(name="token", type="string", length=200, unique=true, nullable=false)
     */
     private $token;
+
+    /**
+    * @ORM\column(name="status", type="string", length=200, nullable=false)
+    */
+    private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="Majes\CoreBundle\Entity\LanguageTranslation", mappedBy="token", cascade={"persist"})
@@ -42,7 +47,7 @@ class LanguageToken {
     public function __construct(){
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
- 
+
     /**
      * @inheritDoc
      * @DataTable(label="Id", column="id", isSortable=1)
@@ -50,7 +55,7 @@ class LanguageToken {
     public function getId() {
         return $this->id;
     }
- 
+
     public function setId($id) {
         $this->id = $id;
     }
@@ -61,9 +66,21 @@ class LanguageToken {
     public function getToken() {
         return $this->token;
     }
- 
+
     public function setToken($token) {
         $this->token = $token;
+    }
+
+    /**
+     * @inheritDoc
+     * @DataTable(label="Status", column="status", isSortable=1)
+     */
+    public function getStatus() {
+        return $this->status;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
     /**
@@ -100,4 +117,6 @@ class LanguageToken {
     {
         return $this->translation;
     }
+
+
 }

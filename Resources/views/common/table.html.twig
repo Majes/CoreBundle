@@ -5,6 +5,7 @@
       <i class="icon-table"></i>{{ pageSubTitle }}
       {% if config.object.hasAdd %}<a href="{{ path(urls.add, params) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>{% endif %}
       {% if urls.export is defined %}<a href="{{ path(urls.export) }}" class="btn btn-primary-outline pull-right"><i class="icon-save"></i>{% trans %}Export{% endtrans %}</a>{% endif %}
+      {% if urls.parse is defined %}<a href="{{ path(urls.parse) }}" class="btn btn-primary-outline pull-right"><i class="icon-"></i>{% trans %}Parse{% endtrans %}</a>{% endif %}
   </div>
   <div class="widget-content padded clearfix">
       <table class="table table-bordered table-striped{% if config.object.isDatatablejs %} dataTable{% if config.object.ajaxUrl is not empty %} ajaxTable{% endif %}{% endif %}" {% if config.object.ajaxUrl is not empty %}data-url="{{path(config.object.ajaxUrl)}}"{% endif %}>
@@ -31,7 +32,7 @@
                     {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key):get(data, param.key)}) %}{% endfor %}{% endif %}
                     {% if urls.edit is defined %}<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>{% endif %}
                     {% if urls.delete is defined %}{% if data.isSystem is defined %}{% if not data.isSystem %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% else %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans }}')"><i class="icon-trash"></i></a>{% endif %}{% endif %}
-                    {% for action, url in urls %}{% if action not in ['edit', 'export', 'add', 'delete', 'params'] %}
+                    {% for action, url in urls %}{% if action not in ['edit', 'export', 'add', 'delete', 'params', 'parse'] %}
                     <a href="{{ path(url.path, params) }}" class="table-actions"><i class="{{url.icon}}"></i></a>
                     {% endif %}{% endfor %}
                   </div>
