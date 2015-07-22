@@ -5,7 +5,7 @@
       <i class="icon-table"></i>{{ pageSubTitle }}
       {% if config.object.hasAdd %}<a href="{{ path(urls.add, params) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>{% endif %}
       {% if urls.export is defined %}<a href="{{ path(urls.export) }}" class="btn btn-primary-outline pull-right"><i class="icon-save"></i>{% trans %}Export{% endtrans %}</a>{% endif %}
-      {% if urls.parse is defined %}<a href="{{ path(urls.parse) }}" class="btn btn-primary-outline pull-right"><i class="icon-"></i>{% trans %}Parse{% endtrans %}</a>{% endif %}
+      {% if urls.parse is defined %}<a href="{{ path(urls.parse) }}" class="btn btn-primary-outline pull-right"><i class="icon-refresh"></i>{% trans %}Parse{% endtrans %}</a>{% endif %}
   </div>
   <div class="widget-content padded clearfix">
       <table class="table table-bordered table-striped{% if config.object.isDatatablejs %} dataTable{% if config.object.ajaxUrl is not empty %} ajaxTable{% endif %}{% endif %}" {% if config.object.ajaxUrl is not empty %}data-url="{{path(config.object.ajaxUrl)}}"{% endif %}>
