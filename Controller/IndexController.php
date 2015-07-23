@@ -758,7 +758,12 @@ class IndexController extends Controller implements SystemController
 
         $translator = $this->container->get('majescore.translator');
 
-        $messages = $translator->workTrads('MajesTeelBundle');
+        $frontBundles = $this->container->getParameter('front_bundles');
+
+        $messages = array();
+        foreach ($frontBundles as $bundle) {
+            $messages = array_merge($messages, $translator->workTrads($bundle));
+        }
 
         foreach($messages as $message){
             switch ($message['state']) {
@@ -781,7 +786,6 @@ class IndexController extends Controller implements SystemController
                     }
                     break 1;
                 default:
-                    # code...
                     break 1;
             }
         }
@@ -820,7 +824,8 @@ class IndexController extends Controller implements SystemController
             }
 
         }else{
-            $token = null;
+            $token = $em->getRepository('MajesCoreBundle:LanguageToken')
+                ->findOneById($token_id);
         }
 
         //Perform post submit
