@@ -837,6 +837,7 @@ class IndexController extends Controller implements SystemController
             }
 
             $token->setToken($request->get('token'));
+            $token->setStatus('<div class="label label-success pull-right">Edited</div>');
 
             $em->persist($token);
             $em->flush();
