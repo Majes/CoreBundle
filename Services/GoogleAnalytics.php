@@ -35,7 +35,11 @@ class GoogleAnalytics{
             			'beginDate' => $this->_begin,
             			'endDate' => $this->_end));
 
-		$client = new \Google_Client();
+		$config = new \Google_Config();
+		$config->setClassConfig('Google_Cache_File', array('directory' => $this->_container->get('kernel')->getRootDir()."/app/cache/Google_Client/"));
+	        // Here I set a relative folder to avoid pb on permissions to a folder like /tmp that is not permitted on my mutualised host
+
+		$client = new \Google_Client($config);
 		$client->setApplicationName("Majesteel");
 		$analytics = new \Google_Service_Analytics($client);
 
