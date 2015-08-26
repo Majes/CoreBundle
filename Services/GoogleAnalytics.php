@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\Services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ class GoogleAnalytics{
 	private $_begin = false;
 	private $_end = false;
 	private $_em = false;
-	
+
 	public function __construct(ContainerInterface $container, $em = null){
 
 		$this->_container = $container;
@@ -36,7 +36,7 @@ class GoogleAnalytics{
             			'endDate' => $this->_end));
 
 		$config = new \Google_Config();
-		$config->setClassConfig('Google_Cache_File', array('directory' => $this->_container->get('kernel')->getRootDir()."/app/cache/Google_Client/"));
+		$config->setClassConfig('Google_Cache_File', array('directory' => $this->_container->get('kernel')->getRootDir()."/cache/Google_Client/"));
 	        // Here I set a relative folder to avoid pb on permissions to a folder like /tmp that is not permitted on my mutualised host
 
 		$client = new \Google_Client($config);
@@ -49,10 +49,10 @@ class GoogleAnalytics{
 			return false;
 		}
 
-		
+
 
 		$key = file_get_contents(__DIR__.'/../../../../../../app/keys/'.$this->_params['service_key_fingerprints'].'-privatekey.p12');
-	
+
 		$cred = new \Google_Auth_AssertionCredentials(
 		  	// Replace this with the email address from the client.
 		  	$this->_params['service_email_address'],
@@ -61,16 +61,16 @@ class GoogleAnalytics{
 		  	$key
 		);
 
-		
+
 		$response = $client->setAssertionCredentials($cred);
 
 
 		if(!empty($stats) || is_null($cred) || is_null($analytics) || is_null($client)){
 			return;
 		}
-		
+
 		$this->getAnalytics($analytics);
-		
+
 	}
 
 	public function isUp(){
@@ -84,18 +84,18 @@ class GoogleAnalytics{
 
 	public function getAnalytics(&$analytics) {
   		try {
-		
-  		 	
+
+
   		    // Step 3. Query the Core Reporting API.
   		    $results = $this->getResults($analytics, $this->_params['view_id']);
 
   		    // Step 4. Output the results.
   		    return $this->saveResults($results);
-  		 
+
   		} catch (apiServiceException $e) {
   		  // Error from the API.
   		  print 'There was an API error : ' . $e->getCode() . ' : ' . $e->getMessage();
-		
+
   		} catch (Exception $e) {
   		  print 'There wan a general error : ' . $e->getMessage();
   		}
@@ -125,7 +125,7 @@ class GoogleAnalytics{
 	  if (count($results->getRows()) > 0) {
 	    $profileName = $results->getProfileInfo()->getProfileName();
 	    $rows = $results->getRows();
-		
+
 	    foreach($rows as $row){
 
 	    	//Remove current one
@@ -138,7 +138,7 @@ class GoogleAnalytics{
 		    if(!empty($statCurrent)){
 		    	$statCurrent->setCurrent(0);
 		    	$this->_em->persist($statCurrent);
-				$this->_em->flush();   
+				$this->_em->flush();
 			}
 
 	    	$stat = new Stat();
@@ -157,7 +157,7 @@ class GoogleAnalytics{
 	    }
 
 
-	  } 
+	  }
 
 	  return true;
 	}
