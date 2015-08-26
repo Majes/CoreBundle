@@ -83,7 +83,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $result;
     }
-    
+
+    public function findAllByRole($role)
+    {
+        $q = $this
+            ->createQueryBuilder('u')
+            ->innerJoin('u.roles', 'r')
+            ->where('r.role = :role')
+            ->setParameter('role', $role)
+            ->getQuery();
+
+        $result = $q->getResult();
+
+        return $result;
+    }
+
     public function findForAdmin($offset = 0, $limit = 10, $search = ''){
         $qb = $this->createQueryBuilder('s');
 
@@ -103,5 +117,5 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         //$query = $qb->getQuery();
         return $paginator;
     }
-    
+
 }
