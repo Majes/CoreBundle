@@ -122,7 +122,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $userAddresses;
-    
+
     /**
     * @ORM\OneToOne(targetEntity="Majes\TeelBundle\Entity\UserData", cascade={"persist","remove"})
     */
@@ -344,6 +344,12 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->lastname;
     }
 
+
+    public function getName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
     /**
      * @inheritDoc
      */
@@ -439,7 +445,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Get wysiwyg
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWysiwyg()
     {
@@ -547,7 +553,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function addLog(\Majes\CoreBundle\Entity\Log $logs)
     {
         $this->logs[] = $logs;
-    
+
         return $this;
     }
 
@@ -568,7 +574,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     public function entityRenderFront(){ return $this->entityRender();}
-    
+
     /**
      *
      * @ORM\PrePersist
@@ -589,7 +595,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function createUserdata()
     {
-        
+
         if(is_null($this->getUserdata()))
         {
             $this->setUserdata(new UserData());
@@ -628,7 +634,7 @@ class User implements AdvancedUserInterface, \Serializable
         if(!$this->userAddresses->contains($userAddress)){
             $this->userAddresses->add($userAddress);
         }
-        
+
         return $this;
     }
 
