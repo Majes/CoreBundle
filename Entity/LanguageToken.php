@@ -21,7 +21,7 @@ class LanguageToken {
     private $id;
 
     /**
-    * @ORM\column(name="token", type="string", length=200, unique=true, nullable=false)
+    * @ORM\column(name="token", type="text", nullable=false)
     */
     private $token;
 

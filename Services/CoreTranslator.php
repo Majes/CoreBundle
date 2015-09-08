@@ -147,7 +147,7 @@ class CoreTranslator
                        break;
                    }
                }
-               $row = array('state' => array_sum($states), 'formatState' => $this->formatStates($states), 'domain' => $domain, 'id' => $this->formatId($messageId), 'sanitized' => $this->sanitizeString($value));
+               $row = array('state' => array_sum($states), 'formatState' => $this->formatStates($states), 'domain' => $domain, 'id' => $this->formatId($messageId), 'sanitized' => $this->sanitizeString($value), 'initial' => $value);
                foreach ($fallbackCatalogues as $fallbackCatalogue) {
                    $row[] = $this->sanitizeString($fallbackCatalogue->get($messageId, $domain));
                }

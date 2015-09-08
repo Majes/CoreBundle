@@ -766,12 +766,13 @@ class IndexController extends Controller implements SystemController
         }
 
         foreach($messages as $message){
+
             switch ($message['state']) {
                 case 0:
-                    $token = $em->getRepository('MajesCoreBundle:LanguageToken')->findOneByToken($message['sanitized']);
+                    $token = $em->getRepository('MajesCoreBundle:LanguageToken')->findOneByToken($message['initial']);
                     if(is_null($token)){
                         $token = new LanguageToken();
-                        $token->setToken($message['sanitized']);
+                        $token->setToken($message['initial']);
                         $token->setStatus($message['formatState']);
 
                         $em->persist($token);
