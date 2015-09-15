@@ -27,6 +27,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
+     * @ORM\Column(name="api_key", type="string", length=32, nullable=true)
+     */
+    private $apiKey;
+
+    /**
      * @ORM\Column(name="social", type="json_array", nullable=true)
      */
     private $social;
@@ -678,5 +683,21 @@ class User implements AdvancedUserInterface, \Serializable
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    /**
+     * @param mixed $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
     }
 }
