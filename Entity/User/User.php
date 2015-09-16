@@ -146,6 +146,8 @@ class User implements AdvancedUserInterface, \Serializable
         $this->isActive = true;
         $this->salt = md5(uniqid(null, true));
 
+        $this->apiKey = md5(uniqid(mt_rand(), true));
+
         $datetime = new \DateTime();
         $this->lastconnectedDate = $datetime;
         $this->createDate = $datetime;
