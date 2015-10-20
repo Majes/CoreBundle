@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Majes\CoreBundle\Services;
 
@@ -14,16 +14,18 @@ class Mailer
     private $_admin_email;
     private $_mailerDb;
     private $_user;
+    private $_container;
 
     public $_email;
 
-    public function __construct($mailer, $templating, $em, $context, $admin_email = null)
+    public function __construct($mailer, $templating, $em, $context, $admin_email = null, $container)
     {
         $this->_mailer = $mailer;
         $this->_templating = $templating;
         $this->_em = $em;
         $this->_admin_email = $admin_email;
         $this->_mailerDb = new TeelMailer();
+        $this->_container = $container;
 
         $token = $context->getToken();
         $_user = !empty($token) ? $context->getToken()->getUser() : null;
@@ -58,7 +60,10 @@ class Mailer
     public function setBody($body = '', $template = null, $data = array()){
 
         $this->_email->setContentType('text/html');
-        
+
+        $this->_container->enterScope('request');
+        $this->_container->set('request', new Request(), 'request');
+
         if(!is_null($template) && $this->_templating->exists($template)){
             $body = $this->_templating->render($template, $data);
 
@@ -88,9 +93,9 @@ class Mailer
 
         //Save email in database
         $this->_em->persist($this->_mailerDb);
-        $this->_em->flush(); 
+        $this->_em->flush();
 
-        return $sent; 
+        return $sent;
 
     }
 
