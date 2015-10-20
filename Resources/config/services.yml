@@ -7,7 +7,7 @@ services:
 
     kernel.listener.exception_listener:
         class: Majes\CoreBundle\EventListener\ExceptionListener
-        arguments: [@templating, @kernel, @service_container, "@security.context"]
+        arguments: [@templating, @service_container, "@security.context"]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
@@ -76,7 +76,7 @@ services:
 
     majes.mailer:
         class: Majes\CoreBundle\Services\Mailer
-        arguments: [@mailer, @templating,@doctrine.orm.entity_manager, @security.context, %admin_email%, @service_container]
+        arguments: [@mailer, @doctrine.orm.entity_manager, @security.context, %admin_email%, @service_container]
 
     majes.ga:
         class: Majes\CoreBundle\Services\GoogleAnalytics

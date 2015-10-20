@@ -19,14 +19,14 @@ class Mailer
 
     public $_email;
 
-    public function __construct($mailer, $templating, $em, $context, $admin_email = null, $container)
+    public function __construct($mailer, $em, $context, $admin_email = null, $container)
     {
         $this->_mailer = $mailer;
-        $this->_templating = $templating;
         $this->_em = $em;
         $this->_admin_email = $admin_email;
         $this->_mailerDb = new TeelMailer();
         $this->_container = $container;
+        $this->_templating = $this->_container->get('templating');
 
         $token = $context->getToken();
         $_user = !empty($token) ? $context->getToken()->getUser() : null;

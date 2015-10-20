@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -12,22 +12,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 class ExceptionListener
 {
     protected $templating;
-    protected $kernel;
     protected $container;
     private $securityContext = null;
     protected $em;
 
-    public function __construct(EngineInterface $templating, $kernel, Container $container, SecurityContext $securityContext)
+    public function __construct(EngineInterface $templating, Container $container, SecurityContext $securityContext)
     {
 
         $this->templating = $templating;
-        $this->kernel = $kernel;
         $this->container = $container;
         $this->securityContext = $securityContext;
 
         $this->em = $this->container->get('doctrine.orm.entity_manager');
     }
-    
+
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
 
@@ -68,7 +66,7 @@ class ExceptionListener
                     if(!empty($langByLocale))
                         $locale = $langByLocale->getLocale();
                 }
-    
+
             }
         }
 
@@ -78,7 +76,7 @@ class ExceptionListener
 
         if(!empty($_user) && !is_string($_user)){
             $params = array_merge($request->query->all(),  $request->request->all(), $request->get('_route_params'));
-            
+
             if(!is_null($request->get('_route'))){
 
                 $log = new Log();
@@ -89,7 +87,7 @@ class ExceptionListener
                 $log->setParams(json_encode($params));
                 $log->setStatus(json_encode($exception->getStatusCode()));
                 $log->setException(json_encode($exception->getMessage()));
-                
+
                 $this->entityManager->persist($log);
                 $this->entityManager->flush();
             }
@@ -103,7 +101,7 @@ class ExceptionListener
         // HttpExceptionInterface is a special type of exception
         // that holds status code and header details
         if ($exception instanceof HttpExceptionInterface) {
-            
+
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
 
