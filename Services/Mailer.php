@@ -4,6 +4,7 @@ namespace Majes\CoreBundle\Services;
 
 use Symfony\Component\Templating\EngineInterface;
 use Majes\CoreBundle\Entity\Mailer as TeelMailer;
+use Symfony\Component\HttpFoundation\Request;
 
 class Mailer
 {
