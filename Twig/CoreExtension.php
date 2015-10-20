@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\Twig;
 
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -33,11 +33,11 @@ class CoreExtension extends \Twig_Extension
     }
 
     public function dataTable($object){
-        
+
 
         $reader = new AnnotationReader();
         $converter = new DataTableConverter($reader);
-        
+
         $dataTableConfig = $converter->convert($object);
 
         return $dataTableConfig;
@@ -91,7 +91,7 @@ class CoreExtension extends \Twig_Extension
     }
 
     public function get($object, $property, $format = null){
-        
+
         $function = 'get'.ucfirst($property);
         $value = $object->$function();
 
@@ -119,7 +119,7 @@ class CoreExtension extends \Twig_Extension
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         return $finfo->file($file);
 
-        
+
 
     }
 
@@ -136,16 +136,22 @@ class CoreExtension extends \Twig_Extension
     public function setupAttribute($ref)
     {
         switch($ref){
+            case 'selection':
+                $lists = $this->_em->getRepository('MajesCoreBundle:ListBox')
+                ->findBy(array('deleted' => false));
+                $setup=array('lists'=>$lists, 'ref'=>$ref);
+                return $setup;
+            break;
             case 'listbox':
                 $lists = $this->_em->getRepository('MajesCoreBundle:ListBox')
                 ->findBy(array('deleted' => false));
-                $setup=array('lists'=>$lists, 'ref'=>$ref);   
+                $setup=array('lists'=>$lists, 'ref'=>$ref);
                 return $setup;
             break;
             case 'listboxmultiple':
                 $lists = $this->_em->getRepository('MajesCoreBundle:ListBox')
                 ->findBy(array('deleted' => false));
-                $setup=array('lists'=>$lists, 'ref'=>$ref);   
+                $setup=array('lists'=>$lists, 'ref'=>$ref);
                 return $setup;
             break;
         }
