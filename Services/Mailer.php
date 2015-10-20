@@ -26,7 +26,6 @@ class Mailer
         $this->_admin_email = $admin_email;
         $this->_mailerDb = new TeelMailer();
         $this->_container = $container;
-        $this->_templating = $this->_container->get('templating');
 
         $token = $context->getToken();
         $_user = !empty($token) ? $context->getToken()->getUser() : null;
@@ -58,9 +57,14 @@ class Mailer
 
     }
 
-    public function setBody($body = '', $template = null, $data = array()){
+    public function setBody($body = '', $template = null, $data = array(), $templating = null){
 
         $this->_email->setContentType('text/html');
+
+        if(is_null($templating))
+            $this->_templating = $this->_container->get('templating');
+        else
+            $this->_templating = $templating;
 
         $this->_container->enterScope('request');
         $this->_container->set('request', new Request(), 'request');
