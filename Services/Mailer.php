@@ -69,7 +69,7 @@ class Mailer
         $this->_container->enterScope('request');
         $this->_container->set('request', new Request(), 'request');
 
-        if(!is_null($template) && $this->_templating->exists($template)){
+        if(!is_null($template)){
             $body = $this->_templating->render($template, $data);
 
             $this->_mailerDb->setTemplate($template);
