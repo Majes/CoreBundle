@@ -86,7 +86,8 @@ class CoreExtension extends \Twig_Extension
             $count++;
         }
 
-        return array("draw" => $draw, "recordsTotal" => count($dataTemp['datas']),"recordsFiltered" => count($dataTemp['datas']), "data" => $rows);
+        $recordsTotal = isset($dataTemp['recordsTotal']) ? $recordsTotal : count($dataTemp);
+        return array("draw" => $draw, "recordsTotal" => $recordsTotal,"recordsFiltered" => $recordsTotal, "data" => $rows);
 
     }
 
