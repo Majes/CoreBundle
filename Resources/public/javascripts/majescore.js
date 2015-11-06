@@ -24,9 +24,18 @@ CoreAdmin = {
 			});
 		});
 
-		
-			}
-		};
+		$('textarea.maxchar').keyup(function() {
+			var _self = $(this);
+
+			var _maxchar = _self.attr('maxlength');
+	        var text_length = _self.val().length;
+
+	        _self.next().find('.count').html(text_length);
+
+	    });
+
+	}
+};
 
 CoreAdmin.Common = {
 	confirmDelete: function(msg){
@@ -48,7 +57,7 @@ CoreAdmin.Common = {
    		collectionHolder.append($newLinkLi);
 		// addTagFormFirst(collectionHolder , $newLinkLi);
     	jQuery(document).ready(function() {
-		    
+
 		    collectionHolder.find('li.list-group-item').each(function() {
 		    	addTagFormDeleteLink($(this));
 	    	});
@@ -56,12 +65,12 @@ CoreAdmin.Common = {
 		    // ajoute l'ancre « ajouter un tag » et li à la balise ul
 		    collectionHolder.append($newLinkLi);
 
-		    
+
 
 		    $addTagLink.on('click', function(e) {
 		        // empêche le lien de créer un « # » dans l'URL
 		        e.preventDefault();
-				
+
 		        // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
 		        addTagForm(collectionHolder , $newLinkLi);
 
@@ -79,7 +88,7 @@ CoreAdmin.Common = {
 		    // Affiche le formulaire dans la page dans un li, avant le lien "ajouter un tag"
 		    var $newFormLi = $('<li  class="list-group-item text-right"></li>').append(newForm);
 		    $newLinkLi.before($newFormLi);
-		    
+
 	    }
 	    function addTagForm(collectionHolder, $newLinkLi) {
 		    // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt

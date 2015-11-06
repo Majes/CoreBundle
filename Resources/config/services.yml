@@ -41,6 +41,11 @@ services:
         tags:
             - { name: form.type_extension, alias: textarea }
 
+    majescore.maxchar_extension:
+        class: Majes\CoreBundle\Form\Extension\MaxCharTypeExtension
+        tags:
+            - { name: form.type_extension, alias: textarea }
+
     majescore.datepicker_extension:
         class: Majes\CoreBundle\Form\Extension\DatepickerTypeExtension
         tags:

@@ -204,7 +204,7 @@
                 <option disabled="disabled">{{ separator }}</option>
             {% endif %}
         {% endif %}
-        
+
         {% set options = choices %}
         {{ block('choice_widget_options') }}
     </select>
@@ -269,7 +269,7 @@
     {% elseif linked is not null %}
         <div class="input-group">
             <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control"/>
-            <span class="input-group-btn"><button id='{{id}}Button' class="btn btn-default" type="button" data-ajax="{{linked.ajax}}" data-url="{{path(linked.path, linked.options)}}">Get it</button></span> 
+            <span class="input-group-btn"><button id='{{id}}Button' class="btn btn-default" type="button" data-ajax="{{linked.ajax}}" data-url="{{path(linked.path, linked.options)}}">Get it</button></span>
         </div>
         <script>
             $('#{{id}}Button').click(function(event) {
@@ -288,8 +288,8 @@
                 }else{
                     window.open($(event.target).data('url'),'window','width=900,height=550');
                 }
-                
-            
+
+
         });
         </script>
     {% else %}
@@ -325,14 +325,17 @@
             toolbar2: "bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
 
             image_advtab: true ,
-            
+
             external_filemanager_path:"{{ path('_media_picker', {'context':'tinymce'}) }}",
             filemanager_title:"Media picker" ,
             external_plugins: { "mediapicker" : "{{ asset('bundles/majesmedia/plugins/mediapicker/plugin.js') }}"}
-         }); 
+         });
         </script>
+    {% elseif maxchar %}
+        <textarea {{ block('widget_attributes') }} class="form-control maxchar" maxlength="{{maxchar}}">{{ value }}</textarea>
+        <div class="alert alert-{% if maxchar < value|length %}danger{% else %}success{% endif %}">Nombre de caractères <div class="badge pull-right">{{maxchar}}</div><div class="badge pull-right"> / </div><div class="badge pull-right count">{{value|length}}</div></div>
     {% else %}
-        <textarea {{ block('widget_attributes') }} class="form-control">{{ value }}</textarea>        
+        <textarea {{ block('widget_attributes') }} class="form-control" >{{ value }}</textarea>
     {% endif %}
 {% endspaceless %}
 {% endblock textarea_widget %}
@@ -342,7 +345,7 @@
     <label class="checkbox">
         <input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %} {% if switched is not empty %}data-on="{{switched.colorOn}}" data-off="{{switched.colorOff}}" data-on-label="{{switched.labelOn}}" data-off-label="{{switched.labelOff}}" {% endif %}/>
         {% if switched is null or switched is empty %}<span>{{label}}</span>{% endif %}
-    </label> 
+    </label>
     {% if switched %}
     <script>
         $('#{{id}}').bootstrapSwitch();
