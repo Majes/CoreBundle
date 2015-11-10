@@ -392,11 +392,13 @@ class IndexController extends Controller implements SystemController
                         if(empty($tokenRow)){
                             $tokenRow = new LanguageToken();
                             $tokenRow->setToken($row['token']);
-                            $tokenRow->setStatus('<div class="label label-warning pull-right">Missing</div>');
+                            $tokenRow->setStatus('importing');
 
                             $em->persist($tokenRow);
                             $em->flush();
                         }
+
+                        $tokenRow->setStatus('<div class="label label-success pull-right">Edited</div>');
 
                         $tokenId = $tokenRow->getId();
                         foreach($row['languages'] as $localeToken => $translationToken){
@@ -408,14 +410,15 @@ class IndexController extends Controller implements SystemController
                             if(empty($languageTranslationRow))
                                 $languageTranslationRow = new LanguageTranslation();
 
+                            $translationValue = empty($translationToken) ? $row['token'] : $translationToken;
                             $languageTranslationRow->setLocale($localeToken);
                             $languageTranslationRow->setTranslation($translationToken);
                             $languageTranslationRow->setCatalogue($row['catalogue']);
                             $languageTranslationRow->setToken($tokenRow);
 
                             $em->persist($languageTranslationRow);
-                            $em->flush();
                         }
+                        $em->flush();
 
 
                     }
