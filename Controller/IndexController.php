@@ -679,7 +679,7 @@ class IndexController extends Controller implements SystemController
         $fp = fopen($filename, 'w');
 
         foreach ($csv as $line) {
-            fputcsv($fp, $line);
+            fputcsv($fp, $line,';');
         }
 
         fclose($fp);
@@ -1065,7 +1065,7 @@ class IndexController extends Controller implements SystemController
         $fp = fopen($filename, 'w');
 
         foreach ($csv as $line) {
-            fputcsv($fp, $line);
+            fputcsv($fp, $line, ';');
         }
 
         fclose($fp);
@@ -1309,7 +1309,7 @@ class IndexController extends Controller implements SystemController
         $fp = fopen($filename, 'w');
 
         foreach ($csv as $line) {
-            fputcsv($fp, $line);
+            fputcsv($fp, $line,';');
         }
 
         fclose($fp);
