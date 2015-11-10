@@ -366,6 +366,7 @@ class IndexController extends Controller implements SystemController
 
 
                         for ($c=0; $c < $num; $c++) {
+
                             if($c > 2){
                                 if($count > 0){
                                     $key = $c - 3;
@@ -391,6 +392,7 @@ class IndexController extends Controller implements SystemController
                         if(empty($tokenRow)){
                             $tokenRow = new LanguageToken();
                             $tokenRow->setToken($row['token']);
+                            $tokenRow->setStatus('<div class="label label-warning pull-right">Missing</div>');
 
                             $em->persist($tokenRow);
                             $em->flush();
@@ -725,9 +727,9 @@ class IndexController extends Controller implements SystemController
             ->listCatalogues();
 
         return $this->render('MajesCoreBundle:Index:language-messages.html.twig', array(
-            'pageTitle' => $this->_translator->trans('Languages'),
+            'pageTitle' => $this->_translator->trans('Languages', array(), 'admin'),
             'object' => new LanguageToken(),
-            'pageSubTitle' => $this->_translator->trans('List of translations'),
+            'pageSubTitle' => $this->_translator->trans('List of translations', array(), 'admin'),
             'loadmore' => $loadmore,
             'page' => $page,
             'catalogues' => $catalogues,
@@ -774,6 +776,7 @@ class IndexController extends Controller implements SystemController
                         $token = new LanguageToken();
                         $token->setToken($message['initial']);
                         $token->setStatus($message['formatState']);
+                        $token->setCatalogue($message['domain']);
 
                         $em->persist($token);
                         $em->flush();
@@ -808,11 +811,22 @@ class IndexController extends Controller implements SystemController
         $languagetranslation = $em->getRepository('MajesCoreBundle:LanguageTranslation')
             ->findOneBy(array('token' => $token_id));
 
+        $token = $em->getRepository('MajesCoreBundle:LanguageToken')
+            ->findOneBy(array('id' => $token_id));
 
-        $translations = array();
+
+        $translations = array(); $langs = array(); $defaultCat = 'new';
+        if(is_null($languagetranslation) && is_null($token)) $defaultCat = 'messages';
+        elseif(is_null($languagetranslation)){
+
+            $cat = $token->getCatalogue();
+            if(!empty($cat)) $defaultCat = $cat;
+
+        }
         foreach($this->_langs as $lang){
 
-            $translations[$lang->getLocale()] = array('name' => $lang->getName(), 'value' => '');
+            $translations[$defaultCat][$lang->getLocale()] = array('name' => $lang->getName(), 'value' => '');
+            $langs[$lang->getLocale()] = $lang->getName();
 
         }
 
@@ -821,13 +835,17 @@ class IndexController extends Controller implements SystemController
 
             $token = $languagetranslation->getToken();
             foreach($token->getTranslations() as $token_translation){
-                $translations[$token_translation->getLocale()]['value'] = $token_translation->getTranslation();
+                $translations[$token_translation->getCatalogue()][$token_translation->getLocale()] = array(
+                    'value' => $token_translation->getTranslation(),
+                    'name' => $langs[$token_translation->getLocale()]
+                );
             }
 
         }else{
             $token = $em->getRepository('MajesCoreBundle:LanguageToken')
                 ->findOneById($token_id);
         }
+
 
         //Perform post submit
         //$form = $this->createForm(new LanguageTokenType($lang), $token);
@@ -846,22 +864,67 @@ class IndexController extends Controller implements SystemController
             $token_id = $token->getId();
 
             $form_translations = $request->get('translations');
-            foreach ($form_translations as $form_translation_lang => $form_translation) {
+            foreach ($form_translations as $form_translation_catalogue => $form_translationCat) {
 
-                //Get translation if exists in db
-                $form_translation_temp = $em->getRepository('MajesCoreBundle:LanguageTranslation')
-                    ->findOneBy(array('token' => $token_id, 'locale' => $form_translation_lang));
-                if(is_null($form_translation_temp)){
-                    $form_translation_temp = new LanguageTranslation();
-                    $form_translation_temp->setToken($token);
-                    $form_translation_temp->setLocale($form_translation_lang);
-                    $form_translation_temp->setCatalogue('messages'); //to change
+                if($form_translation_catalogue == 'new'){
+
+                    //Add new catalogue translation
+                    if($form_translationCat['catalogue'] != 'new')
+                    {
+
+                        foreach ($form_translationCat as $form_translation_lang => $form_translation) {
+                            if($form_translation_lang != 'catalogue'){
+
+                                //Get translation if exists in db
+                                $form_translation_temp = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+                                    ->findOneBy(array('token' => $token_id, 'locale' => $form_translation_lang, 'catalogue' => $form_translationCat['catalogue']));
+                                if(is_null($form_translation_temp)){
+                                    $form_translation_temp = new LanguageTranslation();
+                                    $form_translation_temp->setToken($token);
+                                    $form_translation_temp->setLocale($form_translation_lang);
+                                    $form_translation_temp->setCatalogue($form_translationCat['catalogue']); //to change
+                                }
+
+                                $form_translation_temp->setTranslation($form_translation);
+                                $form_translation_temp->setCatalogue($form_translationCat['catalogue']); //to change
+                                $token->setStatus('<div class="label label-success pull-right">Edited</div>');
+                                $em->persist($form_translation_temp);
+                                $em->flush();
+
+                            }
+                        }
+
+                    }
+
+
+                }else{
+
+                    foreach ($form_translationCat as $form_translation_lang => $form_translation) {
+                        if($form_translation_lang != 'catalogue'){
+
+                            //Get translation if exists in db
+                            $form_translation_temp = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+                                ->findOneBy(array('token' => $token_id, 'locale' => $form_translation_lang, 'catalogue' => $form_translationCat['catalogue']));
+                            if(is_null($form_translation_temp)){
+                                $form_translation_temp = new LanguageTranslation();
+                                $form_translation_temp->setToken($token);
+                                $form_translation_temp->setLocale($form_translation_lang);
+                                $form_translation_temp->setCatalogue($form_translationCat['catalogue']); //to change
+                            }
+
+                            $form_translation_temp->setTranslation($form_translation);
+                            $form_translation_temp->setCatalogue($form_translationCat['catalogue']); //to change
+                            $token->setStatus('<div class="label label-success pull-right">Edited</div>');
+                            $em->persist($form_translation_temp);
+                            $em->flush();
+
+
+                        }
+                    }
+
                 }
 
-                $form_translation_temp->setTranslation($form_translation);
-                $token->setStatus('<div class="label label-success pull-right">Edited</div>');
-                $em->persist($form_translation_temp);
-                $em->flush();
+
             }
 
             //Clear translation cache
@@ -931,44 +994,68 @@ class IndexController extends Controller implements SystemController
     public function languageMessageExportAction()
     {
 
-        $reader = new AnnotationReader();
-
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        $reflClass = new \ReflectionClass('Majes\CoreBundle\Entity\LanguageTranslation');
-        $methods = $reflClass->getMethods();
-
-        $mapper=array();
-        foreach ($methods as $method) {
-            $classAnnotations = $reader->getMethodAnnotations($reflClass->getMethod($method->name));
-            foreach ($classAnnotations AS $annot) {
-                if ($annot instanceof DataTable) {
-                    $label = $annot->getLabel();
-                    $property = $annot->getColumn();
-                    $merger=array($label => $property);
-                    if(!empty($label) && !empty($property)){
-                        $mapper=array_merge($mapper, $merger);
-                    }
-
-                }
-            }
-        }
-
         $em = $this->getDoctrine()->getManager();
-        $languagetranslations = $em->getRepository('MajesCoreBundle:LanguageTranslation')
+        $languagetranslations = $em->getRepository('MajesCoreBundle:LanguageToken')
             ->findAll();
 
-        $csv=array();
-
-        array_push($csv, array_keys($mapper));
-
-        foreach ($languagetranslations as $languagetranslation) {
-            $line=array();
-            foreach (array_values($mapper) as $property) {
-                array_push($line, $accessor->getValue($languagetranslation, $property));
-            }
-            array_push($csv, $line);
+        $csv[0] = array(
+            0   => 'Id',
+            1   => 'Catalogue',
+            2   => 'Token'
+        );
+        $count = 3;
+        foreach($this->_langs as $lang){
+            $csv[0][$count] = $lang->getLocale();
+            $count++;
         }
+
+        $line = 1;
+        foreach ($languagetranslations as $languagetoken) {
+            $tokenCat = array();
+            foreach($languagetoken->getTranslations() as $translation){
+                $tokenCat[$translation->getCatalogue()][$translation->getLocale()] = array(
+                    'value' => $translation->getTranslation(),
+                    'id' => $translation->getId()
+                );
+            }
+
+            if(count($tokenCat) > 0)
+                foreach($tokenCat as $catalogue => $translations){
+
+                    $csv[$line] = array(
+                        0 => $languagetoken->getId(),
+                        1 => $catalogue,
+                        2 => $languagetoken->getToken()
+                    );
+
+                    foreach($this->_langs as $lang){
+
+                        $csv[$line][] = isset($translations[$lang->getLocale()]) ? $translations[$lang->getLocale()]['value'] : '';
+                    }
+
+                    $line++;
+
+                }
+            else{
+                $catalogue = $languagetoken->getCatalogue();
+
+                $csv[$line] = array(
+                    0 => $languagetoken->getId(),
+                    1 => empty($catalogue) ? 'messages' : $catalogue,
+                    2 => $languagetoken->getToken()
+                );
+
+                foreach($this->_langs as $lang){
+                    $csv[$line][] = '';
+                }
+
+                $line++;
+            }
+
+
+
+        }
+
         $exportsDir=$this->get('kernel')->getRootDir()."/../web/exports";
         $filename=$exportsDir."/Traductions.csv";
 

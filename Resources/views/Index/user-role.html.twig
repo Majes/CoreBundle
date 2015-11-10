@@ -1,20 +1,20 @@
 {% form_theme form_role 'MajesCoreBundle:Form:fields.html.twig' %}
 	    	    		{{ form_start(form_role, { 'attr': {'class': 'form-horizontal'} }) }}
 	    	    		<div class="col-md-3">
-							
+
 	    	  			</div>
 	    				<div class="col-md-6">
-	    	    			
+
 	    	    			<div class="widget-content padded">
-	    	    		  		
+
 								{{ form_errors(form_role) }}
 	    	    				{{ form_widget(form_role) }}
-			
+
 	    	    		  		<div class="form-actions col-lg-offset-3 col-lg-9">
-	    	    		    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
-	    	    		    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	    	    		    		<input type="submit" class="btn btn-primary" value="{{'Submit'|trans({}, 'admin')}}" />
+	    	    		    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{{'Cancel'|trans({}, 'admin') }}</a>
 	    	    		  		</div>
-								
+
 	    	    			</div>
 	    	  			</div>
 	    	  			{{ form_end(form_role) }}

@@ -19,9 +19,9 @@
                         {{ notice.title|raw }}
                         </a></li>
                         {% endfor %}
- 
+
                     {% endfor %}
-                    
+
                 </ul>
             </li>
             <li class="dropdown messages hidden-xs">
@@ -42,9 +42,9 @@
                         {{ message.title|raw }}
                         </a></li>
                         {% endfor %}
- 
+
                     {% endfor %}
-                    
+
                 </ul>
             </li>
             <li class="dropdown settings hidden-xs">
@@ -78,19 +78,19 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ path('_admin_myaccount') }}">
-                        <i class="icon-user"></i>{% trans %}My Account{% endtrans %}</a>
+                        <i class="icon-user"></i>{{'My Account'|trans({}, 'admin') }}</a>
                     </li>
                     <li><a href="{{ path('_admin_emptycache') }}" id="emptycache">
-                        <i class="icon-trash"></i>{% trans %}Empty cache{% endtrans %}</a>
+                        <i class="icon-trash"></i>{{'Empty cache'|trans({}, 'admin') }}</a>
                     </li>
                     <li><a href="{{ path('_admin_logout') }}">
-                        <i class="icon-signout"></i>{% trans %}Logout{% endtrans %}</a>
+                        <i class="icon-signout"></i>{{'Logout'|trans({}, 'admin') }}</a>
                     </li>
                 </ul>
             </li>
             </ul>
         </div>
-        
+
         <button class="navbar-toggle">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

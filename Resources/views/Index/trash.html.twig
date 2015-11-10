@@ -22,7 +22,7 @@
 {% block content_header '' %}
 
 {% block content %}
-    
+
 <div class="container-fluid main-content">
 
     {{ include(
@@ -30,7 +30,7 @@
             ) }}
 
     <div class="page-title">
-      <h1>{{pageTitle}}</h1>
+      <h1>{{pageTitle|trans({}, 'admin')}}</h1>
     </div>
      <div class="row">
 
@@ -43,12 +43,12 @@
                             <div class="panel">
                                 <div class="panel-heading">
                                     <div class="panel-title">
-                                        <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>{% trans %}Filters{% endtrans %}</a>
+                                        <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>{{'Filters'|trans({}, 'admin')}}</a>
                                     </div>
                                 </div>
                                 <div class="panel-collapse collapse in" id="collapseBundle">
                                     <div class="panel-body">
-                                        <label class="checkbox"><input {% if '' in chosen %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>{% trans %}All{% endtrans %}</span></label>
+                                        <label class="checkbox"><input {% if '' in chosen %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>{{'All'|trans({}, 'admin') }}</span></label>
 
                                         {% for choice in choices %}
                                         <label class="checkbox"><input {% if choice in chosen %}checked="checked"{% endif %} name="types[]" type="checkbox" value="{{choice}}"><span>{{choice }}</span></label>
@@ -59,14 +59,14 @@
                             <div class="panel">
                                 <div class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>{% trans %}Filter{% endtrans %}</button>
+                                        <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>{{'Filter'|trans({}, 'admin') }}</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>  
+            </div>
         </form>
 
         <!-- Gallery with filtering and actions -->
@@ -75,7 +75,7 @@
             {% if urls.params is defined %}{% for key, param in urls.params %}{% set params = params|merge({ (key): param.default}) %}{% endfor %}{% endif %}
             <div class="widget-container fluid-height clearfix">
                 <div class="heading">
-                    <i class="icon-table"></i>{{ pageSubTitle }}
+                    <i class="icon-table"></i>{{ pageSubTitle|trans({}, 'admin') }}
                     {# {% if config.object.hasAdd %}<a href="{{ path(urls.add, params) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>{% endif %} #}
                 </div>
                 <div class="widget-content padded clearfix">
@@ -83,7 +83,7 @@
                         <thead>
                             <th class="check-header hidden-xs"></th>
                             {% for head in headers %}
-                            <th class="{{head.isMobile ? 'hidden-xs' : ''}}{{head.isSortable ? '' : ' sorting_disabled'}}">{{head.label}}</th>
+                            <th class="{{head.isMobile ? 'hidden-xs' : ''}}{{head.isSortable ? '' : ' sorting_disabled'}}">{{head.label|trans({}, 'admin')}}</th>
                             {% endfor %}
                             <th></th>
                         </thead>
@@ -103,8 +103,8 @@
                                     <div class="action-buttons">
                                 {% set params = {'id' : entity.Id} %}
                                 {% set urls = entity.actions %}
-                                        {% if urls.undelete is defined %}<a href="{{ path(urls.undelete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to do this ?{% endtrans %}')"><i class="icon-wrench"></i></a>{% endif %}
-                                        {% if urls.delete is defined %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to do this ?{% endtrans %}')"><i class="icon-trash"></i></a>{% endif %}
+                                        {% if urls.undelete is defined %}<a href="{{ path(urls.undelete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{'Are you sure you want to do this ?'|trans({}, 'admin') }}')"><i class="icon-wrench"></i></a>{% endif %}
+                                        {% if urls.delete is defined %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{'Are you sure you want to do this ?'|trans({}, 'admin') }}')"><i class="icon-trash"></i></a>{% endif %}
                                     </div>
                                 </td>
                             </tr>

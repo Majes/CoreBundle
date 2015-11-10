@@ -41,12 +41,7 @@ class MaxCharTypeExtension extends AbstractTypeExtension
     {
         if (array_key_exists('maxchar', $options)) {
             $parentData = $form->getParent()->getData();
-
-            if (null !== $parentData) {
-                $maxchar = $options['maxchar'];
-            } else {
-                $maxchar = true;
-            }
+            $maxchar = $options['maxchar'];
 
             // set an "image_url" variable that will be available when rendering this field
             $view->vars['maxchar'] = $maxchar;

@@ -12,7 +12,7 @@
             ) }}
 
     <div class="page-title">
-      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+      <h1>{{pageTitle|trans({}, 'admin') }}</h1>
     </div>
 	<div class="row">
 
@@ -25,49 +25,49 @@
 							<div class="panel">
 				  				<div class="panel-heading">
 				    				<div class="panel-title">
-				      					<a class="accordion-toggle{% if langs is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseLang"><div class="caret pull-right"></div>Languages</a>
+				      					<a class="accordion-toggle{% if langs is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseLang"><div class="caret pull-right"></div>{{'Languages'|trans({}, 'admin')}}</a>
 				    				</div>
 				  				</div>
 				  				<div class="panel-collapse collapse{% if langs is not null %} in{% endif %}" id="collapseLang">
 				    				<div class="panel-body">
-				      					<label class="checkbox"><input {% if '' in langs %}checked="checked"{% endif %} name="langs[]" type="checkbox" value=""><span>All</span></label>
+				      					<label class="checkbox"><input {% if '' in langs %}checked="checked"{% endif %} name="langs[]" type="checkbox" value=""><span>{{'All'|trans({}, 'admin')}}</span></label>
 				      					{% for lang in all_langs %}
 										<label class="checkbox"><input {% if lang.locale in langs %}checked="checked"{% endif %} name="langs[]" type="checkbox" value="{{lang.locale}}"><span>{{lang.locale}}</span></label>
 				      					{% endfor %}
-         
+
 				    				</div>
 				  				</div>
 							</div>
 							<div class="panel">
 				  				<div class="panel-heading">
 				    				<div class="panel-title">
-				      					<a class="accordion-toggle{% if catalogues is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>Catalogue</a>
+				      					<a class="accordion-toggle{% if catalogues is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>{{'Catalogue'|trans({}, 'admin')}}</a>
 				    				</div>
 				  				</div>
 				  				<div class="panel-collapse collapse{% if catalogues is not null %} in{% endif %}" id="collapseType">
 				    				<div class="panel-body">
-				      					<label class="checkbox"><input {% if '' in catalogues %}checked="checked"{% endif %} name="catalogues[]" type="checkbox" value=""><span>All</span></label>
+				      					<label class="checkbox"><input {% if '' in catalogues %}checked="checked"{% endif %} name="catalogues[]" type="checkbox" value=""><span>{{'All'|trans({}, 'admin')}}</span></label>
 				      					{% for catalogue in all_catalogues %}
 										<label class="checkbox"><input {% if catalogue.catalogue in catalogues %}checked="checked"{% endif %} name="catalogues[]" type="checkbox" value="{{catalogue.catalogue}}"><span>{{catalogue.catalogue}}</span></label>
 				      					{% endfor %}
-         
+
 				    				</div>
 				  				</div>
 							</div>
 							<div class="panel">
                 			    <div class="panel-collapse collapse in">
                 			        <div class="panel-body">
-                			            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>Filter</button>
+                			            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>{{'Filter'|trans({}, 'admin')}}</button>
                 			        </div>
                 			    </div>
                 			</div>
-				
+
 						</div>
 					</div>
 				</div>
 			</div>
         </form>
-		
+
 		<div class="col-lg-9">
 
 

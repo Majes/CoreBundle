@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="container-fluid main-content">
-      
+
       <!-- Statistics -->
       <div class="row">
         <div class="col-lg-4">
@@ -15,7 +15,7 @@
               <div class="row text-center">
                 <div class="col-sm-12 col-md-12 col-lg-12 today">
                   <p>
-                     {% trans %}TODAY{% endtrans %}
+                     {{ 'TODAY'|trans({}, 'admin')}}
                   </p>
                   <img id="picTemp" src="" width="100" height="100">
                   <div class="number">
@@ -39,7 +39,7 @@
                 {{stats.all.percentNewVisits}}<small>%</small>
               </div>
               <div class="text">
-                {% trans %}Percentage new visits{% endtrans %}
+                {{'Percentage new visits'|trans({}, 'admin') }}
               </div>
             </div>
             <div class="col-md-3">
@@ -48,7 +48,7 @@
                 {{stats.all.newVisits}}
               </div>
               <div class="text">
-                {% trans %}New visitors this current month{% endtrans %}
+                {{'New visitors this current month'|trans({}, 'admin') }}
               </div>
             </div>
             <div class="col-md-3">
@@ -57,7 +57,7 @@
                 {{stats.all.avgTimeToSite}}<small>sec</small>
               </div>
               <div class="text">
-                {% trans %}Average time on site{% endtrans %}
+                {{ 'Average time on site'|trans({}, 'admin') }}
               </div>
             </div>
             <div class="col-md-3">
@@ -66,7 +66,7 @@
                 {{stats.all.pageviewsPerVisits}}
               </div>
               <div class="text">
-                {% trans %}Page views per visit{% endtrans %}
+                {{'Page views per visit'|trans({}, 'admin') }}
               </div>
             </div>
           </div>
@@ -75,21 +75,21 @@
         <div class="col-lg-8" style="">
           <div class="widget-container fluid-height">
             <div class="alert alert-danger">
-              {% trans %}You need to activate Google Analytics API{% endtrans %}
+              {{'You need to activate Google Analytics API'|trans({}, 'admin') }}
             </div>
           </div>
         </div>
         {% endif %}
 
       </div>
-      
-      
+
+
       <div class="row">
         <!-- Area Charts:Morris -->
         <div class="col-md-6">
           <div class="widget-container fluid-height">
             <div class="heading">
-              <i class="icon-bar-chart"></i>{% trans %}New visits stats{% endtrans %}
+              <i class="icon-bar-chart"></i>{{'New visits stats'|trans({}, 'admin') }}
             </div>
             <div class="widget-content padded text-center">
               <div class="graph-container">
@@ -103,7 +103,7 @@
         <div class="col-md-6">
             <div class="widget-container scrollable chat" style="height: 427px;">
               <div class="heading">
-                <i class="icon-comments"></i>{% trans %}Chat Widget{% endtrans %}<i class="icon-smile pull-right"></i>
+                <i class="icon-comments"></i>{{'Chat Widget'|trans({}, 'admin') }}<i class="icon-smile pull-right"></i>
               </div>
               <div class="widget-content padded">
                 <ul>
@@ -126,8 +126,8 @@
                   {% if chat|length == 0 %}<li>
                     <div class="bubble">
                       <p class="message">
-                        {% trans %}Be the first to post a word.{% endtrans %}
-                      </p>  
+                        {{'Be the first to post a word.'|trans({}, 'admin') }}
+                      </p>
                       <p class="time"></p>
                     </div>
                   </li>{% endif %}
@@ -135,7 +135,7 @@
               </div>
               <div class="post-message">
                 <form method="POST">
-                <input class="form-control" placeholder="Write your message here..." name="content" type="text"><input type="submit" value="Send">
+                <input class="form-control" placeholder="Write your message here..." name="content" type="text"><input type="submit" value="{{'Send'|trans({}, 'admin')}}">
                 </form>
               </div>
             </div>
@@ -144,7 +144,7 @@
       </div>
 
 
-      {# 
+      {#
       <div class="row">
         <div class="col-lg-12">
           <div class="widget-container fluid-height">
@@ -206,9 +206,9 @@
           </div>
         </div>
       </div> #}
-  
+
       <script>
-      
+
       $(document).ready(function(){
         if ($('#hero-area').length) {
         var data = Array();
@@ -233,12 +233,12 @@
         showpopup: false,
         plainfolder: '{{ asset('bundles/majescore/images') }}'
       },function(City,Country, IP, Latitude, Longitude, Temperature, Picture){
-    
+
         $("#txtCity").html(City);
         $("#txtTemperature").html(parseInt(Temperature));
         $("#picTemp").attr("src",Picture)
       });
       });
       </script>
-  
+
 {% endblock %}

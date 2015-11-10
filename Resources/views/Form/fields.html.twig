@@ -45,7 +45,7 @@
         {% set label = name|humanize %}
     {% endif %}
 
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }} </label>
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, 'admin') }} </label>
 {% endspaceless %}
 {% endblock form_label %}
 
@@ -56,7 +56,7 @@
     {% if type == 'file' %}
         {% if mediapicker %}
             <div class="form-group">
-                <label for="myaccount_is_active" class="control-label col-lg-3">{% trans %}Preview{% endtrans %}</label>
+                <label for="myaccount_is_active" class="control-label col-lg-3">{{'Preview'|trans({}, 'admin') }}</label>
                 <div class="col-lg-9">
                     {% if data is not null %}
                     <img src="{{ teelMediaLoad(data.id, 200, 200, false, asset('bundles/majesmedia/img/icon-document.png'),{ 'src' : true })|raw }}" width="200" title="{{data.title}}" id="preview{{id}}"/>
@@ -74,10 +74,10 @@
                         <div class="heading tabs">
                             <ul class="nav nav-tabs pull-right" data-tabs="tabs" id="{{id}}_tabs">
                                 <li class="active">
-                                    <a data-toggle="tab" href="#{{id}}_tab1"><i class="icon-comments"></i><span>{% trans %}Upload new file{% endtrans %}</span></a>
+                                    <a data-toggle="tab" href="#{{id}}_tab1"><i class="icon-comments"></i><span>{{'Upload new file'|trans({}, 'admin') }}</span></a>
                                 </li>
                                 <li>
-                                    <a data-toggle="tab" href="#{{id}}_tab2" class="triggerMediaPicker"><i class="icon-user"></i><span>{% trans %}Existing media{% endtrans %}</span></a>
+                                    <a data-toggle="tab" href="#{{id}}_tab2" class="triggerMediaPicker"><i class="icon-user"></i><span>{{'Existing media'|trans({}, 'admin') }}</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -98,7 +98,7 @@
 
 
             <div class="form-group">
-                <label for="myaccount_is_active" class="control-label col-lg-3">{% trans %}Remove{% endtrans %}</label>
+                <label for="myaccount_is_active" class="control-label col-lg-3">{{'Remove'|trans({}, 'admin') }}</label>
                 <div class="col-lg-9">
                     <label class="checkbox">
                                 <input type="checkbox" name="{{full_name}}[remove]" value="1"><span></span>
@@ -126,7 +126,7 @@
                     <i class="icon-file fileupload-exists"></i><span class="fileupload-preview"></span>
                   </div>
                   <div class="input-group-btn">
-                    <a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">Remove</a><span class="btn btn-default btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/></span>
+                    <a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">{{'Remove'|trans({}, 'admin')}}</a><span class="btn btn-default btn-file"><span class="fileupload-new">{{'Select file'|trans({}, 'admin')}}</span><span class="fileupload-exists">{{'Change'|trans({}, 'admin')}}</span><input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/></span>
                   </div>
                 </div>
             </div>
@@ -195,7 +195,7 @@
     {% endif %}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="{% if select2 is not null %}select2able{% else %}form-control{% endif %}">
         {% if empty_value is not none %}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, 'admin') }}</option>
         {% endif %}
         {% if preferred_choices|length > 0 %}
             {% set options = preferred_choices %}
@@ -333,7 +333,7 @@
         </script>
     {% elseif maxchar %}
         <textarea {{ block('widget_attributes') }} class="form-control maxchar" maxlength="{{maxchar}}">{{ value }}</textarea>
-        <div class="alert alert-{% if maxchar < value|length %}danger{% else %}success{% endif %}">Nombre de caractères <div class="badge pull-right">{{maxchar}}</div><div class="badge pull-right"> / </div><div class="badge pull-right count">{{value|length}}</div></div>
+        <div class="alert alert-{% if maxchar < value|length %}danger{% else %}success{% endif %}">{{'Number of characters'|trans({}, 'admin')}} <div class="badge pull-right">{{maxchar}}</div><div class="badge pull-right"> / </div><div class="badge pull-right count">{{value|length}}</div></div>
     {% else %}
         <textarea {{ block('widget_attributes') }} class="form-control" >{{ value }}</textarea>
     {% endif %}

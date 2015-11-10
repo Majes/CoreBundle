@@ -49,7 +49,7 @@ class AuthController extends Controller implements SystemController
         $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
-    
+
         if($request->getMethod() == 'POST'){
             $usertochange = $em->getRepository('MajesCoreBundle:User\User')->findOneByUsername($request->request->get('_username'));
             if(is_object($usertochange)){
@@ -72,7 +72,7 @@ class AuthController extends Controller implements SystemController
                 $mailer = \Swift_Mailer::newInstance($transport);
 
                 $message = \Swift_Message::newInstance()
-                    ->setSubject('Reinitialisation du mot de passe')
+                    ->setSubject($this->_translator->trans('Reinitialisation du mot de passe', array(), 'admin'))
                     ->setFrom(array('dev@neomajes.com' => 'Neomajes'))
                     ->setTo($usertochange->getEmail())
                     ->setBody('Bonjour,<br/><br/><strong>Vous avez oublié ou perdu votre mot de passe pour accéder ?</strong><br/>Votre nouveau mot de passe: '.$newpassword.'<br/><br/>Cordialement,<br/><br/>Neomajes', 'text/html');

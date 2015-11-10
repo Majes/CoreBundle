@@ -45,7 +45,7 @@
         {% set label = name|humanize %}
     {% endif %}
 
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }} </label>
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, 'admin') }} </label>
 {% endspaceless %}
 {% endblock form_label %}
 
@@ -65,7 +65,7 @@
     {% if (image_url is not null) %}
         {% set mime_type = getMimeType(image_url) %}
         {% if 'image' in mime_type %}<img src="{{ asset(image_url) }}" style="max-width: 80%; margin: 10px 0 0"/>
-        {% else %}<a href="{{ asset(image_url) }}" target="_blank" class="icon-cloud-download"> {{ 'Download file'|trans({}, translation_domain) }}</a>
+        {% else %}<a href="{{ asset(image_url) }}" target="_blank" class="icon-cloud-download"> {{ 'Download file'|trans({}, 'admin') }}</a>
         {% endif %}
     {% endif %}
 
@@ -80,7 +80,7 @@
     {% endif %}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="form-control">
         {% if empty_value is not none %}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, 'admin') }}</option>
         {% endif %}
         {% if preferred_choices|length > 0 %}
             {% set options = preferred_choices %}
@@ -134,7 +134,7 @@
 {% block checkbox_widget %}
 	<label class="checkbox">
     	<input type="checkbox" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}{% if checked %} checked="checked"{% endif %}/>
-        {{ label|trans }}
+        {{ label|trans({}, 'admin') }}
 	</label>
 {% endblock checkbox_widget %}
 

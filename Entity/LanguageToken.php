@@ -31,6 +31,11 @@ class LanguageToken {
     private $status;
 
     /**
+    * @ORM\column(name="catalogue", type="string", length=200, nullable=true)
+    */
+    private $catalogue;
+
+    /**
      * @ORM\OneToMany(targetEntity="Majes\CoreBundle\Entity\LanguageTranslation", mappedBy="token", cascade={"persist"})
      * @ORM\JoinColumn(name="id", referencedColumnName="languade_token_id")
      */
@@ -116,6 +121,14 @@ class LanguageToken {
     public function getTranslation()
     {
         return $this->translation;
+    }
+
+    public function getCatalogue() {
+        return $this->catalogue;
+    }
+
+    public function setCatalogue($catalogue) {
+        $this->catalogue = $catalogue;
     }
 
 

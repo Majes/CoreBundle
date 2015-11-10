@@ -8,22 +8,22 @@
 				<div class="panel">
 				  	<div class="panel-heading">
 				    	<div class="panel-title">
-				      		<a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseOne"><div class="caret pull-right"></div>Date Range</a>
+				      		<a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapseOne"><div class="caret pull-right"></div>{{'Date Range'|trans({}, 'admin')}}</a>
 				    	</div>
 				  	</div>
 				  	<div class="panel-collapse collapse in" id="collapseOne">
 				    	<div class="panel-body">
-				      		<label class="radio"><input name="type" type="radio" value="hour"><span>Past Hour</span></label>
-                            <label class="radio"><input name="type" type="radio" value="day"><span>Past Day</span></label>
-				      		<label class="radio"><input checked="" name="type" type="radio" value="week"><span>Past Week</span></label></label>
-				      		<label class="radio"><input name="type" type="radio" value="month"><span>Past Month</span></label>
-				      		<label class="radio"><input name="type" type="radio" value="year"><span>Past Year</span></label>
+				      		<label class="radio"><input name="type" type="radio" value="hour"><span>{{'Past Hour'|trans({}, 'admin')}}</span></label>
+                            <label class="radio"><input name="type" type="radio" value="day"><span>{{'Past Day'|trans({}, 'admin')}}</span></label>
+				      		<label class="radio"><input checked="" name="type" type="radio" value="week"><span>{{'Past Week'|trans({}, 'admin')}}</span></label></label>
+				      		<label class="radio"><input name="type" type="radio" value="month"><span>{{'Past Month'|trans({}, 'admin')}}</span></label>
+				      		<label class="radio"><input name="type" type="radio" value="year"><span>{{'Past Year'|trans({}, 'admin')}}</span></label>
 				    	</div>
 				  	</div>
                     <div class="panel">
                             <div class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <button class="btn btn-default pull-right" id="filterButton"><i class="icon-search"></i>Filter</button>
+                                    <button class="btn btn-default pull-right" id="filterButton"><i class="icon-search"></i>{{'Filter'|trans({}, 'admin')}}</button>
                                 </div>
                             </div>
                         </div>
@@ -38,17 +38,17 @@
 
   <div class="widget-container fluid-height">
         <div class="heading">
-            <i class="icon-stackexchange"></i> User activity
+            <i class="icon-stackexchange"></i> {{'User activity'|trans({}, 'admin')}}
         </div>
         <div class="widget-content padded">
         <!-- Table -->
         <table class="table table-filters">
             <thead>
                 <th width="60"></th>
-                <th>Module</th>
-                <th>Action</th>
-                <th class="hidden-sm hidden-xs">Date</th>
-                <th class="hidden-xs">Time</th>
+                <th>{{'Module'|trans({}, 'admin')}}</th>
+                <th>{{'Action'|trans({}, 'admin')}}</th>
+                <th class="hidden-sm hidden-xs">{{'Date'|trans({}, 'admin')}}</th>
+                <th class="hidden-xs">{{'Time'|trans({}, 'admin')}}</th>
             </thead>
             <tbody id="activityResultsAjax">
                 {{ include(
@@ -60,7 +60,7 @@
 
 </div>
 {% if loadmore == true %}<a href="{{ path('_admin_user_activity', {'id': id, 'page': page+1}) }}" class="btn btn-lg btn-default btn-block" id="loadMoreButton" style="margin-top: 20px;">
-{% trans %}Load more{% endtrans %}
+{{'Load more'|trans({}, 'admin') }}
 </a>{% endif %}
 
 <script>

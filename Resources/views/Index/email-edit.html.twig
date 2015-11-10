@@ -12,24 +12,24 @@
             ) }}
 
     <div class="page-title">
-      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+      <h1>{{pageTitle|trans({}, 'admin') }}</h1>
     </div>
   <div class="row">
           <div class="col-sm-2">
             <!--<a class="btn btn-block btn-primary compose-btn" href="#">Compose</a>-->
             <ul class="list-group">
-        
+
                 <li class="list-group-item{% if sent %} active{% endif %}">
                   <a href="{{path('_admin_management_emails_edit', {id: email.id, sent: 1})}}">
                     <p>
-                      <span class="badge">{{count.sent}}</span>Sent
+                      <span class="badge">{{count.sent}}</span>{{'Sent'|trans({}, 'admin')}}
                     </p>
                   </a>
                 </li>
                 <li class="list-group-item{% if not sent %} active{% endif %}">
                   <a href="{{path('_admin_management_emails_edit', {id: email.id, sent: 0})}}">
                     <p>
-                      <span class="badge">{{count.error}}</span>Error
+                      <span class="badge">{{count.error}}</span>{{'Error'|trans({}, 'admin')}}
                     </p>
                   </a>
                 </li>
@@ -61,10 +61,10 @@
                     {{email.createDate|date('d/m/Y H:i')}}
                   </p>
                   <p>
-                    <strong>{% if email.user is not empty %}{{email.user.email}}{% else %}System{% endif %}</strong><br><span class="text-muted">To: {{email.addressTo}}</span><br>{{email.subject}}
+                    <strong>{% if email.user is not empty %}{{email.user.email}}{% else %}{{'System'|trans({}, 'admin')}}{% endif %}</strong><br><span class="text-muted">{{'To:'|trans({}, 'admin')}} {{email.addressTo}}</span><br>{{email.subject}}
                   </p>
                   <div class="btn-group message-actions">
-                    <a href="{{path('_admin_management_emails_send', {id: email.id, sent: sent})}}" class="btn btn-sm btn-default-outline" title="{% trans %}Send again{% endtrans %}" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to send this email again?{% endtrans %}')"><i class="icon-envelope"></i></a><!--<button class="btn btn-sm btn-default-outline"><i class="icon-long-arrow-right"></i></button>-->
+                    <a href="{{path('_admin_management_emails_send', {id: email.id, sent: sent})}}" class="btn btn-sm btn-default-outline" title="{{'Send again'|trans({}, 'admin') }}" onclick="return CoreAdmin.Common.confirmDelete('{{'Are you sure you want to send this email again?'|trans({}, 'admin') }}')"><i class="icon-envelope"></i></a><!--<button class="btn btn-sm btn-default-outline"><i class="icon-long-arrow-right"></i></button>-->
                   </div>
                 </div>
                 <div class="message-text">

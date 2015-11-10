@@ -22,19 +22,18 @@
                         <input class="form-control" type="password" value="" name="_password"/>
                         </div>
                   </div>
-                  <a class="pull-right" href="{{ path('_admin_forgot') }}">Forgot password?</a>
+                  <a class="pull-right" href="{{ path('_admin_forgot') }}">{{'Forgot password?'|trans({}, 'admin')}}</a>
                   <div class="text-left">
                         <label class="checkbox">
                           <input type="checkbox" name="_remember_me"/>
-                          <span>Keep me logged in</span>
+                          <span>{{'Keep me logged in'|trans({}, 'admin')}}</span>
                         </label>
                   </div>
-                  <input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="Log in"/>
-                  
-                  
+                  <input type="submit" class="btn btn-lg btn-primary btn-block login-submit" value="{{'Log in'|trans({}, 'admin')}}"/>
+
+
             </form>
     </div>
     <!-- End Login Screen -->
 
 {% endblock %}
-      

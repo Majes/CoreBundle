@@ -12,25 +12,25 @@
             ) }}
 
     <div class="page-title">
-      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+      <h1>{{pageTitle|trans({}, 'admin') }}</h1>
     </div>
 	<div class="row">
 	    <div class="widget-container fluid-height clearfix">
 	    	<div class="heading">
-	        	<i class="icon-user"></i> {% trans %}%pageSubTitle%{% endtrans %}
+	        	<i class="icon-user"></i> {{pageSubTitle|trans({}, 'admin') }}
 	        </div>
 			<form method="post" class="form-horizontal">
 	    	<div class="row">
 	    	<div class="col-md-3">
-				
+
 	    	</div>
 	    	<div class="col-md-6">
-	    		
+
 	    		<div class="widget-content padded">
-	    	  		
-					
+
+
           			<div class="form-group">
-          			  	<label class="control-label col-md-2">{% trans %}Token{% endtrans %}</label>
+          			  	<label class="control-label col-md-2">{{'Token'|trans({}, 'admin') }}</label>
           			  	<div class="col-md-9">
           			    	<input class="form-control" value="{% if token is not null %}{{token.token}}{% endif %}" name="token" placeholder="Token" type="text">
           			  	</div>
@@ -41,35 +41,50 @@
           			    	<input class="form-control" value="messages" disabled name="catalogue" placeholder="messages" type="text">
           			  	</div>
           			</div>-->
-        			
-			
-					
+
+
+
 	    		</div>
 	    	</div>
 			</div>
 
-			<div class="widget-content padded"><h3>{% trans %}Translations{% endtrans %}</h3></div>
+			<div class="widget-content padded"><h3>{{'Translations'|trans({}, 'admin') }}</h3></div>
 
+			{% for catalogue, translationsCat in translations %}
 			<div class="row">
-				{% for lang, translation in translations %}
+
+				<div class="col-md-12">
+					<div class="widget-content padded">
+						<div class="form-group">
+          				  <label class="control-label col-md-3">{{'Domaine'|trans({}, 'admin')}}</label>
+          				  <div class="col-md-5">
+          				    <input class="form-control" name="translations[{{catalogue}}][catalogue]" value="{{catalogue}}"/>
+          				  </div>
+          				</div>
+	    			</div>
+
+				</div>
+				{% for lang, translation in translationsCat %}
 				<div class="col-md-6">
-	    		
+
 	    			<div class="widget-content padded">
 						<div class="form-group">
           				  <label class="control-label col-md-3">{{ translation.name }}</label>
           				  <div class="col-md-9">
-          				    <textarea class="form-control" rows="4" name="translations[{{lang}}]">{{ translation.value }}</textarea>
+          				    <textarea class="form-control" rows="4" name="translations[{{catalogue}}][{{lang}}]">{{ translation.value }}</textarea>
           				  </div>
           				</div>
 	    			</div>
 	    		</div>
 	    		{% endfor %}
 			</div>
-			
+
+			{% endfor %}
+
 			<div class="widget-content padded">
 	    	  		<div class="form-actions col-lg-offset-3 col-lg-9">
-	    	    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
-	    	    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	    	    		<input type="submit" class="btn btn-primary" value="{{'Submit'|trans({}, 'admin') }}" />
+	    	    		<a href="{{ path('_admin_users') }}" class="btn btn-default-outline">{{'Cancel'|trans({}, 'admin') }}</a>
 	    	  		</div>
 	    	</div>
 	    	</form>
