@@ -8,7 +8,7 @@ _admin_login:
 
 _admin_login_check:
     pattern:   /authentification_check
-    defaults: { _controller: MajesCoreBundle:Auth:login_check }
+    defaults: { _controller: MajesCoreBundle:Auth:loginCheck }
 
 _admin_forgot:
     pattern:   /forgot_password
