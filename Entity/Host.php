@@ -35,7 +35,7 @@ class Host{
      * @ORM\Column(name="is_multilingual", type="boolean", nullable=false)
      */
     private $isMultilingual=1;
-    
+
 
     /**
      * @ORM\Column(name="create_date", type="datetime", nullable=false)
@@ -48,10 +48,15 @@ class Host{
     private $updateDate;
 
     /**
+    * @ORM\column(name="default_locale", type="string", length=200, nullable=true)
+    */
+    private $defaultLocale;
+
+    /**
      * @ORM\Column(name="deleted", type="boolean", nullable=false)
      */
     private $deleted=0;
-    
+
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
@@ -171,7 +176,7 @@ class Host{
 
         return $this;
     }
-    
+
     /**
      *
      * @ORM\PrePersist
@@ -186,7 +191,7 @@ class Host{
             $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
-    
+
     /**
      * Gets the value of deleted.
      *
@@ -209,5 +214,28 @@ class Host{
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    /**
+     * Set defaultLocale
+     *
+     * @param string $defaultLocale
+     * @return Host
+     */
+    public function setDefaultLocale($defaultLocale)
+    {
+        $this->defaultLocale = $defaultLocale;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultLocale
+     * @DataTable(label="Default locale", column="defaultLocale", isSortable=0)
+     * @return string
+     */
+    public function getDefaultLocale()
+    {
+        return $this->defaultLocale;
     }
 }

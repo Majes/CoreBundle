@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -35,16 +35,19 @@ class HostType extends AbstractType
         	'constraints' => array(
        		    new NotBlank()
        		)));
-        
+
         $builder->add('url', 'text', array(
         	'required' => true,
         	'constraints' => array(
        		    new NotBlank()
        		)));
-        
+
 
         $builder->add('is_multilingual', 'checkbox', array(
         	'required' => false));
+
+		$builder->add('default_locale', 'text', array(
+            'required' => false));
 
     }
 
