@@ -46,7 +46,7 @@ class ExceptionListener
         $this->container->enterScope('request');
         $this->container->set('request', $request, 'request');
 
-        if($this->container->get('kernel')->getEnvironment() == 'dev')
+        if(strpos($this->container->get('kernel')->getEnvironment(), 'dev' ) !== false)
             return;
 
         if(isset($request->server)){
