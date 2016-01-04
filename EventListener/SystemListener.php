@@ -67,9 +67,9 @@ class SystemListener
                 exit;
             }
         }
-        
+
         $routeDoc = $request->get('routeDocument');
-        
+
         $domain = $request->server->get('HTTP_HOST');
 
         if(!empty($routeDoc)){
@@ -115,18 +115,18 @@ class SystemListener
 
             //try autologin via facebook, twitter or google
             $social = $this->container->get('majes.social');
-            
+
             $user = $social->login();
 
             $wysiwyg = $parameters['wysiwyg'];
             $menu = $this->container->getParameter('menu');
             $is_multilingual = $this->container->getParameter('is_multilingual');
-            
+
             $env = $this->container->get( 'kernel' )->getEnvironment();
             if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') {
                 $redirectUrl = $this->router->generate($parameters['maintenance_route']);
                 header('Location: '.$redirectUrl);
-                exit;               
+                exit;
                 // $this->render(redirectUrl($parameters['maintenance_route']));
             }
 
@@ -143,7 +143,7 @@ class SystemListener
 
                 if(!empty($_user) && !is_string($_user)){
                     $params = array_merge($request->query->all(),  $request->request->all(), (array) $request->get('_route_params'));
-                    
+
                     if(!is_null($request->get('_route'))){
                         $log = new Log();
                         $log->setUser($_user);
@@ -151,7 +151,7 @@ class SystemListener
                         $log->setRoute($request->get('_route'));
                         $log->setLocale($locale);
                         $log->setParams(json_encode($params));
-                        
+
                         $this->entityManager->persist($log);
                         $this->entityManager->flush();
                     }
@@ -171,7 +171,7 @@ class SystemListener
                 $request->attributes->set('controller', $matches[3]);
                 $request->attributes->set('action',     $matches[4]);
             }
-            
+
 
             $language_rowset = $this->entityManager->getRepository('MajesCoreBundle:Language')->findAll();
 
@@ -187,7 +187,7 @@ class SystemListener
             $controllerObject->_default_lang = $default_lang;
             $controllerObject->_translator = $controllerObject->get('translator');
             $controllerObject->_is_multilingual = $is_multilingual;
-            
+
             $session = $request->getSession();
             $session->set('langs', $controllerObject->_langs);
             $session->set('_locale', $locale);
@@ -196,7 +196,7 @@ class SystemListener
             $session->set('google', $google);
             $session->set('facebook', $facebook);
             $session->set('twitter', $twitter);
-            
+
             /*NOTIFICATION*/
             // Google analytics
             // Google api
@@ -207,17 +207,17 @@ class SystemListener
 
             $notification->set(array('_source' => 'core'));
             $notification->reinit();
-            
+
             $google = $this->container->getParameter('google');
             if($ga_status == -1)
                 $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
             elseif($ga_status == -2)
                 $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
-            
-            if(!isset($google['analytics']) || empty($google['analytics'])) 
+
+            if(!isset($google['analytics']) || empty($google['analytics']))
                 $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
 
-       
+
         }
 
     }

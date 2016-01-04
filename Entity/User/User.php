@@ -117,7 +117,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $createDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="Majes\CoreBundle\Entity\Log", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Majes\CoreBundle\Entity\Log", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $logs;

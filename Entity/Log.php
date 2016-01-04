@@ -12,31 +12,31 @@ use Majes\CoreBundle\Annotation\DataTable;
  * @ORM\HasLifecycleCallbacks
  */
 class Log {
- 
+
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\Column(type="integer", nullable=false)
      * @ORM\GeneratedValue
      */
     private $id;
- 
+
     /**
-    * @ORM\column(name="locale", type="string", length=5, nullable=false) 
+    * @ORM\column(name="locale", type="string", length=5, nullable=false)
     */
     private $locale;
- 
+
     /**
-    * @ORM\column(name="name", type="string", length=200, nullable=false) 
+    * @ORM\column(name="name", type="string", length=200, nullable=false)
     */
     private $name;
 
     /**
-    * @ORM\column(name="route", type="string", length=200, nullable=false) 
+    * @ORM\column(name="route", type="string", length=200, nullable=false)
     */
     private $route;
 
     /**
-    * @ORM\column(name="params", type="text", nullable=false) 
+    * @ORM\column(name="params", type="text", nullable=false)
     */
     private $params;
 
@@ -55,7 +55,7 @@ class Log {
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-    
+
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
      */
@@ -69,18 +69,18 @@ class Log {
     public function getId() {
         return $this->id;
     }
- 
+
     public function setId($id) {
         $this->id = $id;
     }
-    
+
     /**
      * @DataTable(label="Locale", column="locale", isSortable=1, isSortable=1)
      */
     public function getLocale() {
         return $this->locale;
     }
- 
+
     public function setLocale($locale) {
         $this->locale = $locale;
     }
@@ -91,7 +91,7 @@ class Log {
     public function getName() {
         return $this->name;
     }
- 
+
     public function setName($name) {
         $this->name = $name;
     }
