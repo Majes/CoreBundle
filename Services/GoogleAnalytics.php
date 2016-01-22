@@ -88,7 +88,7 @@ class GoogleAnalytics{
 
   		    // Step 3. Query the Core Reporting API.
   		    $results = $this->getResults($analytics, $this->_params['view_id']);
-
+			if(empty($results)) return false;
   		    // Step 4. Output the results.
   		    return $this->saveResults($results);
 
@@ -115,7 +115,7 @@ class GoogleAnalytics{
 	   			//, array('segment'=>'gaid::-13') => tablet
 	   			//,
 	   		return $data;
-	   	}catch(Exception $e){
+	   	}catch(\Google_IO_Exception $e){
 	   		return;
 	   	}
 	}
