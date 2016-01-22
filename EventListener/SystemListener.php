@@ -200,23 +200,32 @@ class SystemListener
             /*NOTIFICATION*/
             // Google analytics
             // Google api
-            $ga = $this->container->get('majes.ga');
-            $ga_status = $ga->isUp();
+            $google = $this->container->getParameter('google');
+            $ga_is_active = true;
+            if($this->container->hasParameter('majesteel'))
+            {
+                $majesteel = $this->container->getParameter('majesteel');
+                if(isset($majesteel['ga_service'])) $ga_is_active = $majesteel['ga_service'];
+            }
 
             $notification = $this->container->get('majes.notification');
 
             $notification->set(array('_source' => 'core'));
             $notification->reinit();
 
-            $google = $this->container->getParameter('google');
-            if($ga_status == -1)
-                $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
-            elseif($ga_status == -2)
-                $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
+            if($ga_is_active){
+                $ga = $this->container->get('majes.ga');
+                $ga_status = $ga->isUp();
 
-            if(!isset($google['analytics']) || empty($google['analytics']))
-                $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
+                $google = $this->container->getParameter('google');
+                if($ga_status == -1)
+                    $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
+                elseif($ga_status == -2)
+                    $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
 
+                if(!isset($google['analytics']) || empty($google['analytics']))
+                    $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
+            }
 
         }
 
