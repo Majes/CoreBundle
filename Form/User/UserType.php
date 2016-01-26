@@ -1,4 +1,4 @@
-<?php 
+<?php
 // src/Majes/CoreBundle/Form/User/Myaccount.php
 namespace Majes\CoreBundle\Form\User;
 
@@ -21,7 +21,7 @@ class UserType extends AbstractType
         $this->session = $session;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Majes\CoreBundle\Entity\User\User',
@@ -43,13 +43,13 @@ class UserType extends AbstractType
             'constraints' => array(
                 new NotBlank()
             )));
-        
+
         $builder->add('lastname', 'text', array(
             'required' => true,
             'constraints' => array(
                 new NotBlank()
             )));
-        
+
         $builder->add('email', 'email', array(
             'required' => true,
             'constraints' => array(

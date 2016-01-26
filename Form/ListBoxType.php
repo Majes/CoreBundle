@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +18,7 @@ class ListBoxType extends AbstractType
         $this->session = $session;
     }
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+	public function configureOptions(OptionsResolverInterface $resolver)
 	{
     	$resolver->setDefaults(array(
     	    'data_class' => 'Majes\CoreBundle\Entity\ListBox',
@@ -35,7 +35,7 @@ class ListBoxType extends AbstractType
         	'constraints' => array(
        		    new NotBlank()
        		)));
-        
+
         $builder->add('content', 'collection', array(
         	'type' => new ListBoxItemType($this->session),
         	'prototype'=>true,

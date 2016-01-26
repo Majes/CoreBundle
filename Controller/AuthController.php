@@ -5,12 +5,13 @@ namespace Majes\CoreBundle\Controller;
 use Majes\CoreBundle\Controller\SystemController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller implements SystemController
 {
 
 
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         /*
          * The action's view can be rendered using render() method
@@ -18,7 +19,6 @@ class AuthController extends Controller implements SystemController
          *
          */
 
-        $request = $this->getRequest();
         $session = $request->getSession();
 
         // get the login error if there is one
@@ -38,7 +38,7 @@ class AuthController extends Controller implements SystemController
         return $this->render('MajesCoreBundle:Auth:login.html.twig');
     }
 
-    public function forgotAction()
+    public function forgotAction(Request $request)
     {
         /*
          * The action's view can be rendered using render() method
@@ -46,7 +46,6 @@ class AuthController extends Controller implements SystemController
          *
          */
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
 

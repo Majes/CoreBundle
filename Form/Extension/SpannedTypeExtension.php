@@ -25,7 +25,7 @@ class SpannedTypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('spanned'));
     }
@@ -54,4 +54,3 @@ class SpannedTypeExtension extends AbstractTypeExtension
             $view->vars['spanned'] = null;
     }
 }
-

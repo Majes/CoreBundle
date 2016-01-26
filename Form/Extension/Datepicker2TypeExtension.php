@@ -25,7 +25,7 @@ class Datepicker2TypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('datepicker'));
     }
@@ -54,4 +54,3 @@ class Datepicker2TypeExtension extends AbstractTypeExtension
             $view->vars['datepicker'] = null;
     }
 }
-

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Majes\CoreBundle\Form\Language;
 
@@ -17,7 +17,7 @@ class LanguageTranslationType extends AbstractType
         $this->_lang = $lang;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Majes\CoreBundle\Entity\LanguageTranslation',
@@ -35,14 +35,14 @@ class LanguageTranslationType extends AbstractType
                 new NotBlank()
             )));
 
-        
-      
+
+
         $builder->add('translation', 'textarea', array(
             'required' => true));
 
         $builder->add('locale', 'hidden', array('empty_data' => $this->_lang));
 
-     
+
     }
 
     public function getName()

@@ -25,7 +25,7 @@ class MediaPickerTypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('mediapicker'));
     }
@@ -54,4 +54,3 @@ class MediaPickerTypeExtension extends AbstractTypeExtension
             $view->vars['mediapicker'] = null;
     }
 }
-

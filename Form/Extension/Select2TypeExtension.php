@@ -25,7 +25,7 @@ class Select2TypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('select2'));
     }
@@ -54,4 +54,3 @@ class Select2TypeExtension extends AbstractTypeExtension
             $view->vars['select2'] = null;
     }
 }
-

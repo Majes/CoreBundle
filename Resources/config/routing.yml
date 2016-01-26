@@ -1,169 +1,169 @@
 _admin_index:
-    pattern:  /dashboard
+    path:  /dashboard
     defaults: { _controller: MajesCoreBundle:Index:dashboard }
 
 _admin_login:
-    pattern:  /authentification
+    path:  /authentification
     defaults: { _controller: MajesCoreBundle:Auth:login }
 
 _admin_login_check:
-    pattern:   /authentification_check
+    path:   /authentification_check
     defaults: { _controller: MajesCoreBundle:Auth:loginCheck }
 
 _admin_forgot:
-    pattern:   /forgot_password
+    path:   /forgot_password
     defaults: { _controller: MajesCoreBundle:Auth:forgot }
 
 _admin_logout:
-    pattern:   /deconnexion
+    path:   /deconnexion
     defaults: { _controller: MajesCoreBundle:Auth:logout }
 
 _admin_emptycache:
-    pattern:  /cache
+    path:  /cache
     defaults: { _controller: MajesCoreBundle:Index:emptycache }
 
 _admin_myaccount:
-    pattern:  /myaccount
+    path:  /myaccount
     defaults: { _controller: MajesCoreBundle:Index:myaccount }
 
 _admin_domains:
-    pattern:  /domains
+    path:  /domains
     defaults: { _controller: MajesCoreBundle:Index:domains }
 
 _admin_domain_edit:
-    pattern:  /domain/edit/{id}
+    path:  /domain/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:domainEdit, id: null }
 
 _admin_domain_delete:
-    pattern:  /domain/delete/{id}
+    path:  /domain/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:domainDelete }
 
 _admin_domain_undelete:
-    pattern:  /domain/undelete/{id}
+    path:  /domain/undelete/{id}
     defaults: { _controller: MajesCoreBundle:Index:domainUndelete }
 
 _admin_domain_export:
-    pattern:  /domain/export
+    path:  /domain/export
     defaults: { _controller: MajesCoreBundle:Index:domainExport }
 
 _admin_languages:
-    pattern:  /languages
+    path:  /languages
     defaults: { _controller: MajesCoreBundle:Index:languages }
 
 _admin_languages_import:
-    pattern:  /languages/import
+    path:  /languages/import
     defaults: { _controller: MajesCoreBundle:Index:languageImport }
 
 _admin_language_edit:
-    pattern:  /language/edit/{id}
+    path:  /language/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageEdit, id: null }
 
 _admin_language_delete:
-    pattern:  /language/delete/{id}
+    path:  /language/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageDelete }
 
 _admin_language_export:
-    pattern:  /language/export
+    path:  /language/export
     defaults: { _controller: MajesCoreBundle:Index:languageExport }
 
 _admin_language_parse:
-    pattern:  /languages/messages/parse
+    path:  /languages/messages/parse
     defaults: { _controller: MajesCoreBundle:Index:languageParse }
 
 _admin_language_messages:
-    pattern:  /language/messages
+    path:  /language/messages
     defaults: { _controller: MajesCoreBundle:Index:languageMessages }
 
 _admin_language_message_edit:
-    pattern:  /language/message/edit/{id}
+    path:  /language/message/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageMessageEdit, id: null }
 
 _admin_language_message_delete:
-    pattern:  /language/message/delete/{id}
+    path:  /language/message/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:languageMessageDelete }
 
 _admin_language_message_export:
-    pattern:  /language/message/export
+    path:  /language/message/export
     defaults: { _controller: MajesCoreBundle:Index:languageMessageExport }
 
 _admin_users:
-    pattern:  /users
+    path:  /users
     defaults: { _controller: MajesCoreBundle:Index:users }
 
 _admin_user_edit:
-    pattern:  /user/edit/{id}
+    path:  /user/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:userEdit, id: null }
 
 _admin_user_export:
-    pattern:  /user/export/
+    path:  /user/export/
     defaults: { _controller: MajesCoreBundle:Index:userExport}
 
 _admin_user_activity:
-    pattern:  /user/activity/{id}
+    path:  /user/activity/{id}
     defaults: { _controller: MajesCoreBundle:Index:userActivity, id: null }
 
 _admin_user_role:
-    pattern:  /user/role/{id}
+    path:  /user/role/{id}
     defaults: { _controller: MajesCoreBundle:Index:userRole }
 
 _admin_user_delete:
-    pattern:  /user/delete/{id}
+    path:  /user/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:userDelete }
 
 _admin_user_undelete:
-    pattern:  /user/undelete/{id}
+    path:  /user/undelete/{id}
     defaults: { _controller: MajesCoreBundle:Index:userUndelete }
 
 _admin_roles:
-    pattern:  /roles
+    path:  /roles
     defaults: { _controller: MajesCoreBundle:Index:roles }
 
 _admin_role_edit:
-    pattern:  /role/edit/{id}
+    path:  /role/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:roleEdit, id: null }
 
 _admin_role_delete:
-    pattern:  /role/delete/{id}
+    path:  /role/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:roleDelete }
 
 _admin_role_undelete:
-    pattern:  /role/undelete/{id}
+    path:  /role/undelete/{id}
     defaults: { _controller: MajesCoreBundle:Index:roleUndelete }
 
 _admin_trashs:
-    pattern:  /trashs
+    path:  /trashs
     defaults: { _controller: MajesCoreBundle:Index:trashs, context: full }
 
 _admin_listboxs_list:
-    pattern:  /listboxs
+    path:  /listboxs
     defaults: { _controller: MajesCoreBundle:Index:listboxs}
 
 _admin_listbox_edit:
-    pattern:  /listbox/edit/{id}
+    path:  /listbox/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:listboxEdit, id: null}
 
 _admin_listbox_delete:
-    pattern:  /listbox/delete/{id}
+    path:  /listbox/delete/{id}
     defaults: { _controller: MajesCoreBundle:Index:listboxDelete}
 
 _admin_listbox_undelete:
-    pattern:  /listbox/undelete/{id}
+    path:  /listbox/undelete/{id}
     defaults: { _controller: MajesCoreBundle:Index:listboxUndelete}
 
 _admin_sitemap:
-    pattern:  /sitemap/{host_id}
+    path:  /sitemap/{host_id}
     defaults: { _controller: MajesCoreBundle:Index:sitemap }
 
 
 _admin_management_emails:
-    pattern:  /emails
+    path:  /emails
     defaults: { _controller: MajesCoreBundle:Index:emails }
 
 _admin_management_emails_edit:
-    pattern:  /email/edit/{id}
+    path:  /email/edit/{id}
     defaults: { _controller: MajesCoreBundle:Index:emailEdit, id: null }
 
 
 _admin_management_emails_send:
-    pattern:  /email/send/{id}
+    path:  /email/send/{id}
     defaults: { _controller: MajesCoreBundle:Index:emailSend }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 // src/Majes/CoreBundle/Form/User/Myaccount.php
 namespace Majes\CoreBundle\Form\Language;
 
@@ -19,7 +19,7 @@ class LanguageType extends AbstractType
         $this->session = $session;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Majes\CoreBundle\Entity\Language',
@@ -36,7 +36,7 @@ class LanguageType extends AbstractType
             'constraints' => array(
                 new NotBlank()
             )));
-        
+
         $builder->add('locale', 'text', array(
             'required' => true,
             'constraints' => array(

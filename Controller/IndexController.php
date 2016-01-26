@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Majes\CoreBundle\Conversion\DataTableConverter;
@@ -45,11 +46,10 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_ADMIN")
      *
      */
-    public function dashboardAction()
+    public function dashboardAction(Request $request)
     {
         $ga = $this->container->get('majes.ga');
 
-        $request = $this->getRequest();
         if($request->getMethod() == 'POST'){
 
             $chatObj = new Chat();
@@ -90,9 +90,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_ADMIN")
      *
      */
-    public function myaccountAction(){
+    public function myaccountAction(Request $request){
 
-        $request = $this->getRequest();
 
         $form = $this->createForm(new Myaccount($request->getSession()), $this->_user);
 
@@ -190,9 +189,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageEditAction($id){
+    public function languageEditAction(Request $request, $id){
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $language = $em->getRepository('MajesCoreBundle:Language')
@@ -239,8 +237,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageDeleteAction($id){
-        $request = $this->getRequest();
+    public function languageDeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $language = $em->getRepository('MajesCoreBundle:Language')
@@ -335,9 +332,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageImportAction()
+    public function languageImportAction(Request $request)
     {
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -452,8 +448,7 @@ class IndexController extends Controller implements SystemController
     }
 
 
-    public function SitemapAction($host_id = null){
-        $request = $this->getRequest();
+    public function SitemapAction(Request $request, $host_id = null){
 
         $em = $this->getDoctrine()->getManager();
         $CmsServices = $this->container->get('majescms.cms_service');
@@ -506,9 +501,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function domainEditAction($id){
+    public function domainEditAction(Request $request, $id){
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $host = $em->getRepository('MajesCoreBundle:Host')
@@ -564,8 +558,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function domainDeleteAction($id){
-        $request = $this->getRequest();
+    public function domainDeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $host = $em->getRepository('MajesCoreBundle:Host')
@@ -604,8 +597,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function domainUndeleteAction($id){
-        $request = $this->getRequest();
+    public function domainUndeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $host = $em->getRepository('MajesCoreBundle:Host')
@@ -703,9 +695,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageMessagesAction(){
+    public function languageMessagesAction(Request $request){
         $_results_per_page = 20;
-        $request = $this->getRequest();
 
         $catalogues = $request->get('catalogues');
         $langs = $request->get('langs');
@@ -757,8 +748,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageParseAction(){
-        $request = $this->getRequest();
+    public function languageParseAction(Request $request){
+
         $em = $this->getDoctrine()->getManager();
 
         $translator = $this->container->get('majescore.translator');
@@ -803,11 +794,10 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function languageMessageEditAction($id)
+    public function languageMessageEditAction(Request $request, $id)
     {
         $token_id = $id;
         $em = $this->getDoctrine()->getManager();
-        $request = $this->getRequest();
 
 
 
@@ -967,8 +957,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function LanguageMessageDeleteAction($id){
-        $request = $this->getRequest();
+    public function LanguageMessageDeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $translation = $em->getRepository('MajesCoreBundle:LanguageToken')
@@ -1088,13 +1077,12 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function usersAction(){
+    public function usersAction(Request $request){
 
         $em = $this->getDoctrine()->getManager();
         /*$users = $em->getRepository('MajesCoreBundle:User\User')
             ->findBy(array('deleted' => false));*/
 
-        $request = $this->getRequest();
 
         if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
             $users = array_filter($users,function($user){
@@ -1157,9 +1145,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function userEditAction($id){
+    public function userEditAction(Request $request, $id){
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
@@ -1333,11 +1320,10 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function userActivityAction($id){
+    public function userActivityAction(Request $request, $id){
 
         $_results_per_page = 10;
 
-        $request = $this->getRequest();
 
         $type = $request->get('type');
         $page = $request->get('page');
@@ -1376,9 +1362,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function userRoleAction($id){
+    public function userRoleAction(Request $request, $id){
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')
@@ -1428,8 +1413,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function userDeleteAction($id){
-        $request = $this->getRequest();
+    public function userDeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')
@@ -1455,8 +1439,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function userUndeleteAction($id){
-        $request = $this->getRequest();
+    public function userUndeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')
@@ -1501,9 +1484,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function roleEditAction($id){
+    public function roleEditAction(Request $request, $id){
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $role = $em->getRepository('MajesCoreBundle:User\Role')
@@ -1544,8 +1526,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function roleDeleteAction($id){
-        $request = $this->getRequest();
+    public function roleDeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $role = $em->getRepository('MajesCoreBundle:User\Role')
@@ -1571,8 +1552,7 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function roleUndeleteAction($id){
-        $request = $this->getRequest();
+    public function roleUndeleteAction(Request $request, $id){
 
         $em = $this->getDoctrine()->getManager();
         $role = $em->getRepository('MajesCoreBundle:User\Role')
@@ -1592,14 +1572,13 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function TrashsAction($context)
+    public function TrashsAction(Request $request, $context)
     {
         $_results_per_page = 10;
 
         $em = $this->getDoctrine()->getManager();
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        $request = $this->getRequest();
         $session = $this->get('session');
 
         $filter = $request->get("types");
@@ -1690,10 +1669,9 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
      *
      */
-    public function listboxEditAction($id)
+    public function listboxEditAction(Request $request, $id)
     {
 
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $listbox = $em->getRepository('MajesCoreBundle:ListBox')
@@ -1757,10 +1735,9 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
      *
      */
-    public function listboxDeleteAction($id) {
+    public function listboxDeleteAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
-        $request = $this->getRequest();
 
         $list = $em->getRepository('MajesCoreBundle:ListBox')
                 ->findOneById($id);
@@ -1779,10 +1756,9 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_CMS_DESIGNER,ROLE_SUPERADMIN")
      *
      */
-    public function listboxUndeleteAction($id) {
+    public function listboxUndeleteAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
-        $request = $this->getRequest();
 
         $list = $em->getRepository('MajesCmsBundle:List')
                 ->findOneById($id);
@@ -1801,10 +1777,9 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function emailsAction(){
+    public function emailsAction(Request $request){
 
         $em = $this->getDoctrine()->getManager();
-        $request = $this->getRequest();
 
 
 
@@ -1871,9 +1846,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function emailEditAction($id){
+    public function emailEditAction(Request $request, $id){
 
-        $request = $this->getRequest();
         $sent = $request->get('sent', 1);
 
         $em = $this->getDoctrine()->getManager();
@@ -1912,9 +1886,8 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN,ROLE_ADMIN_USER")
      *
      */
-    public function emailSendAction($id){
+    public function emailSendAction(Request $request, $id){
 
-        $request = $this->getRequest();
         $sent = $request->get('sent', 1);
 
         $em = $this->getDoctrine()->getManager();

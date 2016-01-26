@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +18,7 @@ class ListBoxItemType extends AbstractType
         $this->session = $session;
     }
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+	public function configureOptions(OptionsResolverInterface $resolver)
 	{
     	$resolver->setDefaults(array(
     	    'csrf_protection' => false
@@ -35,7 +35,7 @@ class ListBoxItemType extends AbstractType
         $builder->add('slug', 'text', array(
             'required' => false,
             ));
-        
+
         $builder->add('value', 'text', array(
         	'required' => true,
         	'constraints' => array(

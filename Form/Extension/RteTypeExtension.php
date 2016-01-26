@@ -25,7 +25,7 @@ class RteTypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('rte'));
     }
@@ -54,4 +54,3 @@ class RteTypeExtension extends AbstractTypeExtension
             $view->vars['rte'] = null;
     }
 }
-

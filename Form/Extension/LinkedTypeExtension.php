@@ -25,7 +25,7 @@ class LinkedTypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('linked'));
     }
@@ -54,4 +54,3 @@ class LinkedTypeExtension extends AbstractTypeExtension
             $view->vars['linked'] = null;
     }
 }
-

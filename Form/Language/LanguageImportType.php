@@ -1,4 +1,4 @@
-<?php 
+<?php
 // src/Majes/CoreBundle/Form/User/Myaccount.php
 namespace Majes\CoreBundle\Form\Language;
 
@@ -14,7 +14,7 @@ class LanguageImportType extends AbstractType
 {
 
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
@@ -29,7 +29,7 @@ class LanguageImportType extends AbstractType
             'required' => false,
             'mapped' => false,
             'label' => 'Csv file'));
-     
+
 
     }
 

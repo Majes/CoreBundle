@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Majes\CoreBundle\Form\Language;
 
@@ -18,7 +18,7 @@ class LanguageTokenType extends AbstractType
         $this->_lang = $lang;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Majes\CoreBundle\Entity\LanguageToken',
@@ -30,7 +30,7 @@ class LanguageTokenType extends AbstractType
     {
 
 
-        
+
         $builder->add('token', 'text', array(
             'required' => true,
             'constraints' => array(

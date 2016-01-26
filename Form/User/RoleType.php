@@ -1,4 +1,4 @@
-<?php 
+<?php
 // src/Majes/CoreBundle/Form/User/Myaccount.php
 namespace Majes\CoreBundle\Form\User;
 
@@ -14,7 +14,7 @@ class RoleType extends AbstractType
 {
 
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+	public function configureOptions(OptionsResolverInterface $resolver)
 	{
     	$resolver->setDefaults(array(
     	    'data_class' => 'Majes\CoreBundle\Entity\User\Role',
@@ -30,7 +30,7 @@ class RoleType extends AbstractType
             'constraints' => array(
                 new NotBlank()
             )));
-        
+
         $builder->add('name', 'text', array(
             'required' => true,
             'constraints' => array(

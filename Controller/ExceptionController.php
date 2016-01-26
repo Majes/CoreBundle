@@ -4,6 +4,7 @@ namespace Majes\CoreBundle\Controller;
 
 use Majes\CoreBundle\Controller\SystemController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class ExceptionController extends Controller implements SystemController
 {
@@ -17,5 +18,5 @@ class ExceptionController extends Controller implements SystemController
         return $this->render('MajesCoreBundle:Exception:notfound.html.twig');
     }
 
-    
+
 }

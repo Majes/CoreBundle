@@ -1,4 +1,4 @@
-<?php 
+<?php
 // src/Acme/TaskBundle/Form/Type/TagType.php
 namespace Majes\CoreBundle\Form\User;
 
@@ -22,7 +22,7 @@ class UserRoleType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+
     	$roles = $this->em->getRepository('MajesCoreBundle:User\Role')
             ->findBy(array('deleted' => false));
 
@@ -44,7 +44,7 @@ class UserRoleType extends AbstractType
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
 
     }
