@@ -27,7 +27,7 @@ class MaxCharTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('maxchar', 'count'));
+        $resolver->setDefined(array('maxchar', 'count'));
     }
 
     /**

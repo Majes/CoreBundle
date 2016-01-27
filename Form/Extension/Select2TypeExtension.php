@@ -27,7 +27,7 @@ class Select2TypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('select2'));
+        $resolver->setDefined(array('select2'));
     }
 
     /**

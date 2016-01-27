@@ -27,7 +27,7 @@ class SwitchedTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('switched'));
+        $resolver->setDefined(array('switched'));
     }
 
     /**

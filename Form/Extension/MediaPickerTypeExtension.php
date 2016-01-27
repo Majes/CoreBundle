@@ -27,7 +27,7 @@ class MediaPickerTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('mediapicker'));
+        $resolver->setDefined(array('mediapicker'));
     }
 
     /**

@@ -27,7 +27,7 @@ class LinkedTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('linked'));
+        $resolver->setDefined(array('linked'));
     }
 
     /**

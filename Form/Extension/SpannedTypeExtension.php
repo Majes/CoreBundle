@@ -27,7 +27,7 @@ class SpannedTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('spanned'));
+        $resolver->setDefined(array('spanned'));
     }
 
     /**

@@ -1,13 +1,13 @@
 services:
     kernel.listener.system_listener:
         class: Majes\CoreBundle\EventListener\SystemListener
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@router"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container", "@router"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
     kernel.listener.exception_listener:
         class: Majes\CoreBundle\EventListener\ExceptionListener
-        arguments: [@templating, @service_container, "@security.context"]
+        arguments: [@templating, @service_container, "@security.token_storage"]
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 

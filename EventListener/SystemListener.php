@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -39,7 +40,7 @@ class SystemListener
     private $router = null;
 
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, Container $container, $router)
+    public function __construct(EntityManager $entityManager, TokenStorage $securityContext, Container $container, $router)
     {
         $this->entityManager = $entityManager;
         $this->securityContext = $securityContext;

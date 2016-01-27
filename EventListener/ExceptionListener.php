@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
@@ -16,7 +17,7 @@ class ExceptionListener
     private $securityContext = null;
     protected $em;
 
-    public function __construct(EngineInterface $templating, Container $container, SecurityContext $securityContext)
+    public function __construct(EngineInterface $templating, Container $container, TokenStorage $securityContext)
     {
 
         $this->templating = $templating;

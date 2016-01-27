@@ -27,7 +27,7 @@ class RteTypeExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setOptional(array('rte'));
+        $resolver->setDefined(array('rte'));
     }
 
     /**

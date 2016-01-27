@@ -1084,7 +1084,7 @@ class IndexController extends Controller implements SystemController
             ->findBy(array('deleted' => false));*/
 
 
-        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
+        if(!$this->get('security.authorization_checker')->isGranted('ROLE_SUPERADMIN'))
             $users = array_filter($users,function($user){
                 if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId())){
                     return false;
@@ -1151,7 +1151,7 @@ class IndexController extends Controller implements SystemController
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('MajesCoreBundle:User\User')->findOneById($id);
 
-        if(!$this->get('security.context')->isGranted('ROLE_SUPERADMIN'))
+        if(!$this->get('security.authorization_checker')->isGranted('ROLE_SUPERADMIN'))
             if($user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()))
                 throw new AccessDeniedException();
 
@@ -1420,7 +1420,7 @@ class IndexController extends Controller implements SystemController
             ->findOneById($id);
 
         if(!is_null($user)){
-            if( $this->get('security.context')->isGranted('ROLE_ADMIN_USER') && $user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()) )
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN_USER') && $user->hasRole($this->getDoctrine()->getManager()->getRepository('MajesCoreBundle:User\Role')->findOneBy(array('deleted' => false, 'role' => 'ROLE_SUPERADMIN'))->getId()) )
               throw new AccessDeniedException();
 
             foreach ($user->getRoles() as $role) {
