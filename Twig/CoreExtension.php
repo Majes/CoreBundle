@@ -10,11 +10,13 @@ class CoreExtension extends \Twig_Extension
     private $_container;
     private $_em;
     private $_router;
+    private $_mediaService;
 
-    public function __construct(ContainerInterface $container = null, $em, $router){
+    public function __construct(ContainerInterface $container = null, $em, $router, $mediaService){
         $this->_em = $em;
         $this->_container = $container;
         $this->_router = $router;
+        $this->_mediaService = $mediaService;
     }
 
     public function getFunctions()
@@ -99,6 +101,11 @@ class CoreExtension extends \Twig_Extension
         if($format == 'datetime'){
             if(is_null($value)) return '';
             return $value->format('d/m/Y');
+        }elseif($format == 'media'){
+
+            $src = $this->_mediaService->teelMediaLoad($value, 75, "auto");
+            return '<img src="'.$src.'" width="75" />';
+
         }else
             return $value;
 

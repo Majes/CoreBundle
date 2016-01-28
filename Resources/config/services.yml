@@ -69,7 +69,7 @@ services:
 
     majescore.twig.core_extension:
         class: Majes\CoreBundle\Twig\CoreExtension
-        arguments:  ["@service_container","@doctrine.orm.entity_manager", @router]
+        arguments:  ["@service_container","@doctrine.orm.entity_manager", @router, @majesmedia.mediaService]
         tags:
             - { name: twig.extension }
 
