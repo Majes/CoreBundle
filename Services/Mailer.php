@@ -46,7 +46,11 @@ class Mailer
 
     public function setFrom($from = null){
         $this->_email->setFrom($from);
-        $this->_mailerDb->setAddressFrom($from);
+        if(is_array($from)){
+            $this->_mailerDb->setAddressFrom(json_encode($from));
+        }else {
+            $this->_mailerDb->setAddressFrom($from);
+        }
 
     }
 
