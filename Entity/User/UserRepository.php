@@ -84,7 +84,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $result;
     }
 
-    public function findAllByRole($role)
+    public function findAllByRole($role, $orderBy = null)
     {
         $q = $this
             ->createQueryBuilder('u')
@@ -92,6 +92,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->where('r.role = :role')
             ->setParameter('role', $role)
             ->getQuery();
+
+        if(!is_null($orderBy) && is_array($orderBy)){
+            $qb->orderBy('u.'.$orderBy[0], $orderBy[1]);
+        }
 
         $result = $q->getResult();
 
