@@ -90,14 +90,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->createQueryBuilder('u')
             ->innerJoin('u.roles', 'r')
             ->where('r.role = :role')
-            ->setParameter('role', $role)
-            ->getQuery();
+            ->setParameter('role', $role);
+
 
         if(!is_null($orderBy) && is_array($orderBy)){
-            $qb->orderBy('u.'.$orderBy[0], $orderBy[1]);
+            $q->orderBy('u.'.$orderBy[0], $orderBy[1]);
         }
 
-        $result = $q->getResult();
+        $query = $q->getQuery();
+        $result = $query->getResult();
 
         return $result;
     }

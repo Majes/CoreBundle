@@ -50,6 +50,10 @@ class UserType extends AbstractType
                 new NotBlank()
             )));
 
+        $builder->add('pseudo', 'text', array(
+                'required' => false,
+            ));
+
         $builder->add('email', 'email', array(
             'required' => true,
             'constraints' => array(

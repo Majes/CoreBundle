@@ -48,6 +48,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $username;
 
     /**
+     * @ORM\Column(name="pseudo", type="string", length=255, nullable=true)
+     */
+    private $pseudo;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $salt;
@@ -187,6 +192,16 @@ class User implements AdvancedUserInterface, \Serializable
         $this->media = $media;
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPseudo($pseudo)
+    {
+        $this->pseudo = $pseudo;
+        return $this;
+    }
+
 
     /**
      * @inheritDoc
@@ -349,6 +364,14 @@ class User implements AdvancedUserInterface, \Serializable
     public function getLastname()
     {
         return $this->lastname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPseudo()
+    {
+        return $this->pseudo;
     }
 
 
