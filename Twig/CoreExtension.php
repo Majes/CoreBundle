@@ -54,38 +54,42 @@ class CoreExtension extends \Twig_Extension
         $count = 0;
         foreach ($dataTemp['datas'] as $data) {
 
-            //config actions
-            $actions = '';
-            if($config['object']['hasPreview']) $actions .= '<a class="table-actions" href=""><i class="icon-eye-open"></i></a>';
-            $params['id'] = $data->getId();
-            if(isset($dataTemp['urls']['params']))
-                foreach($dataTemp['urls']['params'] as $key => $param)
-                    $params[] = array($key => $coreTwig->get($data, $param['key']));
+            try{
 
-            if(isset($dataTemp['urls']['edit']))
-                $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['edit'], $params).'" class="table-actions"><i class="icon-pencil"></i></a>';
+                //config actions
+                $actions = '';
+                if($config['object']['hasPreview']) $actions .= '<a class="table-actions" href=""><i class="icon-eye-open"></i></a>';
+                $params['id'] = $data->getId();
+                if(isset($dataTemp['urls']['params']))
+                    foreach($dataTemp['urls']['params'] as $key => $param)
+                        $params[] = array($key => $coreTwig->get($data, $param['key']));
 
-            if(isset($dataTemp['urls']['delete']))
-                if(method_exists($data, 'getIsSystem') && !$data['isSystem']) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
-                elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
+                if(isset($dataTemp['urls']['edit']))
+                    $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['edit'], $params).'" class="table-actions"><i class="icon-pencil"></i></a>';
 
-            foreach($dataTemp['urls'] as $action => $url){
+                if(isset($dataTemp['urls']['delete']))
+                    if(method_exists($data, 'getIsSystem') && !$data['isSystem']) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
+                    elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
 
-                if(!in_array($action, array('edit', 'export', 'add', 'delete', 'params'))){
+                foreach($dataTemp['urls'] as $action => $url){
 
-                    $actions .= '<a href="'.$this->_router->generate($url['path'], $params).'" class="table-actions"><i class="'.$url['icon'].'"></i></a>';
+                    if(!in_array($action, array('edit', 'export', 'add', 'delete', 'params'))){
+
+                        $actions .= '<a href="'.$this->_router->generate($url['path'], $params).'" class="table-actions"><i class="'.$url['icon'].'"></i></a>';
+
+                    }
 
                 }
 
-            }
+                unset($row);
+                foreach($config['column'] as $config_item){
+                    $row[] = $this->get($data, $config_item['column'], $config_item['format']);
+                }
+                $row[] = $actions;
+                $rows[] = $row;
+                $count++;
 
-            unset($row);
-            foreach($config['column'] as $config_item){
-                $row[] = $this->get($data, $config_item['column'], $config_item['format']);
-            }
-            $row[] = $actions;
-            $rows[] = $row;
-            $count++;
+            }catch(\Doctrine\ORM\EntityNotFoundException $e){}
         }
 
         $recordsTotal = isset($dataTemp['recordsTotal']) ? $dataTemp['recordsTotal'] : count($dataTemp['datas']);
