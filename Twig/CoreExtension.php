@@ -62,7 +62,7 @@ class CoreExtension extends \Twig_Extension
                 $params['id'] = $data->getId();
                 if(isset($dataTemp['urls']['params']))
                     foreach($dataTemp['urls']['params'] as $key => $param)
-                        $params[] = array($key => $coreTwig->get($data, $param['key']));
+                        $params[] = array($key => $this->get($data, $param['key']));
 
                 if(isset($dataTemp['urls']['edit']))
                     $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['edit'], $params).'" class="table-actions"><i class="icon-pencil"></i></a>';
