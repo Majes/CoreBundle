@@ -61,8 +61,9 @@ class CoreExtension extends \Twig_Extension
                 if($config['object']['hasPreview']) $actions .= '<a class="table-actions" href=""><i class="icon-eye-open"></i></a>';
                 $params['id'] = $data->getId();
                 if(isset($dataTemp['urls']['params']))
-                    foreach($dataTemp['urls']['params'] as $key => $param)
+                    foreach($dataTemp['urls']['params'] as $key => $param){
                         $params[$key] = $this->get($data, $param['key']);
+                    }
 
                 if(isset($dataTemp['urls']['edit']))
                     $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['edit'], $params).'" class="table-actions"><i class="icon-pencil"></i></a>';
@@ -72,6 +73,11 @@ class CoreExtension extends \Twig_Extension
                     elseif(!method_exists($data, 'getIsSystem')) $actions .= '<a href="'.$this->_router->generate($dataTemp['urls']['delete'], $params).'" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete(\''.$dataTemp['message'].'\')"><i class="icon-trash"></i></a>';
 
                 foreach($dataTemp['urls'] as $action => $url){
+
+                    if(isset($url['params']))
+                        foreach($url['params'] as $key => $param){
+                            $params[$key] = $this->get($data, $param['key']);
+                        }
 
                     if(!in_array($action, array('edit', 'export', 'add', 'delete', 'params'))){
 
