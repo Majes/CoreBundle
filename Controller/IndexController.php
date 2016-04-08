@@ -408,7 +408,7 @@ class IndexController extends Controller implements SystemController
 
                             $translationValue = empty($translationToken) ? $row['token'] : $translationToken;
                             $languageTranslationRow->setLocale($localeToken);
-                            $languageTranslationRow->setTranslation($translationToken);
+                            $languageTranslationRow->setTranslation($translationValue);
                             $languageTranslationRow->setCatalogue($row['catalogue']);
                             $languageTranslationRow->setToken($tokenRow);
 
