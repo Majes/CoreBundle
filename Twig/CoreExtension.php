@@ -76,7 +76,11 @@ class CoreExtension extends \Twig_Extension
 
                     if(isset($url['params']))
                         foreach($url['params'] as $key => $param){
-                            $params[$key] = $this->get($data, $param['key']);
+                            if(isset($param['value'])){
+                                $params[$key] = $param['value'];
+                            }else {
+                                $params[$key] = $this->get($data, $param['key']);
+                            }
                         }
 
                     if(!in_array($action, array('edit', 'export', 'add', 'delete', 'params'))){

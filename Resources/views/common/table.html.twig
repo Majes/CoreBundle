@@ -33,6 +33,10 @@
                     {% if urls.edit is defined %}<a href="{{ path(urls.edit, params) }}" class="table-actions"><i class="icon-pencil"></i></a>{% endif %}
                     {% if urls.delete is defined %}{% if data.isSystem is defined %}{% if not data.isSystem %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans({}, 'admin') }}')"><i class="icon-trash"></i></a>{% endif %}{% else %}<a href="{{ path(urls.delete, params) }}" class="table-actions" onclick="return CoreAdmin.Common.confirmDelete('{{ message|trans({}, 'admin') }}')"><i class="icon-trash"></i></a>{% endif %}{% endif %}
                     {% for action, url in urls %}{% if action not in ['edit', 'export', 'add', 'delete', 'params', 'parse'] %}
+                    {% if url.params is defined %}{% for key, paramU in url.params %}
+                    {% if paramU.value is defined %}{% set params = params|merge({ (key):paramU.value}) %}
+                    {% else %}{% set params = params|merge({ (key):get(data, paramU.key)}) %}{% endif %}
+                    {% endfor %}{% endif %}
                     <a href="{{ path(url.path, params) }}" class="table-actions"><i class="{{url.icon}}"></i></a>
                     {% endif %}{% endfor %}
                   </div>
