@@ -33,7 +33,6 @@ use Majes\CoreBundle\Form\User\RoleType;
 use Majes\CoreBundle\Form\Language\LanguageTokenType;
 use Majes\CoreBundle\Form\Language\LanguageTranslationType;
 use Majes\CoreBundle\Form\ListBoxType;
-use Majes\CoreBundle\Utils\TeelFunction;
 use Majes\CoreBundle\Annotation\DataTable;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -152,17 +151,19 @@ class IndexController extends Controller implements SystemController
      * @Secure(roles="ROLE_SUPERADMIN")
      *
      */
-    public function emptycacheAction()
-    {
-        /*Clear cache*/
-        if(is_dir($this->get('kernel')->getCacheDir())) {
-            TeelFunction::delTree($this->get('kernel')->getCacheDir(), false, array('annotations'));
+     public function emptycacheAction()
+     {
+         /*Clear cache*/
+         if(is_dir($this->get('kernel')->getCacheDir())) {
 
-            echo json_encode(array('error' => false, 'message' => 'Cache has been cleared successfully!'));
-        }
+             $majescoreUtils = $this->container->get('majescore.utils');
 
-        return new Response();
-    }
+             $majescoreUtils->delTree($this->get('kernel')->getCacheDir(), false, array('annotations'));
+             echo json_encode(array('error' => false, 'message' => 'Cache has been cleared successfully!'));
+         }
+
+         return new Response();
+     }
 
     /**
      * @Secure(roles="ROLE_SUPERADMIN")
@@ -941,7 +942,7 @@ class IndexController extends Controller implements SystemController
         $edit = !is_null($token_id) ? 1 : 0;
 
 
-        $pageSubTitle = is_null($token) ? $this->_translator->trans('Add a new translation') : $this->_translator->trans('Edit translation') .' '. (!is_null($token->getToken()) ? $token->getToken() : '--');
+        $pageSubTitle = is_null($token) ? $this->_translator->trans('Add a new translation') : $this->_translator->trans('Edit translation', array(), 'admin') .' '. (!is_null($token->getToken()) ? $token->getToken() : '--');
         return $this->render('MajesCoreBundle:Index:language-message-edit.html.twig', array(
             'pageTitle' => $this->_translator->trans('Language translation'),
             'pageSubTitle' => $pageSubTitle,
