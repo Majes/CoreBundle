@@ -57,6 +57,12 @@ class Host{
      */
     private $deleted=0;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
+    private $user;
+
 
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
@@ -237,5 +243,22 @@ class Host{
     public function getDefaultLocale()
     {
         return $this->defaultLocale;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \stdClass
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }
