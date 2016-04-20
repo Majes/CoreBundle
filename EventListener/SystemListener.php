@@ -124,7 +124,8 @@ class SystemListener
             $is_multilingual = $this->container->getParameter('is_multilingual');
 
             $env = $this->container->get( 'kernel' )->getEnvironment();
-            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod') {
+
+            if(isset($parameters['maintenance']) && $parameters['maintenance'] && $env == 'prod' && $_route != $parameters['maintenance_route']) {
                 $redirectUrl = $this->router->generate($parameters['maintenance_route']);
                 header('Location: '.$redirectUrl);
                 exit;
