@@ -7,29 +7,31 @@ use Majes\CoreBundle\Annotation\DataTable;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="core_language")
+ * @ORM\Table(name="core_language", indexes={
+ *      @ORM\Index(name="locale", columns={"locale"})
+ * })
  */
 class Language {
- 
+
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\Column(type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
- 
+
     /**
-    * @ORM\column(name="locale", type="string", length=200, nullable=false) 
+    * @ORM\column(name="locale", type="string", length=200, nullable=false)
     */
     private $locale;
- 
+
     /**
-    * @ORM\column(name="name", type="string", length=200, nullable=false) 
+    * @ORM\column(name="name", type="string", length=200, nullable=false)
     */
     private $name;
 
     /**
-    * @ORM\column(type="boolean", name="is_active", nullable=false) 
+    * @ORM\column(type="boolean", name="is_active", nullable=false)
     */
     private $isActive=0;
 
@@ -37,7 +39,7 @@ class Language {
      * @ORM\Column(name="host", type="string", length=255, nullable=true)
      */
     private $host=null;
-    
+
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
      */
@@ -51,18 +53,18 @@ class Language {
     public function getId() {
         return $this->id;
     }
- 
+
     public function setId($id) {
         $this->id = $id;
     }
-    
+
     /**
      * @DataTable(label="Locale", column="locale", isSortable=1, isSortable=1)
      */
     public function getLocale() {
         return $this->locale;
     }
- 
+
     public function setLocale($locale) {
         $this->locale = $locale;
     }
@@ -73,7 +75,7 @@ class Language {
     public function getName() {
         return $this->name;
     }
- 
+
     public function setName($name) {
         $this->name = $name;
     }

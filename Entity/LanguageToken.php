@@ -9,7 +9,9 @@ use Majes\CoreBundle\Annotation\DataTable;
 
 /**
  * @ORM\Entity(repositoryClass="Majes\CoreBundle\Entity\LanguageTokenRepository")
- * @ORM\Table(name="core_language_token")
+ * @ORM\Table(name="core_language_token", indexes={
+ *      @ORM\Index(name="catalogue", columns={"catalogue"})
+ * })
  */
 class LanguageToken {
 
