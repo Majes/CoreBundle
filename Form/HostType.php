@@ -46,6 +46,9 @@ class HostType extends AbstractType
         $builder->add('is_multilingual', 'checkbox', array(
         	'required' => false));
 
+		$builder->add('is_active', 'checkbox', array(
+        	'required' => false));
+
 		$builder->add('default_locale', 'text', array(
             'required' => false));
 

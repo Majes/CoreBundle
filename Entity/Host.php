@@ -58,6 +58,11 @@ class Host{
     private $deleted=0;
 
     /**
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
+     */
+    private $isActive=1;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
@@ -67,7 +72,9 @@ class Host{
     /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
      */
-    public function __construct(){}
+    public function __construct(){
+        $this->isActive = true;
+    }
 
     /**
      * @inheritDoc
@@ -218,6 +225,30 @@ class Host{
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of isActive.
+     *
+     * @return mixed
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Sets the value of isActive.
+     *
+     * @param mixed $isActive the isActive
+     *
+     * @return self
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
