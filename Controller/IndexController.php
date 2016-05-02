@@ -105,7 +105,11 @@ class IndexController extends Controller implements SystemController
                 if(empty($password)){
                     $this->_user->setPassword($_current_password);
                 }else{
-                    $this->_user->setPassword(sha1($password));
+                    $factory = $this->container->get('security.encoder_factory');
+                    $encoder = $factory->getEncoder($this->_user);
+                    $pwd = $encoder->encodePassword($password, $this->_user->getSalt());
+
+                    $this->_user->setPassword($pwd);
                 }
                 $this->_user->setUsername($this->_user->getEmail());
 
