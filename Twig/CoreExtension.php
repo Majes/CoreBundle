@@ -112,9 +112,14 @@ class CoreExtension extends \Twig_Extension
         $function = 'get'.ucfirst($property);
         $value = $object->$function();
 
-        if($format == 'datetime'){
+        if($format == 'date'){
             if(is_null($value)) return '';
             return $value->format('d/m/Y');
+        }elseif($format == 'datetime'){
+
+            if(is_null($value)) return '';
+            return $value->format('d/m/Y H:i');
+
         }elseif($format == 'media'){
 
             $src = $this->_mediaService->teelMediaLoad($value, 75, "auto");
