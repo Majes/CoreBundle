@@ -306,7 +306,8 @@
           bSortable: false,
           aTargets: [-1]
         }
-      ]
+    ],
+    "pageLength": 50
     });
 
     var ajaxUrl = $(".dataTable.ajaxTable").data('url');
@@ -320,7 +321,8 @@
       ],
       "processing": true,
       "serverSide": true,
-      "ajax": ""
+      "ajax": "",
+      "pageLength": 50
     });
     /*
     # =============================================================================
@@ -710,7 +712,7 @@
           }
         });
       }
-      
+
       if ($('#hero-bar').length) {
         return Morris.Bar({
           element: "hero-bar",
@@ -752,7 +754,7 @@
     */
 
     $('.select2able').select2({ placeholder: "Select an option", allowClear: true});
-    
+
     /*
     # =============================================================================
     #   Masonry
