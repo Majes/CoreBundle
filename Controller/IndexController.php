@@ -47,7 +47,7 @@ class IndexController extends Controller implements SystemController
      */
     public function dashboardAction(Request $request)
     {
-        $ga = $this->container->get('majes.ga');
+        // $ga = $this->container->get('majes.ga');
 
         if($request->getMethod() == 'POST'){
 
@@ -67,7 +67,8 @@ class IndexController extends Controller implements SystemController
         $chat = $em->getRepository('MajesCoreBundle:Chat')
             ->findForDashboard();
 
-        $stats_lastmonth = $ga->pastMonth();
+        // $stats_lastmonth = $ga->pastMonth();
+        $stats_lastmonth = array();
         $global_stats = array();
         foreach ($stats_lastmonth as $date => $row) {
             $global_stats = $row;

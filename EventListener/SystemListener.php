@@ -20,7 +20,7 @@ use Majes\CoreBundle\Entity\Log;
 use Majes\CoreBundle\Entity\User\User;
 use Majes\CoreBundle\Entity\User\Role;
 
-require_once __DIR__.'/../../../../../facebook/php-sdk/src/facebook.php';
+// require_once __DIR__.'/../../../../../facebook/php-sdk/src/facebook.php';
 
 class SystemListener
 {
@@ -110,7 +110,7 @@ class SystemListener
         if ($controllerObject instanceof SystemController) {
 
             $parameters = $this->container->getParameter('admin');
-            $google = $this->container->getParameter('google');
+            // $google = $this->container->getParameter('google');
             $facebook = $this->container->getParameter('facebook');
             $twitter = $this->container->getParameter('twitter');
 
@@ -195,39 +195,39 @@ class SystemListener
             $session->set('_locale', $locale);
             $session->set('wysiwyg', $wysiwyg);
             $session->set('menu', $menu);
-            $session->set('google', $google);
+            // $session->set('google', $google);
             $session->set('facebook', $facebook);
             $session->set('twitter', $twitter);
 
             /*NOTIFICATION*/
             // Google analytics
             // Google api
-            $google = $this->container->getParameter('google');
-            $ga_is_active = true;
-            if($this->container->hasParameter('majesteel'))
-            {
-                $majesteel = $this->container->getParameter('majesteel');
-                if(isset($majesteel['ga_service'])) $ga_is_active = $majesteel['ga_service'];
-            }
+            // $google = $this->container->getParameter('google');
+            // $ga_is_active = true;
+            // if($this->container->hasParameter('majesteel'))
+            // {
+            //     $majesteel = $this->container->getParameter('majesteel');
+            //     if(isset($majesteel['ga_service'])) $ga_is_active = $majesteel['ga_service'];
+            // }
 
-            $notification = $this->container->get('majes.notification');
+            // $notification = $this->container->get('majes.notification');
+            //
+            // $notification->set(array('_source' => 'core'));
+            // $notification->reinit();
 
-            $notification->set(array('_source' => 'core'));
-            $notification->reinit();
-
-            if($ga_is_active){
-                $ga = $this->container->get('majes.ga');
-                $ga_status = $ga->isUp();
-
-                $google = $this->container->getParameter('google');
-                if($ga_status == -1)
-                    $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
-                elseif($ga_status == -2)
-                    $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
-
-                if(!isset($google['analytics']) || empty($google['analytics']))
-                    $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
-            }
+            // if($ga_is_active){
+            //     $ga = $this->container->get('majes.ga');
+            //     $ga_status = $ga->isUp();
+            //
+            //     // $google = $this->container->getParameter('google');
+            //     if($ga_status == -1)
+            //         $notification->add('notices', array('status' => 'warning', 'title' => 'Google API is down', 'url' => $ga->_authUrl));
+            //     elseif($ga_status == -2)
+            //         $notification->add('notices', array('status' => 'danger', 'title' => 'Google API params have not been set', 'url' => '#'));
+            //
+            //     // if(!isset($google['analytics']) || empty($google['analytics']))
+            //     //     $notification->add('notices', array('status' => 'danger', 'title' => 'Google Analytics tag has not been set', 'url' => '#'));
+            // }
 
         }
 
